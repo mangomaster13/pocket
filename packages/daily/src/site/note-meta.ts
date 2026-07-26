@@ -4,32 +4,39 @@
 
 export interface NoteMeta {
   title: string;
-  /** Short Chinese/English summary for the archive card. */
+  /** English lead / teaser for the archive card. */
+  lead: string;
+  /** Chinese summary for the archive card (also exposed as `summary`). */
   summary: string;
+  /** Outlet name when present (e.g. BBC World). */
+  sourceName: string;
   /** Highlight vocabulary / keywords. */
   keywords: string[];
 }
 
 /**
- * Parses title, summary, and vocabulary keywords from note markdown.
+ * Parses title, lead, summary, source, and vocabulary keywords from note markdown.
  */
 export function extractNoteMeta(markdown: string, fallbackTitle: string): NoteMeta {
   const title = extractTitle(markdown) || fallbackTitle;
-  const summary = extractSummary(markdown);
+  const lead = extractLead(markdown);
+  const summary = extractZhSummary(markdown);
+  const sourceName = extractSourceName(markdown);
   const keywords = extractKeywords(markdown);
-  return { title, summary, keywords };
+  return { title, lead, summary, sourceName, keywords };
 }
 
 /**
- * Extracts original long sentences marked as **Original:** in the note.
+ * Extracts original long sentences marked as **Original:** / **原句：** in the note.
  */
 export function extractOriginalSentences(markdown: string): string[] {
   const section =
+    sectionBody(markdown, "长难句") ||
     sectionBody(markdown, "Long Sentences") ||
     sectionBody(markdown, "Long Sentences (2-3 items)") ||
     markdown;
   const found: string[] = [];
-  const re = /\*\*Original:\*\*\s*(.+)$/gm;
+  const re = /\*\*(?:Original|原句)[:：]\*\*\s*(.+)$/gim;
   let match: RegExpExecArray | null = re.exec(section);
   while (match) {
     const sentence = match[1].trim();
@@ -57,20 +64,38 @@ function extractTitle(markdown: string): string | undefined {
 }
 
 /**
- * Prefers the first Chinese Summary bullet; falls back to the English one.
+ * Reads the English Lead section (or legacy English Summary bullet).
  */
-function extractSummary(markdown: string): string {
+function extractLead(markdown: string): string {
+  const leadSection = sectionBody(markdown, "Lead");
+  if (leadSection) {
+    return firstParagraph(leadSection) || firstNonHeadingLine(leadSection);
+  }
+
+  const summary = sectionBody(markdown, "Summary");
+  if (!summary) {
+    return "";
+  }
+  const bullets = bulletLines(summary);
+  const english = bullets.find((line) => !/[\u4e00-\u9fff]/.test(line));
+  return english || "";
+}
+
+/**
+ * Prefers ## 中文摘要; falls back to Chinese Summary bullet / first line.
+ */
+function extractZhSummary(markdown: string): string {
+  const zh = sectionBody(markdown, "中文摘要");
+  if (zh) {
+    return firstParagraph(zh) || firstNonHeadingLine(zh);
+  }
+
   const section = sectionBody(markdown, "Summary");
   if (!section) {
     return firstNonHeadingLine(markdown);
   }
 
-  const bullets = section
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => /^[-*]\s+/.test(line))
-    .map((line) => line.replace(/^[-*]\s+/, "").trim());
-
+  const bullets = bulletLines(section);
   if (bullets.length === 0) {
     return firstNonHeadingLine(section) || firstNonHeadingLine(markdown);
   }
@@ -80,10 +105,34 @@ function extractSummary(markdown: string): string {
 }
 
 /**
+ * Reads outlet name from the meta line under H1 (`BBC World · date · url`).
+ */
+function extractSourceName(markdown: string): string {
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+  if (lines.length < 2 || !/^#\s+/.test(lines[0])) {
+    return "";
+  }
+  for (let i = 1; i < Math.min(lines.length, 8); i += 1) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) {
+      continue;
+    }
+    if (/^##\s+/.test(trimmed)) {
+      break;
+    }
+    if (trimmed.includes("·")) {
+      return trimmed.split("·")[0]?.trim() ?? "";
+    }
+  }
+  return "";
+}
+
+/**
  * Pulls bold vocabulary headwords from the Vocabulary section.
  */
 function extractKeywords(markdown: string): string[] {
   const section =
+    sectionBody(markdown, "单词 Vocabulary") ||
     sectionBody(markdown, "Vocabulary") ||
     sectionBody(markdown, "Vocabulary (5 items)") ||
     "";
@@ -92,8 +141,11 @@ function extractKeywords(markdown: string): string[] {
   const re = /^\s*[-*]\s+\*\*(.+?)\*\*/gm;
   let match: RegExpExecArray | null = re.exec(source);
   while (match) {
-    const word = match[1].replace(/\s*\([^)]*\)\s*$/, "").trim();
-    if (word && !found.includes(word)) {
+    const word = match[1]
+      .replace(/^(?:原句|Original)[:：]\s*/i, "")
+      .replace(/\s*\([^)]*\)\s*$/, "")
+      .trim();
+    if (word && !/^(原句|Original)$/i.test(word) && !found.includes(word)) {
       found.push(word);
     }
     match = re.exec(source);
@@ -105,13 +157,19 @@ function extractKeywords(markdown: string): string[] {
  * Returns the body of a ## Section until the next ## heading.
  */
 function sectionBody(markdown: string, heading: string): string | undefined {
+  const needle = heading.toLowerCase();
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const start = lines.findIndex((line) => {
     const normalized = line.trim().toLowerCase();
+    if (!normalized.startsWith("## ")) {
+      return false;
+    }
+    const title = normalized.slice(3).trim();
     return (
-      normalized === `## ${heading.toLowerCase()}` ||
-      normalized.startsWith(`## ${heading.toLowerCase()} `) ||
-      normalized.startsWith(`## ${heading.toLowerCase()}(`)
+      title === needle ||
+      title.startsWith(`${needle} `) ||
+      title.startsWith(`${needle}(`) ||
+      title.includes(needle)
     );
   });
   if (start < 0) {
@@ -129,12 +187,44 @@ function sectionBody(markdown: string, heading: string): string | undefined {
 }
 
 /**
+ * Bullet lines without the leading marker.
+ */
+function bulletLines(section: string): string[] {
+  return section
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => /^[-*]\s+/.test(line))
+    .map((line) => line.replace(/^[-*]\s+/, "").trim());
+}
+
+/**
+ * First non-empty paragraph (blank-line separated).
+ */
+function firstParagraph(text: string): string {
+  const block = text
+    .split(/\n\s*\n/)
+    .map((part) => part.trim())
+    .find(Boolean);
+  if (!block) {
+    return "";
+  }
+  return block
+    .split("\n")
+    .map((line) => line.replace(/^[-*]\s+/, "").trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+/**
  * First meaningful non-heading line as a last-resort summary.
  */
 function firstNonHeadingLine(markdown: string): string {
   for (const line of markdown.split("\n")) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) {
+      continue;
+    }
+    if (trimmed.includes("·") && /https?:\/\//i.test(trimmed)) {
       continue;
     }
     return trimmed.replace(/^[-*]\s+/, "");

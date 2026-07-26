@@ -2,19 +2,19 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { marked } from "marked";
 import { highlightNoteHtml } from "./highlight.js";
-import { extractNoteMeta, extractOriginalSentences } from "./note-meta.js";
+import { extractNoteMeta, extractOriginalSentences, getSectionBody } from "./note-meta.js";
 import { resolvePagesBaseUrl } from "./urls.js";
 
 /** Human labels for topic folder names. */
 const TOPIC_LABELS: Record<string, string> = {
-  world: "World",
-  business: "Business",
-  tech: "Tech",
-  dev: "Dev",
-  music: "Music",
-  horror: "Horror",
-  english: "English",
-  finance: "Finance",
+  world: "国际",
+  business: "商业",
+  tech: "科技",
+  dev: "开发",
+  music: "音乐",
+  horror: "惊悚",
+  english: "英语",
+  finance: "财经",
 };
 
 export interface SiteNote {
@@ -32,8 +32,12 @@ export interface SiteNote {
   relativeHtmlPath: string;
   /** Extracted page title. */
   title: string;
-  /** Short summary for archive cards. */
+  /** English lead for archive cards. */
+  lead: string;
+  /** Chinese summary for archive cards. */
   summary: string;
+  /** Outlet name for archive cards. */
+  sourceName: string;
   /** Highlight keywords / vocabulary. */
   keywords: string[];
 }
@@ -86,10 +90,14 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
     const markdown = readFileSync(markdownPath, "utf8");
     const meta = extractNoteMeta(markdown, `${topicLabel(topic)} · ${date}`);
     const sentences = extractOriginalSentences(markdown);
-    const rawHtml = marked.parse(markdown, { async: false }) as string;
-    const bodyHtml = highlightNoteHtml(rawHtml, meta.keywords, sentences);
+    const articleMarkdown = stripChromeSections(markdown);
+    const rawHtml = marked.parse(articleMarkdown, { async: false }) as string;
+    const highlighted = highlightNoteHtml(rawHtml, meta.keywords, sentences);
+    const bodyHtml = enhanceArticleHtml(highlighted);
     const relativeHtmlPath = `${topic}/${slug}.html`;
     const htmlPath = join(siteDir, relativeHtmlPath);
+    const metaLine = extractMetaLine(markdown);
+    const sourceUrl = extractUrlFromMeta(metaLine) || extractUrlFromSource(markdown);
 
     mkdirSync(dirname(htmlPath), { recursive: true });
     writeFileSync(
@@ -98,6 +106,10 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
         title: meta.title,
         date,
         topic,
+        sourceName: meta.sourceName,
+        sourceUrl,
+        lead: meta.lead || getSectionBody(markdown, "Lead") || "",
+        zhSummary: meta.summary,
         bodyHtml,
       }),
       "utf8",
@@ -111,7 +123,9 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
       htmlPath,
       relativeHtmlPath,
       title: meta.title,
+      lead: meta.lead,
       summary: meta.summary,
+      sourceName: meta.sourceName,
       keywords: meta.keywords,
     });
   }
@@ -179,7 +193,97 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * Shared minimal CSS for archive + note pages.
+ * Removes H1 / Lead / 中文摘要 / Summary so they can be rendered as page chrome.
+ */
+function stripChromeSections(markdown: string): string {
+  let text = markdown.replace(/\r\n/g, "\n");
+  text = text.replace(/^#\s+.+$\n*/m, "");
+  // Drop meta line under former H1.
+  text = text.replace(/^[^\n#][^\n]*·[^\n]*\n+/m, "");
+  text = removeSection(text, "Lead");
+  text = removeSection(text, "中文摘要");
+  text = removeSection(text, "Summary");
+  return text.trim();
+}
+
+/**
+ * Deletes one ## section by heading keyword.
+ */
+function removeSection(markdown: string, heading: string): string {
+  const needle = heading.toLowerCase();
+  const lines = markdown.split("\n");
+  const start = lines.findIndex((line) => {
+    const normalized = line.trim().toLowerCase();
+    return normalized.startsWith("## ") && normalized.slice(3).includes(needle);
+  });
+  if (start < 0) {
+    return markdown;
+  }
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i += 1) {
+    if (/^##\s+/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  return [...lines.slice(0, start), ...lines.slice(end)].join("\n");
+}
+
+/**
+ * Reads the plain meta line under H1.
+ */
+function extractMetaLine(markdown: string): string {
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+  if (!/^#\s+/.test(lines[0] ?? "")) {
+    return "";
+  }
+  for (let i = 1; i < Math.min(lines.length, 8); i += 1) {
+    const trimmed = lines[i].trim();
+    if (!trimmed) {
+      continue;
+    }
+    if (/^##\s+/.test(trimmed)) {
+      break;
+    }
+    if (trimmed.includes("·")) {
+      return trimmed;
+    }
+  }
+  return "";
+}
+
+/**
+ * Pulls the first URL from a meta line.
+ */
+function extractUrlFromMeta(metaLine: string): string {
+  const match = metaLine.match(/https?:\/\/\S+/i);
+  return match?.[0] ?? "";
+}
+
+/**
+ * Fallback URL from source section.
+ */
+function extractUrlFromSource(markdown: string): string {
+  const section =
+    getSectionBody(markdown, "原文 Source") ||
+    getSectionBody(markdown, "Source Article") ||
+    "";
+  const match = section.match(/https?:\/\/\S+/i);
+  return match?.[0] ?? "";
+}
+
+/**
+ * Wraps source section and lightly styles vocabulary / sentence blocks.
+ */
+function enhanceArticleHtml(html: string): string {
+  return html.replace(
+    /(<h2[^>]*>\s*(?:原文\s*Source|Source Article)\s*<\/h2>)([\s\S]*?)(?=<h2[\s>]|$)/i,
+    (_all, heading: string, body: string) => `${heading}<div class="source-box">${body.trim()}</div>\n`,
+  );
+}
+
+/**
+ * Shared CSS for archive + note pages (teal + blue accents).
  */
 function siteStyles(): string {
   return `
@@ -189,11 +293,13 @@ function siteStyles(): string {
   --fg: #111111;
   --muted: #8a8a8a;
   --line: #ececec;
-  --soft: #f5f5f5;
-  --chip: #efefef;
-  --accent: #111111;
-  --summary: #f7f7f7;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
   --summary-border: #3b82f6;
+  --card: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -202,10 +308,12 @@ function siteStyles(): string {
     --muted: #9a9a9a;
     --line: #2a2a2a;
     --soft: #1a1a1a;
-    --chip: #242424;
-    --accent: #f3f3f3;
-    --summary: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
     --summary-border: #60a5fa;
+    --card: #161616;
   }
 }
 * { box-sizing: border-box; }
@@ -215,10 +323,10 @@ body {
     "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
   background: var(--bg);
   color: var(--fg);
-  line-height: 1.6;
+  line-height: 1.65;
   font-size: 15px;
 }
-a { color: inherit; }
+a { color: var(--accent); }
 .wrap {
   max-width: 720px;
   margin: 0 auto;
@@ -230,11 +338,40 @@ a { color: inherit; }
   margin: 0 0 0.35rem;
 }
 h1 {
-  font-size: 1.75rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.65rem;
   line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
 }
 .meta-row {
   display: flex;
@@ -245,11 +382,6 @@ h1 {
   font-size: 0.9rem;
   margin-bottom: 1.25rem;
 }
-.meta-row a {
-  color: var(--muted);
-  text-decoration: none;
-}
-.meta-row a:hover { color: var(--fg); text-decoration: underline; }
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -273,7 +405,7 @@ h1 {
 .tabs button.active {
   color: var(--fg);
   font-weight: 650;
-  border-bottom-color: var(--fg);
+  border-bottom-color: var(--accent);
 }
 .tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
 .filters {
@@ -295,59 +427,79 @@ h1 {
   border-radius: 999px;
   padding: 0.35rem 0.85rem;
 }
-.list { list-style: none; padding: 0; margin: 0; }
-.item {
-  padding: 1.05rem 0 1.15rem;
-  border-bottom: 1px solid var(--line);
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
 }
-.item[hidden] { display: none; }
-.item a.item-link {
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
   text-decoration: none;
   color: inherit;
-  display: block;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
 }
-.item-top {
+.card-top {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  align-items: baseline;
-  margin-bottom: 0.35rem;
-}
-.item-title {
-  font-weight: 650;
-  font-size: 1.02rem;
-}
-.item-date { color: var(--muted); font-size: 0.86rem; white-space: nowrap; }
-.item-topic {
-  display: inline-block;
-  font-size: 0.75rem;
-  color: var(--muted);
-  background: var(--chip);
-  border-radius: 999px;
-  padding: 0.12rem 0.55rem;
+  align-items: center;
   margin-bottom: 0.45rem;
 }
-.item-summary {
-  margin: 0.55rem 0 0;
-  padding: 0.7rem 0.85rem;
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
   background: var(--summary);
   border-left: 3px solid var(--summary-border);
   border-radius: 0 8px 8px 0;
-  color: var(--fg);
   font-size: 0.92rem;
 }
-.keywords {
+.card-keys {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 0.65rem;
+  margin-top: 0.7rem;
 }
-.keywords span {
+.card-keys span {
   font-size: 0.78rem;
-  color: var(--fg);
+  color: var(--accent);
   background: var(--chip);
   border-radius: 999px;
-  padding: 0.18rem 0.55rem;
+  padding: 0.16rem 0.5rem;
 }
 .empty {
   color: var(--muted);
@@ -365,11 +517,11 @@ h1 {
   text-decoration: none;
   font-size: 0.9rem;
 }
-.article-page .brand:hover { color: var(--fg); text-decoration: underline; }
+.article-page .brand:hover { color: var(--accent); }
 .article h1 { display: none; }
 .article h2 {
   font-size: 1.05rem;
-  margin: 1.6rem 0 0.55rem;
+  margin: 1.75rem 0 0.65rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--line);
 }
@@ -379,6 +531,14 @@ h1 {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
 }
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
 mark.hl-kw {
   background: #fef3c7;
   color: inherit;
@@ -475,8 +635,23 @@ function renderNotePage(input: {
   title: string;
   date: string;
   topic: string;
+  sourceName: string;
+  sourceUrl: string;
+  lead: string;
+  zhSummary: string;
   bodyHtml: string;
 }): string {
+  const outlet = input.sourceName || topicLabel(input.topic);
+  const link = input.sourceUrl
+    ? ` · <a href="${escapeHtml(input.sourceUrl)}">原文链接</a>`
+    : "";
+  const lead = input.lead.trim()
+    ? `<p class="lead">${escapeHtml(input.lead.trim())}</p>`
+    : "";
+  const zh = input.zhSummary.trim()
+    ? `<div class="zh-summary"><span class="label">中文摘要</span>${escapeHtml(input.zhSummary.trim())}</div>`
+    : "";
+
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -491,8 +666,11 @@ function renderNotePage(input: {
       <a class="brand" href="../index.html">← 历史归档</a>
       <div class="eyebrow">${escapeHtml(topicLabel(input.topic))} · ${escapeHtml(input.date)}</div>
     </div>
-    <p class="eyebrow">Pocket</p>
+    <p class="eyebrow">Pocket 笔记</p>
     <h1>${escapeHtml(input.title)}</h1>
+    <p class="meta">${escapeHtml(outlet)} · ${escapeHtml(input.date)}${link}</p>
+    ${lead}
+    ${zh}
     <div class="legend">
       <span class="kw">重点单词</span>
       <span class="sent">重点句子</span>
@@ -539,24 +717,29 @@ function renderIndexPage(input: { notes: SiteNote[] }): string {
       ? ""
       : input.notes
           .map((note) => {
-            const keywords =
+            const metaParts = [note.sourceName || topicLabel(note.topic), note.date].filter(Boolean);
+            const keys =
               note.keywords.length === 0
                 ? ""
-                : `<div class="keywords">${note.keywords
+                : `<div class="card-keys">${note.keywords
                     .map((word) => `<span>${escapeHtml(word)}</span>`)
                     .join("")}</div>`;
-            const summary = note.summary
-              ? `<p class="item-summary">${escapeHtml(note.summary)}</p>`
+            const lead = note.lead
+              ? `<p class="card-lead">${escapeHtml(note.lead)}</p>`
               : "";
-            return `  <li class="item" data-note data-topic="${escapeHtml(note.topic)}" data-date="${escapeHtml(note.date)}">
-    <a class="item-link" href="./${escapeHtml(note.relativeHtmlPath)}">
-      <div class="item-topic">${escapeHtml(topicLabel(note.topic))}</div>
-      <div class="item-top">
-        <div class="item-title">${escapeHtml(note.title)}</div>
-        <div class="item-date">${escapeHtml(note.date)}</div>
+            const zh = note.summary
+              ? `<p class="card-zh">${escapeHtml(note.summary)}</p>`
+              : "";
+            return `  <li data-note data-topic="${escapeHtml(note.topic)}" data-date="${escapeHtml(note.date)}">
+    <a class="card" href="./${escapeHtml(note.relativeHtmlPath)}">
+      <div class="card-top">
+        <span class="pill">${escapeHtml(topicLabel(note.topic))}</span>
+        <span class="card-meta">${escapeHtml(metaParts.join(" · "))}</span>
       </div>
-      ${summary}
-      ${keywords}
+      <h3 class="card-title">${escapeHtml(note.title)}</h3>
+      ${lead}
+      ${zh}
+      ${keys}
     </a>
   </li>`;
           })

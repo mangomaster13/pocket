@@ -70,3 +70,20 @@ export function resolveJobRssUrl(source: {
   }
   return undefined;
 }
+
+/**
+ * Resolves a human outlet name from sourceId when present.
+ */
+export function resolveJobSourceName(source: {
+  sourceId?: string;
+}): string | undefined {
+  const id = source.sourceId?.trim();
+  if (!id) {
+    return undefined;
+  }
+  try {
+    return getSourceEntry(id).name;
+  } catch {
+    return undefined;
+  }
+}

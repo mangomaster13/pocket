@@ -21,6 +21,8 @@ export interface SourceDocument {
   title: string;
   body: string;
   url?: string;
+  /** Human outlet name (e.g. BBC World) for meta lines and archive cards. */
+  sourceName?: string;
   fetchedAt: string;
 }
 

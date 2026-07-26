@@ -1,6 +1,6 @@
 import type { JobConfig } from "../config.js";
 import type { SourceDocument } from "../types.js";
-import { resolveJobRssUrl } from "./catalog.js";
+import { resolveJobRssUrl, resolveJobSourceName } from "./catalog.js";
 import type { SourcePaths, SourceProvider } from "./types.js";
 
 interface RssItem {
@@ -39,11 +39,13 @@ export class RssSource implements SourceProvider {
     }
 
     const fetchedAt = new Date().toISOString();
+    const sourceName = resolveJobSourceName(job.source);
     return items.map((item, index) => ({
       id: item.link ?? `${url}#${index}`,
       title: item.title,
-      body: buildRssBody(item),
+      body: buildRssBody(item, sourceName),
       url: item.link,
+      sourceName,
       fetchedAt,
     }));
   }
@@ -52,8 +54,16 @@ export class RssSource implements SourceProvider {
 /**
  * Formats one RSS item into LLM-friendly plain text.
  */
-function buildRssBody(item: RssItem): string {
-  const parts = [`Title: ${item.title}`];
+function buildRssBody(item: RssItem, sourceName?: string): string {
+  const parts = [
+    "Note: RSS usually provides a short excerpt, not the full article.",
+    "If the excerpt below is short, write a 250–400 word Readable rewrite + Chinese translation.",
+    "",
+    `Title: ${item.title}`,
+  ];
+  if (sourceName) {
+    parts.push(`Outlet: ${sourceName}`);
+  }
   if (item.link) {
     parts.push(`URL: ${item.link}`);
   }

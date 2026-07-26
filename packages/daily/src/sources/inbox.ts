@@ -24,7 +24,7 @@ export class InboxSource implements SourceProvider {
       return [];
     }
 
-    const title = extractTitle(raw) ?? `Inbox · ${job.id}`;
+    const title = extractTitle(raw) ?? "";
     return [
       {
         id: relative,
