@@ -1,0 +1,30 @@
+{
+  "name": "@pocket/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pocket CLI — routes bark and daily commands",
+  "bin": {
+    "pocket": "./src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/cli.ts"
+  },
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pocket/bark": "0.1.0",
+    "@pocket/daily": "0.1.0",
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

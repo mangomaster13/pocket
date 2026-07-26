@@ -48,7 +48,7 @@ export class CursorCloudAgentProvider implements LlmProvider {
 
     const createBody: Record<string, unknown> = {
       prompt: { text: promptText },
-      name: "daily-sub note",
+      name: "pocket note",
     };
     if (modelId) {
       createBody.model = { id: modelId };

@@ -1,0 +1,26 @@
+{
+  "name": "@pocket/daily",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Daily digest — sources, LLM notes, site, and Bark notify",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pocket/bark": "0.1.0",
+    "marked": "^18.0.7",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.5",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

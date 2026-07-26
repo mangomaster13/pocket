@@ -1,28 +1,23 @@
 {
-  "name": "daily-sub",
+  "name": "pocket",
   "version": "0.1.0",
   "private": true,
-  "description": "Configurable daily digest pipeline: sources → LLM → notes → Bark",
+  "description": "Pocket — monorepo toolkit: @pocket/bark + @pocket/daily",
   "type": "module",
-  "bin": {
-    "daily-sub": "./dist/cli.js"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx src/cli.ts",
-    "start": "node dist/cli.js",
-    "list": "tsx src/cli.ts list",
-    "run:job": "tsx src/cli.ts run",
-    "bark": "tsx src/cli.ts bark",
-    "typecheck": "tsc --noEmit"
+    "dev": "npm run start -w @pocket/cli",
+    "list": "tsx packages/cli/src/cli.ts list",
+    "run:job": "tsx packages/cli/src/cli.ts run",
+    "site": "tsx packages/cli/src/cli.ts site",
+    "notify": "tsx packages/cli/src/cli.ts notify",
+    "bark": "tsx packages/cli/src/cli.ts bark",
+    "typecheck": "npm run typecheck -w @pocket/bark && npm run typecheck -w @pocket/daily && npm run typecheck -w @pocket/cli"
   },
   "engines": {
     "node": ">=20"
-  },
-  "dependencies": {
-    "dotenv": "^16.6.1",
-    "yaml": "^2.8.0",
-    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.16.5",

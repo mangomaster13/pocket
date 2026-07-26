@@ -29,3 +29,15 @@ export function buildBarkPreview(markdown: string, maxChars: number): string {
 
   return truncateForPush(picked.join("\n") || markdown, maxChars);
 }
+
+/**
+ * Builds a compact Bark teaser when the full note is available via URL.
+ */
+export function buildBarkTeaser(markdown: string, maxChars = 320): string {
+  const preview = buildBarkPreview(markdown, maxChars);
+  const hint = "👉 点击通知查看全文";
+  if (preview.includes(hint)) {
+    return preview;
+  }
+  return `${preview}\n\n${hint}`;
+}

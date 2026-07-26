@@ -11,7 +11,7 @@ export type SourceType = "inbox" | "rss" | "inbox-or-rss";
 /** Supported LLM backends. */
 export type LlmProviderId = "cursor-cloud-agent" | "openai-compatible";
 
-/** Supported delivery channels. */
+/** Supported delivery channels for a job. */
 export type DeliveryType = "bark" | "none";
 
 /** Raw material fetched before LLM generation. */
@@ -61,19 +61,15 @@ export interface TopicContext {
   date: string;
 }
 
-/** Payload for a delivery channel. */
-export interface DeliveryPayload {
-  title: string;
-  body: string;
-  /** Optional deep link (Bark url argument). */
-  url?: string;
-}
-
 /** Result of a completed pipeline run. */
 export interface PipelineResult {
   jobId: string;
   date: string;
   notePath: string;
+  /** Generated HTML note page path, when site build succeeds. */
+  pagePath?: string;
+  /** Public GitHub Pages URL for the note, when configured. */
+  pageUrl?: string;
   sourceIds: string[];
   delivered: boolean;
   preview: string;

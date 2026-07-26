@@ -1,44 +1,63 @@
-# daily-sub
+# Pocket
 
-**中文使用说明（命令怎么用）：见 [docs/使用说明.md](docs/使用说明.md)**
+<p align="center">
+  <img src="assets/icon.png" alt="Pocket icon" width="120" />
+</p>
 
-Configurable daily digest pipeline:
+Personal pocket toolkit — digests, Bark messaging, and more modules later.
+
+Monorepo packages:
+
+| Package | What it does |
+|---------|----------------|
+| **`@pocket/bark`** | Multi-device Bark push + title presets |
+| **`@pocket/daily`** | English (and later finance) notes: source → LLM → `notes/` → `site/` → calls bark |
+| **`@pocket/cli`** | CLI router (`list` / `run` / `site` / `notify` / `bark`) |
+
+**中文命令说明：** [docs/使用说明.md](docs/使用说明.md)
+
+Daily pipeline:
 
 ```text
-schedule → source → topic prompts → LLM → notes/*.md → Bark
+schedule → source → topic prompts → LLM → notes/*.md → site/*.html → Bark (title + teaser + Pages URL)
 ```
 
-Designed so you can swap LLM vendors and add topics (English today, finance later) without rewriting the core flow.
+`@pocket/daily` depends on `@pocket/bark` only through `push()` / `resolveTitle()`. Bark never imports daily.
 
 ## Quick start
 
 ```bash
 cp .env.example .env
-# fill CURSOR_API_KEY + BARK_KEY (default LLM is Cursor Cloud Agent)
+# fill CURSOR_API_KEY + BARK_DEVICES / BARK_KEY_<alias>
+# fill PAGES_BASE_URL=https://<user>.github.io/<repo>
 
 npm install
-npm run run:job -- --job english-morning --skip-delivery   # generate note only
+npm run run:job -- --job english-morning --skip-delivery   # generate note + site
+npm run site                                               # rebuild site/ only
 npm run run:job -- --job english-morning                   # generate + Bark
 npm run list
+npm run bark -- --presets
 ```
 
-## Architecture
+## Layout
 
-| Layer | Role | Extend by |
-|-------|------|-----------|
-| `config/jobs.yaml` | Which jobs run, which source/topic/llm/delivery | Add a job block |
-| `src/sources/` | inbox / RSS / inbox-or-rss | New `SourceProvider` |
-| `src/topics/` | Prompt templates (`english-vocab`, `finance-brief`) | New topic module + registry |
-| `src/providers/` | `openai-compatible`, `cursor-cloud-agent` | New `LlmProvider` |
-| `src/delivery/` | Bark (or `none`) | New channel |
-| `src/pipeline.ts` | Glue only — keep this thin | Prefer not to hardcode vendors |
+```text
+packages/
+  bark/     # push client
+  daily/    # digest + GitHub Pages site builder
+  cli/      # command entry
+config/     # jobs.yaml + bark-presets.yaml
+notes/      # generated markdown
+site/       # generated HTML (gitignored; published to gh-pages)
+```
 
 ## English workflow
 
 1. Paste article text into `inbox/english.md` (Economist etc.), **or** leave it empty to use the BBC RSS fallback in `jobs.yaml`.
 2. Run `english-morning`.
 3. Note is saved to `notes/english/YYYY-MM-DD.md`.
-4. Bark receives a short preview (full note stays in the repo).
+4. HTML is built under `site/english/YYYY-MM-DD.html`.
+5. Bark receives a short teaser + link to GitHub Pages (when `PAGES_BASE_URL` is set).
 
 ## Switch LLM
 
@@ -47,7 +66,7 @@ Default is Cursor Cloud Agent:
 ```yaml
 llm:
   provider: cursor-cloud-agent
-  model: composer-2
+  model: default
 ```
 
 Later, if you add a vendor API:
@@ -66,15 +85,23 @@ Env vars are listed in `.env.example`.
 2. Adjust `source.rssUrl` / inbox path.
 3. Run: `npm run run:job -- --job finance-brief`.
 
-## GitHub Actions
+## GitHub Actions + Pages
 
 Workflow: `.github/workflows/daily.yml`
 
-- Cron: `0 22 * * *` (UTC) ≈ Beijing **06:00**
-- Manual run via Actions → “Daily digest”
-- Secrets to configure: `CURSOR_API_KEY`, `BARK_KEY` (optional `BARK_SERVER`; add `LLM_*` only if you switch provider later)
+1. Generate note (`--skip-delivery`)
+2. Build `site/`
+3. Commit `notes/`
+4. Deploy `site/` → `gh-pages`
+5. Bark `notify` with Pages URL
 
-Push timing tip: generation usually finishes in minutes. If you want a hard 08:00 push, split into two workflows later (generate at 06:00, push at 08:00). Current default pushes as soon as the note is ready.
+One-time GitHub setup:
+
+1. **Settings → Pages → Source**: Deploy from branch `gh-pages` / `/ (root)`
+2. Repo must be **public** on free GitHub for Pages
+3. Secrets: `CURSOR_API_KEY`, `BARK_DEVICES`, `BARK_KEY_daj`, `BARK_KEY_lzx`, …
+
+Public URL (this repo): `https://mangomaster13.github.io/daily-sub/`
 
 ## Bark presets & multi-device
 
@@ -83,11 +110,9 @@ Title presets live in `config/bark-presets.yaml`:
 ```bash
 npm run bark -- --presets
 npm run bark -- --to daj --preset stranger --body "在吗"
-npm run bark -- --to lzx --preset english --body "今日笔记已生成"
+npm run bark -- --to lzx --preset english --body "今日笔记已生成" --url "https://mangomaster13.github.io/daily-sub/english/2026-07-26.html"
 npm run bark -- --to all --title "自定义标题" --body "test"
 ```
-
-Devices use aliases from `.env` (`BARK_DEVICES`, `BARK_KEY_<alias>`). Jobs can set `delivery.titlePreset` (and optional `targets`).
 
 ## Local button / Shortcut
 

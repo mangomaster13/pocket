@@ -23,7 +23,7 @@ export class RssSource implements SourceProvider {
 
     const count = job.source.rssItemCount ?? 1;
     const response = await fetch(url, {
-      headers: { "User-Agent": "daily-sub/0.1 (+https://github.com/local/daily-sub)" },
+      headers: { "User-Agent": "pocket/0.1 (+https://github.com/local/pocket)" },
     });
     if (!response.ok) {
       throw new Error(`RSS fetch failed (${response.status}): ${url}`);

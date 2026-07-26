@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
+import type { BarkPreset } from "./types.js";
 
 const presetsFileSchema = z.object({
   presets: z.record(
@@ -13,16 +14,10 @@ const presetsFileSchema = z.object({
   ),
 });
 
-export interface BarkPreset {
-  id: string;
-  title: string;
-  description?: string;
-}
-
 /**
  * Loads Bark title presets from config/bark-presets.yaml.
  */
-export function loadBarkPresets(
+export function listPresets(
   configPath = process.env.BARK_PRESETS_PATH ?? "config/bark-presets.yaml",
 ): BarkPreset[] {
   const absolute = resolve(process.cwd(), configPath);
@@ -38,8 +33,8 @@ export function loadBarkPresets(
 /**
  * Resolves a preset id to its title, or throws if unknown.
  */
-export function resolveBarkPresetTitle(presetId: string): string {
-  const presets = loadBarkPresets();
+export function resolvePresetTitle(presetId: string): string {
+  const presets = listPresets();
   const found = presets.find((item) => item.id === presetId);
   if (!found) {
     const known = presets.map((item) => item.id).join(", ");
@@ -52,7 +47,7 @@ export function resolveBarkPresetTitle(presetId: string): string {
  * Picks the notification title from explicit title, preset, or fallback.
  * Precedence: explicit title > preset > fallback.
  */
-export function resolveNotificationTitle(options: {
+export function resolveTitle(options: {
   title?: string;
   preset?: string;
   fallback?: string;
@@ -61,7 +56,7 @@ export function resolveNotificationTitle(options: {
     return options.title.trim();
   }
   if (options.preset?.trim()) {
-    return resolveBarkPresetTitle(options.preset.trim());
+    return resolvePresetTitle(options.preset.trim());
   }
-  return options.fallback?.trim() || "daily-sub";
+  return options.fallback?.trim() || "Pocket";
 }

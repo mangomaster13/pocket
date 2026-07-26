@@ -1,11 +1,5 @@
-import { optionalEnv } from "../utils/env.js";
-
-/** One named Bark endpoint. */
-export interface BarkDevice {
-  alias: string;
-  key: string;
-  server: string;
-}
+import { optionalEnv } from "./env.js";
+import type { BarkDevice } from "./types.js";
 
 /**
  * Resolves Bark devices from environment variables.
@@ -20,7 +14,7 @@ export interface BarkDevice {
  * Fallback (single device, alias "default"):
  *   BARK_KEY=...
  */
-export function resolveBarkDevices(): BarkDevice[] {
+export function listDevices(): BarkDevice[] {
   const defaultServer = optionalEnv("BARK_SERVER", "https://api.day.app").replace(/\/$/, "");
   const listed = process.env.BARK_DEVICES?.split(",")
     .map((item) => item.trim())
@@ -56,8 +50,8 @@ export function resolveBarkDevices(): BarkDevice[] {
 /**
  * Filters resolved devices by alias list. Empty/undefined targets means all devices.
  */
-export function selectBarkDevices(targets?: string[]): BarkDevice[] {
-  const devices = resolveBarkDevices();
+export function selectDevices(targets?: string[]): BarkDevice[] {
+  const devices = listDevices();
   if (!targets || targets.length === 0) {
     return devices;
   }

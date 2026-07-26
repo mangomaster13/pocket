@@ -1,14 +1,15 @@
+import { push, resolveTitle } from "@pocket/bark";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import type { AppConfig, JobConfig } from "./config.js";
-import { resolveNotificationTitle } from "./delivery/bark-presets.js";
-import { createDelivery } from "./delivery/registry.js";
 import { createLlmProvider } from "./providers/registry.js";
+import { buildSite } from "./site/build-site.js";
+import { resolveNotePageUrl } from "./site/urls.js";
 import { getSourceProvider } from "./sources/registry.js";
 import { getTopic } from "./topics/registry.js";
 import type { PipelineResult } from "./types.js";
 import { shortDateLabel, todayInTimeZone } from "./utils/date.js";
-import { buildBarkPreview } from "./utils/text.js";
+import { buildBarkPreview, buildBarkTeaser } from "./utils/text.js";
 
 export interface RunJobOptions {
   /** Override date folder/name (YYYY-MM-DD). */
@@ -20,7 +21,7 @@ export interface RunJobOptions {
 }
 
 /**
- * Runs one configured job end-to-end: source → topic prompts → LLM → note → delivery.
+ * Runs one configured job end-to-end: source → topic prompts → LLM → note → site → Bark.
  */
 export async function runJob(
   config: AppConfig,
@@ -54,19 +55,28 @@ export async function runJob(
   mkdirSync(dirname(notePath), { recursive: true });
   writeFileSync(notePath, noteBody, "utf8");
 
-  const preview = buildBarkPreview(noteBody, config.defaults.barkMaxChars);
+  const site = buildSite({ cwd, notesDir });
+  const page = site.notes.find((item) => item.topic === topic.label && item.date === date);
+  const pageUrl = resolveNotePageUrl(topic.label, date);
+  const pagePath = page?.htmlPath;
+
+  const preview = pageUrl
+    ? buildBarkTeaser(noteBody)
+    : buildBarkPreview(noteBody, config.defaults.barkMaxChars);
   const dateLabel = shortDateLabel(date);
   const titlePrefix = job.delivery.titlePrefix ?? topic.label;
   const title = resolveJobTitle(job, dateLabel, titlePrefix);
 
   let delivered = false;
-  const deliveryType = options.skipDelivery ? "none" : job.delivery.type;
-  const delivery = createDelivery(deliveryType, {
-    targets: job.delivery.targets,
-  });
-  if (deliveryType !== "none") {
+  const shouldPush = !options.skipDelivery && job.delivery.type === "bark";
+  if (shouldPush) {
     try {
-      await delivery.deliver({ title, body: preview });
+      await push({
+        title,
+        body: preview,
+        url: pageUrl,
+        targets: job.delivery.targets,
+      });
       delivered = true;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -78,6 +88,8 @@ export async function runJob(
     jobId: job.id,
     date,
     notePath,
+    pagePath,
+    pageUrl,
     sourceIds: docs.map((doc) => doc.id),
     delivered,
     preview,
@@ -93,7 +105,7 @@ function resolveJobTitle(
   titlePrefix: string,
 ): string {
   if (job.delivery.titlePreset) {
-    const base = resolveNotificationTitle({ preset: job.delivery.titlePreset });
+    const base = resolveTitle({ preset: job.delivery.titlePreset });
     return job.delivery.appendDate === false ? base : `${base} · ${dateLabel}`;
   }
   return `${titlePrefix} · ${dateLabel}`;

@@ -21,6 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      PAGES_BASE_URL: https://mangomaster13.github.io/daily-sub
+      CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+      BARK_DEVICES: ${{ secrets.BARK_DEVICES }}
+      BARK_KEY_daj: ${{ secrets.BARK_KEY_daj }}
+      BARK_KEY_lzx: ${{ secrets.BARK_KEY_lzx }}
+      BARK_KEY: ${{ secrets.BARK_KEY }}
+      BARK_SERVER: ${{ secrets.BARK_SERVER }}
+      BARK_ICON: ${{ secrets.BARK_ICON }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+      LLM_MODEL: ${{ secrets.LLM_MODEL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,27 +46,18 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Run job
-        env:
-          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
-          BARK_KEY: ${{ secrets.BARK_KEY }}
-          BARK_SERVER: ${{ secrets.BARK_SERVER }}
-          # Optional later if you switch jobs.yaml to openai-compatible:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
-          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+      - name: Generate note (no Bark yet)
         run: |
           JOB="${{ github.event.inputs.job || 'english-morning' }}"
-          EXTRA=""
-          if [ "${{ github.event.inputs.skip_delivery }}" = "true" ]; then
-            EXTRA="--skip-delivery"
-          fi
-          npm run run:job -- --job "$JOB" $EXTRA
+          npm run run:job -- --job "$JOB" --skip-delivery
+
+      - name: Build site
+        run: npm run site
 
       - name: Commit notes
         run: |
-          git config user.name "daily-sub bot"
-          git config user.email "daily-sub@users.noreply.github.com"
+          git config user.name "pocket bot"
+          git config user.email "pocket@users.noreply.github.com"
           git add notes || true
           if git diff --staged --quiet; then
             echo "No note changes to commit"
@@ -62,3 +65,18 @@ jobs:
             git commit -m "chore: add daily notes $(date -u +%Y-%m-%d)"
             git push
           fi
+
+      - name: Deploy GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
+
+      - name: Bark notify with Pages link
+        if: ${{ github.event.inputs.skip_delivery != true && github.event.inputs.skip_delivery != 'true' }}
+        run: |
+          JOB="${{ github.event.inputs.job || 'english-morning' }}"
+          # Give Pages a moment to become reachable after deploy.
+          sleep 15
+          npm run notify -- --job "$JOB"

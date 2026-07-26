@@ -7,13 +7,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    "rootDir": "src"
   },
-  "files": [],
-  "references": [
-    { "path": "./packages/bark" },
-    { "path": "./packages/daily" },
-    { "path": "./packages/cli" }
-  ]
+  "include": ["src/**/*.ts"]
 }
