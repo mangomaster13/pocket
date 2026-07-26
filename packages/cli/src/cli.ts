@@ -8,9 +8,11 @@ import {
   loadConfig,
   notifyDailySummary,
   notifyJob,
+  resolveJobApp,
   resolveJobCategory,
   resolvePagesBaseUrl,
   runJob,
+  type AppId,
 } from "@pocket/daily";
 import { config as loadEnv } from "dotenv";
 
@@ -61,8 +63,9 @@ async function listCommand(): Promise<void> {
   for (const job of listJobs(config, true)) {
     const flag = job.enabled ? "on " : "off";
     const category = resolveJobCategory(job);
+    const app = resolveJobApp(job);
     console.log(
-      `${flag}  ${job.id.padEnd(22)}  cat=${category.padEnd(10)}  topic=${job.topic}  llm=${job.llm.provider}`,
+      `${flag}  ${job.id.padEnd(22)}  app=${app.padEnd(8)}  cat=${category.padEnd(10)}  topic=${job.topic}  llm=${job.llm.provider}`,
     );
     if (job.description) {
       console.log(`      ${job.description}`);
@@ -116,7 +119,7 @@ async function runCommand(args: string[]): Promise<void> {
   const flags = parseFlags(args);
   const config = loadConfig();
 
-  const jobs = flags.all
+  let jobs = flags.all
     ? listJobs(config)
     : flags.job
       ? [getJob(config, flags.job)]
@@ -126,8 +129,17 @@ async function runCommand(args: string[]): Promise<void> {
     throw new Error('Specify --job <id> or --all. Use "list" to see jobs.');
   }
 
+  if (flags.app) {
+    jobs = jobs.filter((job) => resolveJobApp(job) === flags.app);
+    if (jobs.length === 0) {
+      throw new Error(`No enabled jobs for app="${flags.app}"`);
+    }
+  }
+
   for (const job of jobs) {
-    console.log(`\n▶ Running job: ${job.id} (${resolveJobCategory(job)})`);
+    console.log(
+      `\n▶ Running job: ${job.id} (app=${resolveJobApp(job)}, ${resolveJobCategory(job)})`,
+    );
     const result = await runJob(config, job, {
       date: flags.date,
       skipDelivery: flags.skipDelivery,
@@ -172,8 +184,10 @@ async function notifyCommand(args: string[]): Promise<void> {
   const config = loadConfig();
 
   if (flags.all) {
-    console.log("\n▶ Notify daily summary");
-    const result = await notifyDailySummary(config, listJobs(config), { date: flags.date });
+    const app = flags.app ?? "articles";
+    const jobs = listJobs(config).filter((job) => resolveJobApp(job) === app);
+    console.log(`\n▶ Notify daily summary (app=${app})`);
+    const result = await notifyDailySummary(config, jobs, { date: flags.date, app });
     console.log(`  date       : ${result.date}`);
     console.log(`  categories : ${result.categories.join(", ")}`);
     console.log(`  url        : ${result.pageUrl ?? "(missing PAGES_BASE_URL)"}`);
@@ -209,6 +223,7 @@ interface CliFlags {
   all: boolean;
   skipDelivery: boolean;
   date?: string;
+  app?: AppId;
 }
 
 /**
@@ -228,13 +243,28 @@ function parseFlags(args: string[]): CliFlags {
     } else if (arg === "--date") {
       flags.date = args[i + 1];
       i += 1;
+    } else if (arg === "--app") {
+      flags.app = parseAppFlag(args[i + 1]);
+      i += 1;
     } else if (arg.startsWith("--job=")) {
       flags.job = arg.slice("--job=".length);
     } else if (arg.startsWith("--date=")) {
       flags.date = arg.slice("--date=".length);
+    } else if (arg.startsWith("--app=")) {
+      flags.app = parseAppFlag(arg.slice("--app=".length));
     }
   }
   return flags;
+}
+
+/**
+ * Validates --app flag values.
+ */
+function parseAppFlag(value: string | undefined): AppId {
+  if (value === "articles" || value === "invest") {
+    return value;
+  }
+  throw new Error('Invalid --app. Use "articles" or "invest".');
 }
 
 /**
@@ -328,18 +358,18 @@ function parseBarkFlags(args: string[]): BarkCliFlags {
  * Prints CLI usage.
  */
 function printHelp(): void {
-  console.log(`Pocket — personal toolkit (monorepo: @pocket/bark + @pocket/daily)
+  console.log(`Pocket Hub — personal toolkit (monorepo: @pocket/bark + @pocket/daily)
 
 Commands:
   list                          List jobs from config/jobs.yaml
   sources [--category <id>]     List source roster (config/sources.yaml)
   run --job <id>                Run one daily job (note + site + Bark)
-  run --all                     Run all enabled jobs
+  run --all [--app articles|invest]
   run --job <id> --skip-delivery
   run --job <id> --date YYYY-MM-DD
-  site                          Rebuild site/ HTML from notes/
+  site                          Rebuild Pocket Hub site/ from notes/
   notify --job <id>             Bark-push an existing note (after Pages deploy)
-  notify --all                  One Bark summary linking to the archive index
+  notify --all [--app articles|invest]
   bark --list                   List Bark device aliases
   bark --presets                List title presets
   bark --to <alias|all> --body "..." [--preset id | --title "..."] [--url "..."]
@@ -347,9 +377,10 @@ Commands:
 Examples:
   npm run sources
   npm run sources -- --category tech
-  npm run run:job -- --all --skip-delivery
+  npm run run:job -- --all --app articles --skip-delivery
+  npm run run:job -- --job invest-daily --skip-delivery
   npm run site
-  npm run notify -- --all
+  npm run notify -- --all --app articles
   npm run bark -- --to daj --preset stranger --body "在吗"
 `);
 }

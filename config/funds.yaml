@@ -1,0 +1,8 @@
+# Watchlist for the Invest app (fund-watch topic).
+# Codes are Chinese mutual-fund codes (天天基金 / Eastmoney).
+
+funds:
+  - code: "017811"
+    name: 东方人工智能主题混合C
+  - code: "006080"
+    name: 海富通电子传媒股票C

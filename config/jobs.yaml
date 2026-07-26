@@ -1,8 +1,10 @@
 # Daily digest jobs. Sources live in config/sources.yaml (DailyBrief-style roster).
 #
-# Categories (Pages tabs): world / business / tech / dev / music / horror
+# Pocket Hub apps: articles | invest
+# Article categories: world / business / tech / dev / music / horror
+# Invest category: invest (watchlist in config/funds.yaml)
 # Cron times below are documented in local China time for readability;
-# GitHub Actions should use UTC equivalents (see .github/workflows/daily.yml).
+# GitHub Actions should use UTC equivalents (see .github/workflows/).
 
 defaults:
   notesDir: notes
@@ -14,6 +16,7 @@ jobs:
   - id: world-daily
     enabled: true
     description: World news English notes
+    app: articles
     category: world
     schedule:
       timezone: Asia/Shanghai
@@ -36,6 +39,7 @@ jobs:
   - id: business-daily
     enabled: true
     description: Business / finance English notes
+    app: articles
     category: business
     schedule:
       timezone: Asia/Shanghai
@@ -59,6 +63,7 @@ jobs:
   - id: tech-daily
     enabled: true
     description: Tech / iOS / gadgets English notes
+    app: articles
     category: tech
     schedule:
       timezone: Asia/Shanghai
@@ -81,6 +86,7 @@ jobs:
   - id: dev-daily
     enabled: true
     description: Frontend / web development English notes
+    app: articles
     category: dev
     schedule:
       timezone: Asia/Shanghai
@@ -103,6 +109,7 @@ jobs:
   - id: music-daily
     enabled: true
     description: Music / Taylor / reviews (inbox preferred)
+    app: articles
     category: music
     schedule:
       timezone: Asia/Shanghai
@@ -126,6 +133,7 @@ jobs:
   - id: horror-daily
     enabled: true
     description: Horror film reviews / essays (inbox preferred)
+    app: articles
     category: horror
     schedule:
       timezone: Asia/Shanghai
@@ -144,4 +152,26 @@ jobs:
     delivery:
       type: bark
       titlePreset: english
+      appendDate: true
+
+  - id: invest-daily
+    enabled: true
+    description: Pre-close fund watch (14:40) with A–D buy/sell grades from 分时 + volume
+    app: invest
+    category: invest
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "14:40"
+      pushAt: "14:45"
+    topic: fund-watch
+    source:
+      type: funds
+      fundsFile: config/funds.yaml
+      historyDays: 12
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePreset: invest
       appendDate: true

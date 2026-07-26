@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket Hub — Demo</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+
+.view { display: none; min-height: 100vh; }
+.view.active { display: block; }
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1.25rem;
+}
+
+/* —— Hub —— */
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover {
+  border-color: var(--accent);
+}
+.hub-apps .pill {
+  margin-bottom: 0.45rem;
+}
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.hub-foot {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* —— Sub-app chrome —— */
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.brand {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.brand:hover { color: var(--accent); }
+.switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.switch button {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.switch button.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.switch button:hover { color: var(--accent); }
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count {
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: 0.25rem;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.brief {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem;
+  background: var(--card);
+}
+.brief h2 {
+  font-size: 1.05rem;
+  margin: 1.4rem 0 0.55rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.brief h2:first-child { margin-top: 0; }
+.brief ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+.brief li { margin: 0.3rem 0; }
+.funds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+}
+.fund-chip {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  font-weight: 600;
+}
+.disclaimer {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+  </style>
+</head>
+<body>
+  <!-- Hub -->
+  <section id="hub" class="view active" aria-label="Pocket Hub">
+    <main class="wrap">
+      <p class="eyebrow">Pocket Hub</p>
+      <div class="hub-brand">
+        <img src="../assets/icon.png" alt="" width="40" height="40" />
+        <h1>Pocket Hub</h1>
+      </div>
+      <p class="meta">选择一个子应用 · 每日文章或每日投资观察</p>
+      <ul class="hub-apps">
+        <li>
+          <a href="#" data-go="articles">
+            <span class="pill">Articles</span>
+            <h2>每日文章</h2>
+            <p>英语笔记归档 · 国际 / 科技 / 开发 / 商业等</p>
+          </a>
+        </li>
+        <li>
+          <a href="#" data-go="invest">
+            <span class="pill">Invest</span>
+            <h2>每日投资</h2>
+            <p>按基金代码生成观察简报（非买卖指令）</p>
+          </a>
+        </li>
+      </ul>
+      <p class="hub-foot">Demo only · 正式站将由 site builder 生成</p>
+    </main>
+  </section>
+
+  <!-- Articles -->
+  <section id="articles" class="view" aria-label="每日文章">
+    <main class="wrap">
+      <div class="top">
+        <button type="button" class="brand" data-go="hub">← Pocket Hub</button>
+        <nav class="switch" aria-label="切换子应用">
+          <button type="button" class="active" data-go="articles">文章</button>
+          <button type="button" data-go="invest">投资</button>
+        </nav>
+      </div>
+      <p class="eyebrow">Articles</p>
+      <h1>每日文章</h1>
+      <p class="meta">按分类筛选 · 与现有 notes 归档一致</p>
+      <div class="tabs" role="tablist">
+        <button type="button" class="active">全部<span class="count">2</span></button>
+        <button type="button">国际</button>
+        <button type="button">科技<span class="count">1</span></button>
+        <button type="button">开发<span class="count">1</span></button>
+        <button type="button">商业</button>
+      </div>
+      <ul class="list">
+        <li>
+          <a class="card" href="#">
+            <div class="card-top">
+              <span class="pill">科技</span>
+              <span class="card-meta">2026-07-26</span>
+            </div>
+            <h3 class="card-title">Apple expands on-device AI for iPhone</h3>
+            <p class="card-lead">今日重点：on-device、latency、privacy trade-off…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="#">
+            <div class="card-top">
+              <span class="pill">开发</span>
+              <span class="card-meta">2026-07-26</span>
+            </div>
+            <h3 class="card-title">CSS anchor positioning goes mainstream</h3>
+            <p class="card-lead">今日重点：anchor、fallback、popover…</p>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </section>
+
+  <!-- Invest -->
+  <section id="invest" class="view" aria-label="每日投资">
+    <main class="wrap">
+      <div class="top">
+        <button type="button" class="brand" data-go="hub">← Pocket Hub</button>
+        <nav class="switch" aria-label="切换子应用">
+          <button type="button" data-go="articles">文章</button>
+          <button type="button" class="active" data-go="invest">投资</button>
+        </nav>
+      </div>
+      <p class="eyebrow">Invest · 2026-07-26</p>
+      <h1>每日投资观察</h1>
+      <p class="meta">基于配置的基金代码 · 含买卖建议</p>
+      <div class="funds">
+        <span class="fund-chip">017811</span>
+        <span class="fund-chip">006080</span>
+      </div>
+      <div class="brief">
+        <h2>操作建议</h2>
+        <ul>
+          <li><strong>017811</strong> 东方人工智能主题混合C：建议持有观望</li>
+          <li><strong>006080</strong> 海富通电子传媒股票C：建议暂缓买入</li>
+        </ul>
+        <h2>风险提示</h2>
+        <ul>
+          <li>算法化个人研究，不构成持牌投顾建议</li>
+        </ul>
+      </div>
+      <p class="disclaimer">正式版见 site/invest/ 与 notes/invest/。</p>
+    </main>
+  </section>
+
+  <script>
+    /**
+     * Switches hub / articles / invest views.
+     * @param {string} id View id
+     */
+    function showView(id) {
+      document.querySelectorAll(".view").forEach((el) => {
+        el.classList.toggle("active", el.id === id);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    document.querySelectorAll("[data-go]").forEach((el) => {
+      el.addEventListener("click", (event) => {
+        event.preventDefault();
+        const target = el.getAttribute("data-go");
+        if (target) {
+          showView(target);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

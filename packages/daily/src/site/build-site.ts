@@ -1,4 +1,11 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { marked } from "marked";
 import { highlightNoteHtml } from "./highlight.js";
@@ -15,7 +22,23 @@ const TOPIC_LABELS: Record<string, string> = {
   horror: "惊悚",
   english: "英语",
   finance: "财经",
+  invest: "投资",
 };
+
+/** Notes folders that belong to the Articles app. */
+const ARTICLE_TOPICS = new Set([
+  "world",
+  "business",
+  "tech",
+  "dev",
+  "music",
+  "horror",
+  "english",
+  "finance",
+]);
+
+/** Notes folders that belong to the Invest app. */
+const INVEST_TOPICS = new Set(["invest"]);
 
 export interface SiteNote {
   /** Topic folder name (e.g. english). */
@@ -89,11 +112,20 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
 
     const markdown = readFileSync(markdownPath, "utf8");
     const meta = extractNoteMeta(markdown, `${topicLabel(topic)} · ${date}`);
-    const sentences = extractOriginalSentences(markdown);
+    const app = resolveNoteApp(topic);
     const articleMarkdown = stripChromeSections(markdown);
     const rawHtml = marked.parse(articleMarkdown, { async: false }) as string;
-    const highlighted = highlightNoteHtml(rawHtml, meta.keywords, sentences);
-    const bodyHtml = enhanceArticleHtml(highlighted);
+    // Invest: emphasize A–D grades (no English vocab highlighting).
+    const bodyHtml =
+      app === "invest"
+        ? enhanceInvestHtml(rawHtml)
+        : enhanceArticleHtml(
+            highlightNoteHtml(
+              rawHtml,
+              meta.keywords,
+              extractOriginalSentences(markdown),
+            ),
+          );
     const relativeHtmlPath = `${topic}/${slug}.html`;
     const htmlPath = join(siteDir, relativeHtmlPath);
     const metaLine = extractMetaLine(markdown);
@@ -106,6 +138,7 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
         title: meta.title,
         date,
         topic,
+        app,
         sourceName: meta.sourceName,
         sourceUrl,
         lead: meta.lead || getSectionBody(markdown, "Lead") || "",
@@ -140,8 +173,50 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
     return a.slug.localeCompare(b.slug);
   });
 
+  const articleNotes = notes.filter((note) => resolveNoteApp(note.topic) === "articles");
+  const investNotes = notes.filter((note) => resolveNoteApp(note.topic) === "invest");
+
+  copySiteIcon(cwd, siteDir);
+
   const indexPath = join(siteDir, "index.html");
-  writeFileSync(indexPath, renderIndexPage({ notes }), "utf8");
+  writeFileSync(
+    indexPath,
+    renderHubPage({
+      articleCount: articleNotes.length,
+      investCount: investNotes.length,
+      latestArticleDate: articleNotes[0]?.date,
+      latestInvestDate: investNotes[0]?.date,
+    }),
+    "utf8",
+  );
+
+  const articlesDir = join(siteDir, "articles");
+  mkdirSync(articlesDir, { recursive: true });
+  writeFileSync(
+    join(articlesDir, "index.html"),
+    renderArchivePage({
+      app: "articles",
+      notes: articleNotes,
+      eyebrow: "Articles",
+      title: articleNotes[0]?.date ?? "每日文章",
+      subtitle: `${articleNotes.length} notes · newest first`,
+    }),
+    "utf8",
+  );
+
+  const investDir = join(siteDir, "invest");
+  mkdirSync(investDir, { recursive: true });
+  writeFileSync(
+    join(investDir, "index.html"),
+    renderArchivePage({
+      app: "invest",
+      notes: investNotes,
+      eyebrow: "Invest",
+      title: investNotes[0]?.date ?? "每日投资",
+      subtitle: `${investNotes.length} briefs · newest first`,
+    }),
+    "utf8",
+  );
 
   return {
     siteDir,
@@ -149,6 +224,32 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
     indexPath,
     pagesBaseUrl: resolvePagesBaseUrl(),
   };
+}
+
+/**
+ * Resolves which Hub app a note topic belongs to.
+ */
+function resolveNoteApp(topic: string): "articles" | "invest" {
+  if (INVEST_TOPICS.has(topic)) {
+    return "invest";
+  }
+  if (ARTICLE_TOPICS.has(topic)) {
+    return "articles";
+  }
+  return "articles";
+}
+
+/**
+ * Copies the Pocket icon into site/assets for Hub branding.
+ */
+function copySiteIcon(cwd: string, siteDir: string): void {
+  const source = resolve(cwd, "assets/icon.png");
+  if (!existsSync(source)) {
+    return;
+  }
+  const assetsDir = join(siteDir, "assets");
+  mkdirSync(assetsDir, { recursive: true });
+  copyFileSync(source, join(assetsDir, "icon.png"));
 }
 
 /**
@@ -279,6 +380,67 @@ function enhanceArticleHtml(html: string): string {
   return html.replace(
     /(<h2[^>]*>\s*(?:原文\s*Source|Source Article)\s*<\/h2>)([\s\S]*?)(?=<h2[\s>]|$)/i,
     (_all, heading: string, body: string) => `${heading}<div class="source-box">${body.trim()}</div>\n`,
+  );
+}
+
+/**
+ * Styles Invest grade badges / legend blocks for buy & sell A–D ratings.
+ */
+function enhanceInvestHtml(html: string): string {
+  let next = html;
+
+  // Wrap 「等级说明」 section in a callout box.
+  next = next.replace(
+    /(<h2[^>]*>\s*等级说明\s*<\/h2>)([\s\S]*?)(?=<h2[\s>]|$)/i,
+    (_all, heading: string, body: string) =>
+      `<section class="grade-legend">${heading}${enhanceGradeLegendBody(body.trim())}</section>\n`,
+  );
+
+  // Action rows: **买入等级**: C / **卖出等级**: A
+  next = next.replace(
+    /<li>\s*(?:<p>)?<strong>\s*(买入等级|卖出等级)\s*<\/strong>\s*[:：]\s*([ABCD])\s*(?:<\/p>)?\s*<\/li>/gi,
+    (_all, kind: string, grade: string) => {
+      const side = kind.includes("买") ? "buy" : "sell";
+      const letter = grade.toUpperCase();
+      return (
+        `<li class="grade-row grade-row-${side}">` +
+        `<span class="grade-label">${kind}</span>` +
+        `<span class="grade-badge grade-${letter.toLowerCase()} grade-${side}" data-grade="${letter}">${letter}</span>` +
+        `</li>`
+      );
+    },
+  );
+
+  // Fallback: bare letter after 买入等级 / 卖出等级 in any inline strong
+  next = next.replace(
+    /(<strong>\s*(买入等级|卖出等级)\s*<\/strong>\s*[:：]\s*)([ABCD])\b/gi,
+    (_all, prefix: string, kind: string, grade: string) => {
+      const side = kind.includes("买") ? "buy" : "sell";
+      const letter = grade.toUpperCase();
+      return (
+        `${prefix}<span class="grade-badge grade-${letter.toLowerCase()} grade-${side}" data-grade="${letter}">${letter}</span>`
+      );
+    },
+  );
+
+  return next;
+}
+
+/**
+ * Turns legend bullets like <strong>A</strong>：… into badge + text.
+ */
+function enhanceGradeLegendBody(body: string): string {
+  return body.replace(
+    /<li>\s*(?:<p>)?<strong>\s*([ABCD])\s*<\/strong>\s*[:：]\s*([^<]+?)(?:<\/p>)?\s*<\/li>/gi,
+    (_all, grade: string, text: string) => {
+      const letter = grade.toUpperCase();
+      return (
+        `<li class="grade-legend-item">` +
+        `<span class="grade-badge grade-${letter.toLowerCase()} grade-legend-badge" data-grade="${letter}">${letter}</span>` +
+        `<span class="grade-legend-text">${text.trim()}</span>` +
+        `</li>`
+      );
+    },
   );
 }
 
@@ -580,6 +742,213 @@ mark.hl-sent {
   .legend .kw::before { background: #78350f; }
   .legend .sent::before { background: #1e3a5f; }
 }
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}
 `.trim();
 }
 
@@ -629,12 +998,67 @@ function archiveScript(): string {
 }
 
 /**
+ * Renders Pocket Hub landing page (app picker).
+ */
+function renderHubPage(input: {
+  articleCount: number;
+  investCount: number;
+  latestArticleDate?: string;
+  latestInvestDate?: string;
+}): string {
+  const articleMeta = input.latestArticleDate
+    ? `最新 ${input.latestArticleDate} · ${input.articleCount} 篇`
+    : `${input.articleCount} 篇`;
+  const investMeta = input.latestInvestDate
+    ? `最新 ${input.latestInvestDate} · ${input.investCount} 份`
+    : `${input.investCount} 份`;
+
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket Hub</title>
+  <style>${siteStyles()}</style>
+</head>
+<body>
+  <main class="wrap">
+    <p class="eyebrow">Pocket Hub</p>
+    <div class="hub-brand">
+      <img src="./assets/icon.png" alt="" width="40" height="40" />
+      <h1>Pocket Hub</h1>
+    </div>
+    <p class="meta">选择一个子应用 · 每日文章或每日投资观察</p>
+    <ul class="hub-apps">
+      <li>
+        <a href="./articles/">
+          <span class="pill">Articles</span>
+          <h2>每日文章</h2>
+          <p>英语笔记归档 · ${escapeHtml(articleMeta)}</p>
+        </a>
+      </li>
+      <li>
+        <a href="./invest/">
+          <span class="pill">Invest</span>
+          <h2>每日投资</h2>
+          <p>基金观察与买卖建议 · ${escapeHtml(investMeta)}</p>
+        </a>
+      </li>
+    </ul>
+  </main>
+</body>
+</html>
+`;
+}
+
+/**
  * Renders one note HTML page.
  */
 function renderNotePage(input: {
   title: string;
   date: string;
   topic: string;
+  app: "articles" | "invest";
   sourceName: string;
   sourceUrl: string;
   lead: string;
@@ -643,7 +1067,7 @@ function renderNotePage(input: {
 }): string {
   const outlet = input.sourceName || topicLabel(input.topic);
   const link = input.sourceUrl
-    ? ` · <a href="${escapeHtml(input.sourceUrl)}">原文链接</a>`
+    ? ` · <a href="${escapeHtml(input.sourceUrl)}">数据来源</a>`
     : "";
   const lead = input.lead.trim()
     ? `<p class="lead">${escapeHtml(input.lead.trim())}</p>`
@@ -651,6 +1075,17 @@ function renderNotePage(input: {
   const zh = input.zhSummary.trim()
     ? `<div class="zh-summary"><span class="label">中文摘要</span>${escapeHtml(input.zhSummary.trim())}</div>`
     : "";
+  const archiveHref =
+    input.app === "invest" ? "./index.html" : "../articles/index.html";
+  const eyebrow =
+    input.app === "invest" ? "Pocket Hub · Invest" : "Pocket Hub · Articles";
+  const legend =
+    input.app === "articles"
+      ? `<div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>`
+      : "";
 
   return `<!doctype html>
 <html lang="zh-CN">
@@ -660,21 +1095,18 @@ function renderNotePage(input: {
   <title>${escapeHtml(input.title)}</title>
   <style>${siteStyles()}</style>
 </head>
-<body class="article-page">
+<body class="article-page${input.app === "invest" ? " invest-page" : ""}">
   <main class="wrap">
     <div class="top">
-      <a class="brand" href="../index.html">← 历史归档</a>
+      <a class="brand" href="${archiveHref}">← 历史归档</a>
       <div class="eyebrow">${escapeHtml(topicLabel(input.topic))} · ${escapeHtml(input.date)}</div>
     </div>
-    <p class="eyebrow">Pocket 笔记</p>
+    <p class="eyebrow">${eyebrow}</p>
     <h1>${escapeHtml(input.title)}</h1>
     <p class="meta">${escapeHtml(outlet)} · ${escapeHtml(input.date)}${link}</p>
     ${lead}
     ${zh}
-    <div class="legend">
-      <span class="kw">重点单词</span>
-      <span class="sent">重点句子</span>
-    </div>
+    ${legend}
     <article class="article">
 ${input.bodyHtml}
     </article>
@@ -685,27 +1117,35 @@ ${input.bodyHtml}
 }
 
 /**
- * Renders the archive index page with topic tabs and date filter.
+ * Renders an app archive page with topic tabs and date filter.
  */
-function renderIndexPage(input: { notes: SiteNote[] }): string {
+function renderArchivePage(input: {
+  app: "articles" | "invest";
+  notes: SiteNote[];
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+}): string {
   const topics = [...new Set(input.notes.map((note) => note.topic))].sort();
   const dates = [...new Set(input.notes.map((note) => note.date))].sort((a, b) =>
     b.localeCompare(a),
   );
-  const latestDate = dates[0] ?? "—";
 
   const topicCounts = new Map<string, number>();
   for (const note of input.notes) {
     topicCounts.set(note.topic, (topicCounts.get(note.topic) ?? 0) + 1);
   }
 
-  const tabs = [
-    `<button type="button" class="active" data-topic-filter="all">全部<span class="count">${input.notes.length}</span></button>`,
-    ...topics.map(
-      (topic) =>
-        `<button type="button" data-topic-filter="${escapeHtml(topic)}">${escapeHtml(topicLabel(topic))}<span class="count">${topicCounts.get(topic) ?? 0}</span></button>`,
-    ),
-  ].join("\n      ");
+  const showTopicTabs = input.app === "articles";
+  const tabs = showTopicTabs
+    ? [
+        `<button type="button" class="active" data-topic-filter="all">全部<span class="count">${input.notes.length}</span></button>`,
+        ...topics.map(
+          (topic) =>
+            `<button type="button" data-topic-filter="${escapeHtml(topic)}">${escapeHtml(topicLabel(topic))}<span class="count">${topicCounts.get(topic) ?? 0}</span></button>`,
+        ),
+      ].join("\n      ")
+    : "";
 
   const dateOptions = [
     `<option value="all">全部日期</option>`,
@@ -730,8 +1170,12 @@ function renderIndexPage(input: { notes: SiteNote[] }): string {
             const zh = note.summary
               ? `<p class="card-zh">${escapeHtml(note.summary)}</p>`
               : "";
+            const href =
+              input.app === "invest"
+                ? `./${escapeHtml(note.slug)}.html`
+                : `../${escapeHtml(note.relativeHtmlPath)}`;
             return `  <li data-note data-topic="${escapeHtml(note.topic)}" data-date="${escapeHtml(note.date)}">
-    <a class="card" href="./${escapeHtml(note.relativeHtmlPath)}">
+    <a class="card" href="${href}">
       <div class="card-top">
         <span class="pill">${escapeHtml(topicLabel(note.topic))}</span>
         <span class="card-meta">${escapeHtml(metaParts.join(" · "))}</span>
@@ -745,25 +1189,41 @@ function renderIndexPage(input: { notes: SiteNote[] }): string {
           })
           .join("\n");
 
+  const pageTitle =
+    input.app === "invest" ? "Pocket Hub · Invest" : "Pocket Hub · Articles";
+  const switchArticles =
+    input.app === "articles"
+      ? `<a class="active" href="./">文章</a>`
+      : `<a href="../articles/">文章</a>`;
+  const switchInvest =
+    input.app === "invest"
+      ? `<a class="active" href="./">投资</a>`
+      : `<a href="../invest/">投资</a>`;
+
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pocket — Notes</title>
+  <title>${escapeHtml(pageTitle)}</title>
   <style>${siteStyles()}</style>
 </head>
 <body>
   <main class="wrap">
-    <p class="eyebrow">Pocket 笔记</p>
-    <h1>${escapeHtml(latestDate)}</h1>
+    <div class="top">
+      <a class="brand" href="../">← Pocket Hub</a>
+      <nav class="app-switch" aria-label="切换子应用">
+        ${switchArticles}
+        ${switchInvest}
+      </nav>
+    </div>
+    <p class="eyebrow">${escapeHtml(input.eyebrow)}</p>
+    <h1>${escapeHtml(input.title)}</h1>
     <div class="meta-row">
-      <span>${input.notes.length} notes · newest first</span>
+      <span>${escapeHtml(input.subtitle)}</span>
     </div>
 
-    <div class="tabs" role="tablist">
-      ${tabs}
-    </div>
+    ${showTopicTabs ? `<div class="tabs" role="tablist">\n      ${tabs}\n    </div>` : ""}
 
     <div class="filters">
       <label for="date-filter">日期</label>

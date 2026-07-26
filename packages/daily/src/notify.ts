@@ -12,6 +12,8 @@ export interface NotifyJobOptions {
   date?: string;
   /** Working directory root. */
   cwd?: string;
+  /** Pocket Hub app for summary deep links / titles. */
+  app?: "articles" | "invest";
 }
 
 export interface NotifyJobResult {
@@ -113,11 +115,20 @@ export async function notifyDailySummary(
   }
 
   const dateLabel = shortDateLabel(date);
-  const title = resolveTitle({ preset: "english", fallback: "Pocket" });
+  const app = options.app ?? "articles";
+  const title = resolveTitle({
+    preset: app === "invest" ? "invest" : "english",
+    fallback: app === "invest" ? "今日基金观察" : "Pocket Hub",
+  });
   const titled = `${title} · ${dateLabel}`;
-  const pageUrl = resolvePagesBaseUrl();
+  const base = resolvePagesBaseUrl();
+  const pageUrl = base
+    ? `${base}/${app === "invest" ? "invest" : "articles"}/`
+    : undefined;
   const preview = [
-    `今日更新 ${categories.length} 篇：${categories.join(", ")}`,
+    app === "invest"
+      ? `今日基金观察已更新：${categories.join(", ")}`
+      : `今日更新 ${categories.length} 篇：${categories.join(", ")}`,
     "",
     "👉 点击通知查看归档",
   ].join("\n");

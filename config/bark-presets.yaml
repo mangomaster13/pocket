@@ -16,6 +16,10 @@ presets:
     title: 今日财经速览
     description: 金融 brief
 
+  invest:
+    title: 今日基金观察
+    description: Pocket Hub · Invest 买卖建议
+
   love:
     title: 有人想你了
     description: 给亲近的人

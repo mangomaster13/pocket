@@ -1,15 +1,11 @@
-name: Articles daily
+name: Invest daily
 
 on:
   schedule:
-    # Beijing 06:00 = UTC 22:00 (previous calendar day in UTC)
-    - cron: "0 22 * * *"
+    # Beijing 14:40 = UTC 06:40 (before 15:00 close)
+    - cron: "40 6 * * *"
   workflow_dispatch:
     inputs:
-      job:
-        description: "Job id, or 'all' for every enabled Articles job"
-        required: false
-        default: "all"
       skip_delivery:
         description: "Skip Bark push"
         type: boolean
@@ -17,7 +13,7 @@ on:
         default: false
 
 jobs:
-  run-digest:
+  run-invest:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,14 +42,8 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Generate article notes (no Bark yet)
-        run: |
-          JOB="${{ github.event.inputs.job || 'all' }}"
-          if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
-            npm run run:job -- --all --app articles --skip-delivery
-          else
-            npm run run:job -- --job "$JOB" --skip-delivery
-          fi
+      - name: Generate invest brief (no Bark yet)
+        run: npm run run:job -- --job invest-daily --skip-delivery
 
       - name: Build Pocket Hub site
         run: npm run site
@@ -66,7 +56,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No note changes to commit"
           else
-            git commit -m "chore: add daily notes $(date -u +%Y-%m-%d)"
+            git commit -m "chore: add invest brief $(date -u +%Y-%m-%d)"
             git push
           fi
 
@@ -80,10 +70,5 @@ jobs:
       - name: Bark notify with Pages link
         if: ${{ github.event.inputs.skip_delivery != true && github.event.inputs.skip_delivery != 'true' }}
         run: |
-          JOB="${{ github.event.inputs.job || 'all' }}"
           sleep 15
-          if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
-            npm run notify -- --all --app articles
-          else
-            npm run notify -- --job "$JOB"
-          fi
+          npm run notify -- --job invest-daily

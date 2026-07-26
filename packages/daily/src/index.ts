@@ -2,7 +2,7 @@
  * Public API for `@pocket/daily`.
  */
 export { getJob, listJobs, loadConfig, type AppConfig, type JobConfig } from "./config.js";
-export { resolveJobCategory } from "./job-path.js";
+export { resolveJobApp, resolveJobCategory } from "./job-path.js";
 export {
   notifyDailySummary,
   notifyJob,
@@ -18,4 +18,4 @@ export {
   type SourceEntry,
 } from "./sources/catalog.js";
 export { resolveNotePageUrl, resolvePagesBaseUrl } from "./site/urls.js";
-export type { PipelineResult } from "./types.js";
+export type { AppId, PipelineResult } from "./types.js";

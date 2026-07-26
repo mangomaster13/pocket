@@ -3,10 +3,13 @@
  */
 
 /** Supported content topics (extend by adding a topic module + registry entry). */
-export type TopicId = "english-vocab" | "finance-brief";
+export type TopicId = "english-vocab" | "finance-brief" | "fund-watch";
+
+/** High-level Pocket Hub product line. */
+export type AppId = "articles" | "invest";
 
 /** Supported source strategies. */
-export type SourceType = "inbox" | "rss" | "inbox-or-rss";
+export type SourceType = "inbox" | "rss" | "inbox-or-rss" | "funds";
 
 /** Supported LLM backends. */
 export type LlmProviderId = "cursor-cloud-agent" | "openai-compatible";

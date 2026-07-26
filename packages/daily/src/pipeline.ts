@@ -6,9 +6,13 @@ import { resolveJobCategory } from "./job-path.js";
 import { createLlmProvider } from "./providers/registry.js";
 import { buildSite } from "./site/build-site.js";
 import { resolveNotePageUrl } from "./site/urls.js";
+import {
+  buildClosedMarketNote,
+  resolveAshareSession,
+} from "./sources/market-session.js";
 import { getSourceProvider } from "./sources/registry.js";
 import { getTopic } from "./topics/registry.js";
-import type { PipelineResult } from "./types.js";
+import type { PipelineResult, SourceDocument } from "./types.js";
 import { shortDateLabel, todayInTimeZone } from "./utils/date.js";
 import { buildBarkPreview, buildBarkTeaser } from "./utils/text.js";
 
@@ -35,8 +39,30 @@ export async function runJob(
   const inboxDir = resolve(cwd, process.env.INBOX_DIR ?? config.defaults.inboxDir);
   const category = resolveJobCategory(job);
 
+  // Invest: never invent buy/sell grades on weekends / holidays / stale tape.
+  if (job.topic === "fund-watch") {
+    const session = await resolveAshareSession(date);
+    console.log(
+      `  market  : ${session.isTradingDay ? "open" : "closed"} (${session.reason})`,
+    );
+    if (!session.isTradingDay) {
+      const noteBody = buildClosedMarketNote(date, session);
+      return persistAndMaybeDeliver({
+        config,
+        job,
+        cwd,
+        notesDir,
+        date,
+        category,
+        noteBody,
+        sourceIds: [`market:closed:${date}`],
+        skipDelivery: options.skipDelivery,
+      });
+    }
+  }
+
   const source = getSourceProvider(job.source.type);
-  const docs = await source.fetch(job, { cwd, inboxDir, notesDir });
+  const docs = await source.fetch(job, { cwd, inboxDir, notesDir, date });
   if (docs.length === 0) {
     if (job.source.optional) {
       console.log(`  skipped : no source documents (optional)`);
@@ -54,6 +80,30 @@ export async function runJob(
     throw new Error(`Job "${job.id}" produced no source documents`);
   }
 
+  // Double-check: fund source must mark live session for the job date.
+  if (job.topic === "fund-watch" && !docsHaveLiveSession(docs, date)) {
+    const session = await resolveAshareSession(date);
+    const noteBody = buildClosedMarketNote(date, {
+      ...session,
+      isTradingDay: false,
+      reason: session.isTradingDay
+        ? "未拿到当日实时分时，今日不做买卖建议"
+        : session.reason,
+    });
+    console.log("  market  : closed (no live session in fund payload)");
+    return persistAndMaybeDeliver({
+      config,
+      job,
+      cwd,
+      notesDir,
+      date,
+      category,
+      noteBody,
+      sourceIds: docs.map((doc) => doc.id),
+      skipDelivery: options.skipDelivery,
+    });
+  }
+
   const topic = getTopic(job.topic);
   const prompts = topic.buildPrompts(docs, { jobId: job.id, date });
   if (job.llm.model) {
@@ -65,6 +115,47 @@ export async function runJob(
   const noteBody = topic.finalize
     ? topic.finalize(llmResult.text, { jobId: job.id, date, docs })
     : `${llmResult.text.trim()}\n`;
+
+  return persistAndMaybeDeliver({
+    config,
+    job,
+    cwd,
+    notesDir,
+    date,
+    category,
+    noteBody,
+    sourceIds: docs.map((doc) => doc.id),
+    skipDelivery: options.skipDelivery,
+  });
+}
+
+/**
+ * True when the funds source payload declares a live session for `date`.
+ */
+function docsHaveLiveSession(docs: SourceDocument[], date: string): boolean {
+  return docs.some(
+    (doc) =>
+      doc.body.includes(`liveSession: yes`) && doc.body.includes(`sessionDate: ${date}`),
+  );
+}
+
+interface PersistOptions {
+  config: AppConfig;
+  job: JobConfig;
+  cwd: string;
+  notesDir: string;
+  date: string;
+  category: string;
+  noteBody: string;
+  sourceIds: string[];
+  skipDelivery?: boolean;
+}
+
+/**
+ * Writes the note, rebuilds the site, and optionally pushes Bark.
+ */
+async function persistAndMaybeDeliver(options: PersistOptions): Promise<PipelineResult> {
+  const { config, job, cwd, notesDir, date, category, noteBody, sourceIds } = options;
 
   const notePath = resolve(notesDir, category, `${date}.md`);
   mkdirSync(dirname(notePath), { recursive: true });
@@ -106,7 +197,7 @@ export async function runJob(
     notePath,
     pagePath,
     pageUrl,
-    sourceIds: docs.map((doc) => doc.id),
+    sourceIds,
     delivered,
     preview,
   };

@@ -1,4 +1,5 @@
 import type { SourceType } from "../types.js";
+import { FundsSource } from "./funds.js";
 import { InboxSource } from "./inbox.js";
 import { InboxOrRssSource } from "./inbox-or-rss.js";
 import { RssSource } from "./rss.js";
@@ -8,6 +9,7 @@ const registry: Record<SourceType, SourceProvider> = {
   inbox: new InboxSource(),
   rss: new RssSource(),
   "inbox-or-rss": new InboxOrRssSource(),
+  funds: new FundsSource(),
 };
 
 /**

@@ -4,14 +4,14 @@
   <img src="assets/icon.png" alt="Pocket icon" width="120" />
 </p>
 
-Personal pocket toolkit — digests, Bark messaging, and more modules later.
+**Pocket Hub** — personal toolkit with two apps: **Articles** (English digests) and **Invest** (fund watch + buy/hold advice).
 
 Monorepo packages:
 
 | Package | What it does |
 |---------|----------------|
 | **`@pocket/bark`** | Multi-device Bark push + title presets |
-| **`@pocket/daily`** | English (and later finance) notes: source → LLM → `notes/` → `site/` → calls bark |
+| **`@pocket/daily`** | Articles + Invest pipelines: source → LLM → `notes/` → Pocket Hub `site/` → bark |
 | **`@pocket/cli`** | CLI router (`list` / `run` / `site` / `notify` / `bark`) |
 
 **中文命令说明：** [docs/使用说明.md](docs/使用说明.md)
@@ -32,9 +32,9 @@ cp .env.example .env
 # fill PAGES_BASE_URL=https://<user>.github.io/<repo>
 
 npm install
-npm run run:job -- --all --skip-delivery   # all categories → notes + site
-npm run site                               # rebuild site/ only
-npm run run:job -- --job tech-daily        # one category + Bark
+npm run run:job -- --all --app articles --skip-delivery   # Articles → notes + site
+npm run run:job -- --job invest-daily --skip-delivery     # Invest fund watch
+npm run site                                              # rebuild Pocket Hub site/
 npm run list
 npm run bark -- --presets
 ```
@@ -47,25 +47,31 @@ packages/
   daily/    # digest + GitHub Pages site builder
   cli/      # command entry
 config/
-  jobs.yaml          # which jobs run
-  sources.yaml       # RSS roster (DailyBrief-inspired)
+  jobs.yaml          # which jobs run (app: articles | invest)
+  sources.yaml       # RSS roster (Articles)
+  funds.yaml         # fund watchlist (Invest)
   bark-presets.yaml
 notes/      # generated markdown
-site/       # generated HTML (gitignored; published to gh-pages)
+site/       # Pocket Hub HTML (gitignored; published to gh-pages)
+demo/       # static Hub mock (optional)
 .claude/skills/pocket/SKILL.md   # operational skill for agents
 ```
 
-List feeds: `npm run sources` or `npm run sources -- --category tech`.
+List feeds: `npm run sources` or `npm run sources -- --category tech`.  
+Edit Invest codes in `config/funds.yaml`.
 
-## Categories & workflow
+## Apps & workflow
 
-Pages tabs: **world / business / tech / dev / music / horror**.
+**Pocket Hub** Pages: hub → **Articles** | **Invest**.
+
+Articles tabs: **world / business / tech / dev / music / horror**.
 
 1. Optional: paste an article into `inbox/<category>.md` (title on the `#` line, body below `---`).
 2. Or leave inbox empty → RSS fallback (music/horror skip if both empty).
-3. Run all: `npm run run:job -- --all --skip-delivery`
-4. Notes land in `notes/<category>/YYYY-MM-DD.md` and `site/<category>/...html`.
-5. Bark can summarize with `npm run notify -- --all` (links to the archive index).
+3. Articles: `npm run run:job -- --all --app articles --skip-delivery`
+4. Invest: `npm run run:job -- --job invest-daily --skip-delivery` (watchlist in `config/funds.yaml`)
+5. Notes land in `notes/<category>/YYYY-MM-DD.md`; Hub rebuild via `npm run site`
+6. Bark: `npm run notify -- --all --app articles` or `--job invest-daily`
 
 ## Switch LLM
 

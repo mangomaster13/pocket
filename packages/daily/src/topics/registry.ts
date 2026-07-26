@@ -1,10 +1,12 @@
 import type { TopicDefinition, TopicId } from "../types.js";
 import { englishVocabTopic } from "./english-vocab.js";
 import { financeBriefTopic } from "./finance-brief.js";
+import { fundWatchTopic } from "./fund-watch.js";
 
 const registry: Record<TopicId, TopicDefinition> = {
   "english-vocab": englishVocabTopic,
   "finance-brief": financeBriefTopic,
+  "fund-watch": fundWatchTopic,
 };
 
 /**

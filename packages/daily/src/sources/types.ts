@@ -11,4 +11,6 @@ export interface SourcePaths {
   cwd: string;
   inboxDir: string;
   notesDir: string;
+  /** Job calendar date (YYYY-MM-DD), when the pipeline knows it. */
+  date?: string;
 }

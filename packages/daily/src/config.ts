@@ -4,13 +4,17 @@ import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 
 const sourceSchema = z.object({
-  type: z.enum(["inbox", "rss", "inbox-or-rss"]),
+  type: z.enum(["inbox", "rss", "inbox-or-rss", "funds"]),
   inboxFile: z.string().optional(),
   /** Id from config/sources.yaml (preferred over hardcoding rssUrl). */
   sourceId: z.string().min(1).optional(),
   /** Explicit RSS URL override; wins over sourceId when both set. */
   rssUrl: z.string().url().optional(),
   rssItemCount: z.number().int().positive().optional(),
+  /** Path to fund watchlist YAML (source type `funds`). */
+  fundsFile: z.string().min(1).optional(),
+  /** How many recent NAV rows to fetch per fund. */
+  historyDays: z.number().int().positive().max(60).optional(),
   /**
    * When true, an empty source skips the job instead of failing
    * (useful for inbox-only categories like music / horror).
@@ -47,12 +51,16 @@ const jobSchema = z.object({
   enabled: z.boolean().default(true),
   description: z.string().optional(),
   /**
+   * Pocket Hub product line. Defaults to articles.
+   */
+  app: z.enum(["articles", "invest"]).default("articles"),
+  /**
    * Notes/site category folder (e.g. world, tech).
    * Falls back to the topic label when omitted.
    */
   category: z.string().min(1).optional(),
   schedule: scheduleSchema,
-  topic: z.enum(["english-vocab", "finance-brief"]),
+  topic: z.enum(["english-vocab", "finance-brief", "fund-watch"]),
   source: sourceSchema,
   llm: llmSchema,
   delivery: deliverySchema,
