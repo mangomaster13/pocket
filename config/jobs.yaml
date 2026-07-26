@@ -1,4 +1,4 @@
-# Daily digest jobs. Add new topics/sources/providers without changing core pipeline code.
+# Daily digest jobs. Sources live in config/sources.yaml (DailyBrief-style roster).
 #
 # Categories (Pages tabs): world / business / tech / dev / music / horror
 # Cron times below are documented in local China time for readability;
@@ -23,7 +23,7 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/world.md
-      rssUrl: https://feeds.bbci.co.uk/news/world/rss.xml
+      sourceId: bbc-world
       rssItemCount: 1
     llm:
       provider: cursor-cloud-agent
@@ -45,7 +45,8 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/business.md
-      rssUrl: https://feeds.bbci.co.uk/news/business/rss.xml
+      # Economist titles; paste full text into inbox for deep reads
+      sourceId: economist-finance
       rssItemCount: 1
     llm:
       provider: cursor-cloud-agent
@@ -67,7 +68,7 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/tech.md
-      rssUrl: https://9to5mac.com/feed/
+      sourceId: 9to5mac
       rssItemCount: 1
     llm:
       provider: cursor-cloud-agent
@@ -89,7 +90,7 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/dev.md
-      rssUrl: https://web.dev/feed.xml
+      sourceId: web-dev
       rssItemCount: 1
     llm:
       provider: cursor-cloud-agent
@@ -111,8 +112,7 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/music.md
-      # Fallback when inbox is empty
-      rssUrl: https://pitchfork.com/feed/feed-news/rss
+      sourceId: pitchfork-news
       rssItemCount: 1
       optional: true
     llm:
@@ -135,7 +135,7 @@ jobs:
     source:
       type: inbox-or-rss
       inboxFile: inbox/horror.md
-      rssUrl: https://bloody-disgusting.com/feed/
+      sourceId: bloody-disgusting
       rssItemCount: 1
       optional: true
     llm:

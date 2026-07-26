@@ -20,9 +20,9 @@ export class InboxOrRssSource implements SourceProvider {
       return inboxDocs;
     }
 
-    if (!job.source.rssUrl) {
+    if (!job.source.sourceId && !job.source.rssUrl) {
       throw new Error(
-        `Job "${job.id}" inbox is empty and no source.rssUrl fallback is configured. ` +
+        `Job "${job.id}" inbox is empty and no source.sourceId / source.rssUrl fallback is configured. ` +
           `Put article text in ${job.source.inboxFile ?? `inbox/${job.id}.md`}.`,
       );
     }

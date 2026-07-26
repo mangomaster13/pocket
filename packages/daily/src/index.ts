@@ -11,5 +11,11 @@ export {
 } from "./notify.js";
 export { runJob, type RunJobOptions } from "./pipeline.js";
 export { buildSite, type BuildSiteOptions, type BuildSiteResult } from "./site/build-site.js";
+export {
+  getSourceEntry,
+  listSourceCatalog,
+  loadSourceCatalog,
+  type SourceEntry,
+} from "./sources/catalog.js";
 export { resolveNotePageUrl, resolvePagesBaseUrl } from "./site/urls.js";
 export type { PipelineResult } from "./types.js";

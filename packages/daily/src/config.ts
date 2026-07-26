@@ -6,6 +6,9 @@ import { z } from "zod";
 const sourceSchema = z.object({
   type: z.enum(["inbox", "rss", "inbox-or-rss"]),
   inboxFile: z.string().optional(),
+  /** Id from config/sources.yaml (preferred over hardcoding rssUrl). */
+  sourceId: z.string().min(1).optional(),
+  /** Explicit RSS URL override; wins over sourceId when both set. */
   rssUrl: z.string().url().optional(),
   rssItemCount: z.number().int().positive().optional(),
   /**

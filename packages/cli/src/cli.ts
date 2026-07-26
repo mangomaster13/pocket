@@ -4,6 +4,7 @@ import {
   buildSite,
   getJob,
   listJobs,
+  listSourceCatalog,
   loadConfig,
   notifyDailySummary,
   notifyJob,
@@ -24,6 +25,9 @@ async function main(): Promise<void> {
   switch (command) {
     case "list":
       await listCommand();
+      return;
+    case "sources":
+      await sourcesCommand(rest);
       return;
     case "run":
       await runCommand(rest);
@@ -62,6 +66,45 @@ async function listCommand(): Promise<void> {
     );
     if (job.description) {
       console.log(`      ${job.description}`);
+    }
+  }
+}
+
+/**
+ * Lists the source roster from config/sources.yaml (DailyBrief-style).
+ *
+ * Usage:
+ *   npm run sources
+ *   npm run sources -- --category tech
+ */
+async function sourcesCommand(args: string[]): Promise<void> {
+  let category: string | undefined;
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
+    if (arg === "--category") {
+      category = args[i + 1];
+      i += 1;
+    } else if (arg.startsWith("--category=")) {
+      category = arg.slice("--category=".length);
+    }
+  }
+
+  const sources = listSourceCatalog(category);
+  if (sources.length === 0) {
+    console.log(category ? `No sources for category="${category}"` : "No sources configured");
+    return;
+  }
+
+  console.log(
+    `${"flag".padEnd(4)} ${"id".padEnd(22)} ${"category".padEnd(10)} ${"name"}`,
+  );
+  for (const source of sources) {
+    const flag = source.enabled ? "on " : "off";
+    console.log(
+      `${flag}  ${source.id.padEnd(22)} ${source.category.padEnd(10)} ${source.name}`,
+    );
+    if (source.notes) {
+      console.log(`      ${source.notes}`);
     }
   }
 }
@@ -289,6 +332,7 @@ function printHelp(): void {
 
 Commands:
   list                          List jobs from config/jobs.yaml
+  sources [--category <id>]     List source roster (config/sources.yaml)
   run --job <id>                Run one daily job (note + site + Bark)
   run --all                     Run all enabled jobs
   run --job <id> --skip-delivery
@@ -301,9 +345,11 @@ Commands:
   bark --to <alias|all> --body "..." [--preset id | --title "..."] [--url "..."]
 
 Examples:
-  npm run run:job -- --job english-morning --skip-delivery
+  npm run sources
+  npm run sources -- --category tech
+  npm run run:job -- --all --skip-delivery
   npm run site
-  npm run notify -- --job english-morning
+  npm run notify -- --all
   npm run bark -- --to daj --preset stranger --body "在吗"
 `);
 }

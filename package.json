@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "npm run start -w @pocket/cli",
     "list": "tsx packages/cli/src/cli.ts list",
+    "sources": "tsx packages/cli/src/cli.ts sources",
     "run:job": "tsx packages/cli/src/cli.ts run",
     "site": "tsx packages/cli/src/cli.ts site",
     "notify": "tsx packages/cli/src/cli.ts notify",

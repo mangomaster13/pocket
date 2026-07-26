@@ -46,10 +46,16 @@ packages/
   bark/     # push client
   daily/    # digest + GitHub Pages site builder
   cli/      # command entry
-config/     # jobs.yaml + bark-presets.yaml
+config/
+  jobs.yaml          # which jobs run
+  sources.yaml       # RSS roster (DailyBrief-inspired)
+  bark-presets.yaml
 notes/      # generated markdown
 site/       # generated HTML (gitignored; published to gh-pages)
+.claude/skills/pocket/SKILL.md   # operational skill for agents
 ```
+
+List feeds: `npm run sources` or `npm run sources -- --category tech`.
 
 ## Categories & workflow
 

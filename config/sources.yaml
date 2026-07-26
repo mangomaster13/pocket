@@ -1,0 +1,213 @@
+# Pocket source roster (inspired by DailyBrief sources.config.json).
+# Jobs reference these via source.sourceId; inbox still wins when filled.
+#
+# Categories match Pages tabs: world / business / tech / dev / music / horror
+# Toggle enabled, or point a job at a different sourceId, without touching TS.
+
+sources:
+  # --- world ---
+  - id: bbc-world
+    name: BBC World
+    type: rss
+    url: https://feeds.bbci.co.uk/news/world/rss.xml
+    category: world
+    enabled: true
+
+  - id: guardian-world
+    name: The Guardian World
+    type: rss
+    url: https://www.theguardian.com/world/rss
+    category: world
+    enabled: true
+    notes: Strong long-form English; good alternate for world-daily
+
+  - id: nyt-world
+    name: NYT World
+    type: rss
+    url: https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+    category: world
+    enabled: true
+
+  - id: npr-world
+    name: NPR World
+    type: rss
+    url: https://feeds.npr.org/1004/rss.xml
+    category: world
+    enabled: false
+
+  - id: aljazeera
+    name: Al Jazeera
+    type: rss
+    url: https://www.aljazeera.com/xml/rss/all.xml
+    category: world
+    enabled: false
+
+  - id: the-diplomat
+    name: The Diplomat
+    type: rss
+    url: https://thediplomat.com/feed/
+    category: world
+    enabled: false
+    notes: Asia-Pacific politics
+
+  # --- business ---
+  - id: bbc-business
+    name: BBC Business
+    type: rss
+    url: https://feeds.bbci.co.uk/news/business/rss.xml
+    category: business
+    enabled: true
+
+  - id: economist-finance
+    name: The Economist Finance
+    type: rss
+    url: https://www.economist.com/finance-and-economics/rss.xml
+    category: business
+    enabled: true
+    notes: Titles/summaries often available; full text may be paywalled — prefer inbox for deep reads
+
+  - id: ft-companies
+    name: Financial Times Companies
+    type: rss
+    url: https://www.ft.com/companies?format=rss
+    category: business
+    enabled: false
+    notes: Often paywalled
+
+  - id: bloomberg-markets
+    name: Bloomberg Markets
+    type: rss
+    url: https://feeds.bloomberg.com/markets/news.rss
+    category: business
+    enabled: false
+
+  - id: wsj-markets
+    name: WSJ Markets
+    type: rss
+    url: https://feeds.a.dj.com/rss/RSSMarketsMain.xml
+    category: business
+    enabled: false
+
+  # --- tech (iOS / gadgets / consumer tech) ---
+  - id: 9to5mac
+    name: 9to5Mac
+    type: rss
+    url: https://9to5mac.com/feed/
+    category: tech
+    enabled: true
+
+  - id: theverge
+    name: The Verge
+    type: rss
+    url: https://www.theverge.com/rss/index.xml
+    category: tech
+    enabled: true
+
+  - id: bbc-tech
+    name: BBC Technology
+    type: rss
+    url: https://feeds.bbci.co.uk/news/technology/rss.xml
+    category: tech
+    enabled: false
+
+  - id: ars-technica
+    name: Ars Technica
+    type: rss
+    url: https://feeds.arstechnica.com/arstechnica/index
+    category: tech
+    enabled: false
+
+  - id: openai-news
+    name: OpenAI News
+    type: rss
+    url: https://openai.com/news/rss.xml
+    category: tech
+    enabled: false
+
+  - id: tldr-ai
+    name: TLDR AI
+    type: rss
+    url: https://tldr.tech/api/rss/ai
+    category: tech
+    enabled: false
+
+  # --- dev (frontend / engineering English) ---
+  - id: web-dev
+    name: web.dev
+    type: rss
+    url: https://web.dev/feed.xml
+    category: dev
+    enabled: true
+
+  - id: css-tricks
+    name: CSS-Tricks
+    type: rss
+    url: https://css-tricks.com/feed/
+    category: dev
+    enabled: true
+
+  - id: smashing-magazine
+    name: Smashing Magazine
+    type: rss
+    url: https://www.smashingmagazine.com/feed/
+    category: dev
+    enabled: false
+
+  - id: simonwillison
+    name: Simon Willison
+    type: rss
+    url: https://simonwillison.net/atom/everything/
+    category: dev
+    enabled: false
+
+  - id: github-engineering
+    name: GitHub Engineering
+    type: rss
+    url: https://github.blog/engineering/feed/
+    category: dev
+    enabled: false
+
+  - id: hackernews
+    name: Hacker News (via DailyBrief-style feed wrapper)
+    type: rss
+    url: https://hnrss.org/frontpage
+    category: dev
+    enabled: false
+    notes: Frontpage via hnrss.org; noisy — keep off unless you want HN English
+
+  # --- music ---
+  - id: pitchfork-news
+    name: Pitchfork News
+    type: rss
+    url: https://pitchfork.com/feed/feed-news/rss
+    category: music
+    enabled: true
+
+  - id: rollingstone-music
+    name: Rolling Stone Music
+    type: rss
+    url: https://www.rollingstone.com/music/music-news/feed/
+    category: music
+    enabled: false
+
+  - id: nme
+    name: NME
+    type: rss
+    url: https://www.nme.com/feed
+    category: music
+    enabled: false
+
+  # --- horror ---
+  - id: bloody-disgusting
+    name: Bloody Disgusting
+    type: rss
+    url: https://bloody-disgusting.com/feed/
+    category: horror
+    enabled: true
+
+  - id: dread-central
+    name: Dread Central
+    type: rss
+    url: https://www.dreadcentral.com/feed/
+    category: horror
+    enabled: false

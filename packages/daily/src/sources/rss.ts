@@ -1,5 +1,6 @@
 import type { JobConfig } from "../config.js";
 import type { SourceDocument } from "../types.js";
+import { resolveJobRssUrl } from "./catalog.js";
 import type { SourcePaths, SourceProvider } from "./types.js";
 
 interface RssItem {
@@ -16,14 +17,16 @@ export class RssSource implements SourceProvider {
    * Downloads the feed and returns the newest N items as documents.
    */
   async fetch(job: JobConfig, _paths: SourcePaths): Promise<SourceDocument[]> {
-    const url = job.source.rssUrl;
+    const url = resolveJobRssUrl(job.source);
     if (!url) {
-      throw new Error(`Job "${job.id}" source.type=rss requires source.rssUrl`);
+      throw new Error(
+        `Job "${job.id}" source.type=rss requires source.sourceId or source.rssUrl`,
+      );
     }
 
     const count = job.source.rssItemCount ?? 1;
     const response = await fetch(url, {
-      headers: { "User-Agent": "pocket/0.1 (+https://github.com/local/pocket)" },
+      headers: { "User-Agent": "pocket/0.1 (+https://github.com/mangomaster13/pocket)" },
     });
     if (!response.ok) {
       throw new Error(`RSS fetch failed (${response.status}): ${url}`);
