@@ -1,0 +1,53 @@
+# Bark notification title presets.
+# Usage:
+#   npm run bark -- --to daj --preset stranger --body "在吗"
+#   npm run bark -- --presets
+
+presets:
+  stranger:
+    title: 来自陌生人的消息
+    description: 整活 / 吓一跳
+
+  english:
+    title: 该学英语啦
+    description: 英语日报提醒
+
+  finance:
+    title: 今日财经速览
+    description: 金融 brief
+
+  love:
+    title: 有人想你了
+    description: 给亲近的人
+
+  boss:
+    title: 老板@了你
+    description: 恶作剧
+
+  system:
+    title: 系统通知
+    description: 正经提醒
+
+  weather:
+    title: 今日天气
+    description: 天气类扩展
+
+  reminder:
+    title: 别忘了这件事
+    description: 待办提醒
+
+  secret:
+    title: 加密消息
+    description: 整活
+
+  express:
+    title: 你的快递已到达
+    description: 整活
+
+  focus:
+    title: 该专注了
+    description: 学习 / 工作
+
+  night:
+    title: 晚安小提示
+    description: 晚间推送

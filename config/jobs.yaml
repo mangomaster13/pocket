@@ -34,7 +34,9 @@ jobs:
       # model: deepseek-chat
     delivery:
       type: bark
-      titlePrefix: "English"
+      titlePreset: english
+      appendDate: true
+      # titlePrefix: "English"   # used only when titlePreset is omitted
       # Omit targets to push all aliases in BARK_DEVICES (daj, lzx)
       # targets: [lzx]
 
@@ -55,4 +57,5 @@ jobs:
       model: default
     delivery:
       type: bark
-      titlePrefix: "Finance"
+      titlePreset: finance
+      appendDate: true

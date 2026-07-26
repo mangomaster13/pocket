@@ -1,5 +1,7 @@
 # daily-sub
 
+**中文使用说明（命令怎么用）：见 [docs/使用说明.md](docs/使用说明.md)**
+
 Configurable daily digest pipeline:
 
 ```text
@@ -74,9 +76,20 @@ Workflow: `.github/workflows/daily.yml`
 
 Push timing tip: generation usually finishes in minutes. If you want a hard 08:00 push, split into two workflows later (generate at 06:00, push at 08:00). Current default pushes as soon as the note is ready.
 
-## Local button / Shortcut
+## Bark presets & multi-device
 
-After notes exist (or as part of `run`):
+Title presets live in `config/bark-presets.yaml`:
+
+```bash
+npm run bark -- --presets
+npm run bark -- --to daj --preset stranger --body "在吗"
+npm run bark -- --to lzx --preset english --body "今日笔记已生成"
+npm run bark -- --to all --title "自定义标题" --body "test"
+```
+
+Devices use aliases from `.env` (`BARK_DEVICES`, `BARK_KEY_<alias>`). Jobs can set `delivery.titlePreset` (and optional `targets`).
+
+## Local button / Shortcut
 
 ```bash
 npm run run:job -- --job english-morning

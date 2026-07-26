@@ -3,6 +3,10 @@ import { config as loadEnv } from "dotenv";
 import { getJob, listJobs, loadConfig } from "./config.js";
 import { pushToDevice } from "./delivery/bark.js";
 import { resolveBarkDevices, selectBarkDevices } from "./delivery/bark-devices.js";
+import {
+  loadBarkPresets,
+  resolveNotificationTitle,
+} from "./delivery/bark-presets.js";
 import { runJob } from "./pipeline.js";
 
 loadEnv();
@@ -120,15 +124,24 @@ function parseFlags(args: string[]): CliFlags {
  * Sends an ad-hoc Bark push (for connectivity tests / one-off messages).
  *
  * Usage:
- *   npm run bark -- --to daj --body "hello"
- *   npm run bark -- --to all --title ping --body "test"
+ *   npm run bark -- --to daj --preset stranger --body "在吗"
+ *   npm run bark -- --to all --title "自定义标题" --body "test"
  *   npm run bark -- --list
+ *   npm run bark -- --presets
  */
 async function barkCommand(args: string[]): Promise<void> {
   const flags = parseBarkFlags(args);
   if (flags.list) {
     for (const device of resolveBarkDevices()) {
       console.log(`${device.alias.padEnd(12)} ${device.server}`);
+    }
+    return;
+  }
+
+  if (flags.listPresets) {
+    for (const preset of loadBarkPresets()) {
+      const desc = preset.description ? `  ${preset.description}` : "";
+      console.log(`${preset.id.padEnd(12)} ${preset.title}${desc}`);
     }
     return;
   }
@@ -140,35 +153,46 @@ async function barkCommand(args: string[]): Promise<void> {
   const targets =
     !flags.to || flags.to === "all" ? undefined : flags.to.split(",").map((item) => item.trim());
   const devices = selectBarkDevices(targets);
-  const title = flags.title ?? "daily-sub";
+  const title = resolveNotificationTitle({
+    title: flags.title,
+    preset: flags.preset,
+    fallback: "daily-sub",
+  });
 
   for (const device of devices) {
     await pushToDevice(device, { title, body: flags.body });
-    console.log(`bark ok → ${device.alias}`);
+    console.log(`bark ok → ${device.alias}  title="${title}"`);
   }
 }
 
 interface BarkCliFlags {
   to?: string;
   title?: string;
+  preset?: string;
   body?: string;
   list: boolean;
+  listPresets: boolean;
 }
 
 /**
  * Parses flags for the bark subcommand.
  */
 function parseBarkFlags(args: string[]): BarkCliFlags {
-  const flags: BarkCliFlags = { list: false };
+  const flags: BarkCliFlags = { list: false, listPresets: false };
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];
     if (arg === "--list") {
       flags.list = true;
+    } else if (arg === "--presets" || arg === "--list-presets") {
+      flags.listPresets = true;
     } else if (arg === "--to") {
       flags.to = args[i + 1];
       i += 1;
     } else if (arg === "--title") {
       flags.title = args[i + 1];
+      i += 1;
+    } else if (arg === "--preset") {
+      flags.preset = args[i + 1];
       i += 1;
     } else if (arg === "--body") {
       flags.body = args[i + 1];
@@ -177,6 +201,8 @@ function parseBarkFlags(args: string[]): BarkCliFlags {
       flags.to = arg.slice("--to=".length);
     } else if (arg.startsWith("--title=")) {
       flags.title = arg.slice("--title=".length);
+    } else if (arg.startsWith("--preset=")) {
+      flags.preset = arg.slice("--preset=".length);
     } else if (arg.startsWith("--body=")) {
       flags.body = arg.slice("--body=".length);
     }
@@ -197,12 +223,14 @@ Commands:
   run --job <id> --skip-delivery
   run --job <id> --date YYYY-MM-DD
   bark --list                   List Bark device aliases
-  bark --to <alias|all> --body "..." [--title "..."]
+  bark --presets                List title presets
+  bark --to <alias|all> --body "..." [--preset id | --title "..."]
 
 Examples:
-  npm run run:job -- --job english-morning --skip-delivery
   npm run run:job -- --job english-morning
-  npm run bark -- --to daj --body "daj我爱你"
+  npm run bark -- --presets
+  npm run bark -- --to daj --preset stranger --body "在吗"
+  npm run bark -- --to daj --preset love --body "daj我爱你"
 `);
 }
 

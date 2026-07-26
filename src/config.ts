@@ -18,6 +18,10 @@ const llmSchema = z.object({
 const deliverySchema = z.object({
   type: z.enum(["bark", "none"]),
   titlePrefix: z.string().optional(),
+  /** Title preset id from config/bark-presets.yaml (e.g. english, stranger). */
+  titlePreset: z.string().min(1).optional(),
+  /** When true with titlePreset, append " · MMDD" after the preset title. */
+  appendDate: z.boolean().optional(),
   /** Bark aliases from env (e.g. daj, lzx). Empty/omit = all devices. */
   targets: z.array(z.string().min(1)).optional(),
 });

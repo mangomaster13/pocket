@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import type { AppConfig, JobConfig } from "./config.js";
+import { resolveNotificationTitle } from "./delivery/bark-presets.js";
 import { createDelivery } from "./delivery/registry.js";
 import { createLlmProvider } from "./providers/registry.js";
 import { getSourceProvider } from "./sources/registry.js";
@@ -54,8 +55,9 @@ export async function runJob(
   writeFileSync(notePath, noteBody, "utf8");
 
   const preview = buildBarkPreview(noteBody, config.defaults.barkMaxChars);
+  const dateLabel = shortDateLabel(date);
   const titlePrefix = job.delivery.titlePrefix ?? topic.label;
-  const title = `${titlePrefix} · ${shortDateLabel(date)}`;
+  const title = resolveJobTitle(job, dateLabel, titlePrefix);
 
   let delivered = false;
   const deliveryType = options.skipDelivery ? "none" : job.delivery.type;
@@ -80,4 +82,19 @@ export async function runJob(
     delivered,
     preview,
   };
+}
+
+/**
+ * Builds the Bark title for a job (preset preferred over titlePrefix).
+ */
+function resolveJobTitle(
+  job: JobConfig,
+  dateLabel: string,
+  titlePrefix: string,
+): string {
+  if (job.delivery.titlePreset) {
+    const base = resolveNotificationTitle({ preset: job.delivery.titlePreset });
+    return job.delivery.appendDate === false ? base : `${base} · ${dateLabel}`;
+  }
+  return `${titlePrefix} · ${dateLabel}`;
 }
