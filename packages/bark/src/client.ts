@@ -3,7 +3,7 @@ import type { BarkDevice, BarkPushInput } from "./types.js";
 
 /** Default public URL for the Pocket mango icon (Bark requires a remote image URL). */
 const DEFAULT_BARK_ICON_URL =
-  "https://raw.githubusercontent.com/mangomaster13/daily-sub/master/assets/icon.png";
+  "https://raw.githubusercontent.com/mangomaster13/pocket/master/assets/icon.png";
 
 /**
  * Resolves the Bark notification icon URL (env override or project default).

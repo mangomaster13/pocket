@@ -101,7 +101,7 @@ One-time GitHub setup:
 2. Repo must be **public** on free GitHub for Pages
 3. Secrets: `CURSOR_API_KEY`, `BARK_DEVICES`, `BARK_KEY_daj`, `BARK_KEY_lzx`, …
 
-Public URL (this repo): `https://mangomaster13.github.io/daily-sub/`
+Public URL (this repo): `https://mangomaster13.github.io/pocket/`
 
 ## Bark presets & multi-device
 
@@ -110,7 +110,7 @@ Title presets live in `config/bark-presets.yaml`:
 ```bash
 npm run bark -- --presets
 npm run bark -- --to daj --preset stranger --body "在吗"
-npm run bark -- --to lzx --preset english --body "今日笔记已生成" --url "https://mangomaster13.github.io/daily-sub/english/2026-07-26.html"
+npm run bark -- --to lzx --preset english --body "今日笔记已生成" --url "https://mangomaster13.github.io/pocket/english/2026-07-26.html"
 npm run bark -- --to all --title "自定义标题" --body "test"
 ```
 
