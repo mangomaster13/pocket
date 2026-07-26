@@ -21,6 +21,34 @@ export function extractNoteMeta(markdown: string, fallbackTitle: string): NoteMe
 }
 
 /**
+ * Extracts original long sentences marked as **Original:** in the note.
+ */
+export function extractOriginalSentences(markdown: string): string[] {
+  const section =
+    sectionBody(markdown, "Long Sentences") ||
+    sectionBody(markdown, "Long Sentences (2-3 items)") ||
+    markdown;
+  const found: string[] = [];
+  const re = /\*\*Original:\*\*\s*(.+)$/gm;
+  let match: RegExpExecArray | null = re.exec(section);
+  while (match) {
+    const sentence = match[1].trim();
+    if (sentence && !found.includes(sentence)) {
+      found.push(sentence);
+    }
+    match = re.exec(section);
+  }
+  return found;
+}
+
+/**
+ * Returns the body of a ## Section until the next ## heading.
+ */
+export function getSectionBody(markdown: string, heading: string): string | undefined {
+  return sectionBody(markdown, heading);
+}
+
+/**
  * Extracts the first Markdown H1 as the page title.
  */
 function extractTitle(markdown: string): string | undefined {

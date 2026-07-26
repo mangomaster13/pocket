@@ -59,6 +59,8 @@ export interface TopicDefinition {
 export interface TopicContext {
   jobId: string;
   date: string;
+  /** Source documents for the current run (used by finalize). */
+  docs?: SourceDocument[];
 }
 
 /** Result of a completed pipeline run. */

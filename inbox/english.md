@@ -1,4 +1,4 @@
-# Sample article (replace with today's Economist / news text)
+# Central banks walk a narrow path on rates
 
 Paste the article body below this line. When this file is non-empty, the
 `english-morning` job uses it instead of the RSS fallback.

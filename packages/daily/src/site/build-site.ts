@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { marked } from "marked";
-import { extractNoteMeta } from "./note-meta.js";
+import { highlightNoteHtml } from "./highlight.js";
+import { extractNoteMeta, extractOriginalSentences } from "./note-meta.js";
 import { resolvePagesBaseUrl } from "./urls.js";
 
 /** Human labels for topic folder names. */
@@ -78,7 +79,9 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
 
     const markdown = readFileSync(markdownPath, "utf8");
     const meta = extractNoteMeta(markdown, `${topicLabel(topic)} · ${date}`);
-    const bodyHtml = marked.parse(markdown, { async: false }) as string;
+    const sentences = extractOriginalSentences(markdown);
+    const rawHtml = marked.parse(markdown, { async: false }) as string;
+    const bodyHtml = highlightNoteHtml(rawHtml, meta.keywords, sentences);
     const relativeHtmlPath = `${topic}/${slug}.html`;
     const htmlPath = join(siteDir, relativeHtmlPath);
 
@@ -370,6 +373,47 @@ h1 {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
 }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
 `.trim();
 }
 
@@ -443,6 +487,10 @@ function renderNotePage(input: {
     </div>
     <p class="eyebrow">Pocket</p>
     <h1>${escapeHtml(input.title)}</h1>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
     <article class="article">
 ${input.bodyHtml}
     </article>

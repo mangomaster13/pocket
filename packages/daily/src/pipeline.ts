@@ -48,7 +48,7 @@ export async function runJob(
   const llm = createLlmProvider(job.llm.provider, { model: job.llm.model });
   const llmResult = await llm.generate(prompts);
   const noteBody = topic.finalize
-    ? topic.finalize(llmResult.text, { jobId: job.id, date })
+    ? topic.finalize(llmResult.text, { jobId: job.id, date, docs })
     : `${llmResult.text.trim()}\n`;
 
   const notePath = resolve(notesDir, topic.label, `${date}.md`);
