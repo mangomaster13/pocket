@@ -1,0 +1,58 @@
+# Daily digest jobs. Add new topics/sources/providers without changing core pipeline code.
+#
+# Cron times below are documented in local China time for readability;
+# GitHub Actions should use UTC equivalents (see .github/workflows/daily.yml).
+
+defaults:
+  notesDir: notes
+  inboxDir: inbox
+  # Truncate Bark body to stay within notification limits
+  barkMaxChars: 850
+
+jobs:
+  - id: english-morning
+    enabled: true
+    description: English vocab notes from inbox or RSS
+    # Beijing 06:00 ≈ UTC 22:00 previous day
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "06:00"
+      pushAt: "08:00"
+    topic: english-vocab
+    source:
+      # Try inbox first; fall back to RSS when inbox is empty
+      type: inbox-or-rss
+      inboxFile: inbox/english.md
+      rssUrl: https://feeds.bbci.co.uk/news/world/rss.xml
+      rssItemCount: 1
+    llm:
+      # Default: Cursor Cloud Agent. Switch to openai-compatible later if needed.
+      provider: cursor-cloud-agent
+      # "default" = Auto (from GET /v1/models). Alternatives: composer-2.5, grok-4.5, ...
+      model: default
+      # provider: openai-compatible
+      # model: deepseek-chat
+    delivery:
+      type: bark
+      titlePrefix: "English"
+      # Omit targets to push all aliases in BARK_DEVICES (daj, lzx)
+      # targets: [lzx]
+
+  - id: finance-brief
+    enabled: false
+    description: Finance briefing (enable when ready)
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "07:00"
+      pushAt: "08:00"
+    topic: finance-brief
+    source:
+      type: rss
+      rssUrl: https://feeds.bbci.co.uk/news/business/rss.xml
+      rssItemCount: 3
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePrefix: "Finance"

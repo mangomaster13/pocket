@@ -1,0 +1,32 @@
+{
+  "name": "daily-sub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Configurable daily digest pipeline: sources → LLM → notes → Bark",
+  "type": "module",
+  "bin": {
+    "daily-sub": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "list": "tsx src/cli.ts list",
+    "run:job": "tsx src/cli.ts run",
+    "bark": "tsx src/cli.ts bark",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}

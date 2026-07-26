@@ -1,0 +1,64 @@
+name: Daily digest
+
+on:
+  schedule:
+    # Beijing 06:00 = UTC 22:00 (previous calendar day in UTC)
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job id (default: english-morning)"
+        required: false
+        default: "english-morning"
+      skip_delivery:
+        description: "Skip Bark push"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  run-digest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Run job
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+          BARK_SERVER: ${{ secrets.BARK_SERVER }}
+          # Optional later if you switch jobs.yaml to openai-compatible:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          JOB="${{ github.event.inputs.job || 'english-morning' }}"
+          EXTRA=""
+          if [ "${{ github.event.inputs.skip_delivery }}" = "true" ]; then
+            EXTRA="--skip-delivery"
+          fi
+          npm run run:job -- --job "$JOB" $EXTRA
+
+      - name: Commit notes
+        run: |
+          git config user.name "daily-sub bot"
+          git config user.email "daily-sub@users.noreply.github.com"
+          git add notes || true
+          if git diff --staged --quiet; then
+            echo "No note changes to commit"
+          else
+            git commit -m "chore: add daily notes $(date -u +%Y-%m-%d)"
+            git push
+          fi
