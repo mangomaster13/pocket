@@ -1,21 +1,34 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { marked } from "marked";
+import { extractNoteMeta } from "./note-meta.js";
 import { resolvePagesBaseUrl } from "./urls.js";
+
+/** Human labels for topic folder names. */
+const TOPIC_LABELS: Record<string, string> = {
+  english: "English",
+  finance: "Finance",
+};
 
 export interface SiteNote {
   /** Topic folder name (e.g. english). */
   topic: string;
   /** Note date YYYY-MM-DD. */
   date: string;
+  /** File stem without .md (e.g. 2026-07-26 or 2026-07-26-extra). */
+  slug: string;
   /** Absolute path to the source markdown file. */
   markdownPath: string;
   /** Absolute path to the generated HTML file. */
   htmlPath: string;
-  /** Site-relative path using forward slashes (e.g. english/2026-07-26.html). */
+  /** Site-relative path using forward slashes. */
   relativeHtmlPath: string;
   /** Extracted page title. */
   title: string;
+  /** Short summary for archive cards. */
+  summary: string;
+  /** Highlight keywords / vocabulary. */
+  keywords: string[];
 }
 
 export interface BuildSiteOptions {
@@ -56,26 +69,27 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
     }
 
     const topic = parts[0];
-    const date = basename(parts[1], ".md");
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const slug = basename(parts[1], ".md");
+    const dateMatch = slug.match(/^(\d{4}-\d{2}-\d{2})(?:-.+)?$/);
+    if (!dateMatch) {
       continue;
     }
+    const date = dateMatch[1];
 
     const markdown = readFileSync(markdownPath, "utf8");
-    const title = extractTitle(markdown) || `${topic} · ${date}`;
+    const meta = extractNoteMeta(markdown, `${topicLabel(topic)} · ${date}`);
     const bodyHtml = marked.parse(markdown, { async: false }) as string;
-    const relativeHtmlPath = `${topic}/${date}.html`;
+    const relativeHtmlPath = `${topic}/${slug}.html`;
     const htmlPath = join(siteDir, relativeHtmlPath);
 
     mkdirSync(dirname(htmlPath), { recursive: true });
     writeFileSync(
       htmlPath,
       renderNotePage({
-        title,
+        title: meta.title,
         date,
         topic,
         bodyHtml,
-        pagesBaseUrl: resolvePagesBaseUrl(),
       }),
       "utf8",
     );
@@ -83,29 +97,28 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
     notes.push({
       topic,
       date,
+      slug,
       markdownPath,
       htmlPath,
       relativeHtmlPath,
-      title,
+      title: meta.title,
+      summary: meta.summary,
+      keywords: meta.keywords,
     });
   }
 
   notes.sort((a, b) => {
-    if (a.date === b.date) {
+    if (a.date !== b.date) {
+      return b.date.localeCompare(a.date);
+    }
+    if (a.topic !== b.topic) {
       return a.topic.localeCompare(b.topic);
     }
-    return b.date.localeCompare(a.date);
+    return a.slug.localeCompare(b.slug);
   });
 
   const indexPath = join(siteDir, "index.html");
-  writeFileSync(
-    indexPath,
-    renderIndexPage({
-      notes,
-      pagesBaseUrl: resolvePagesBaseUrl(),
-    }),
-    "utf8",
-  );
+  writeFileSync(indexPath, renderIndexPage({ notes }), "utf8");
 
   return {
     siteDir,
@@ -116,7 +129,7 @@ export function buildSite(options: BuildSiteOptions = {}): BuildSiteResult {
 }
 
 /**
- * Lists markdown note files under the notes directory (topic/date.md).
+ * Lists markdown note files under the notes directory (topic/*.md).
  */
 function listMarkdownNotes(notesDir: string): string[] {
   if (!existsSync(notesDir)) {
@@ -139,11 +152,10 @@ function listMarkdownNotes(notesDir: string): string[] {
 }
 
 /**
- * Extracts the first Markdown H1 as the page title.
+ * Returns a display label for a topic folder.
  */
-function extractTitle(markdown: string): string | undefined {
-  const match = markdown.match(/^#\s+(.+)$/m);
-  return match?.[1]?.trim();
+function topicLabel(topic: string): string {
+  return TOPIC_LABELS[topic] ?? topic.charAt(0).toUpperCase() + topic.slice(1);
 }
 
 /**
@@ -158,104 +170,251 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * Shared CSS for the published notes site.
+ * Shared minimal CSS for archive + note pages.
  */
 function siteStyles(): string {
   return `
 :root {
   color-scheme: light dark;
-  --bg: #f7f4ef;
-  --fg: #1c1917;
-  --muted: #78716c;
-  --card: #fffdf9;
-  --line: #e7e0d5;
-  --accent: #0f766e;
-  --link: #0f766e;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f5f5f5;
+  --chip: #efefef;
+  --accent: #111111;
+  --summary: #f7f7f7;
+  --summary-border: #3b82f6;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #141210;
-    --fg: #f5f0e8;
-    --muted: #a8a29e;
-    --card: #1c1917;
-    --line: #292524;
-    --accent: #5eead4;
-    --link: #5eead4;
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #242424;
+    --accent: #f3f3f3;
+    --summary: #1a1a1a;
+    --summary-border: #60a5fa;
   }
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
-  background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(15, 118, 110, 0.12), transparent 55%),
-    radial-gradient(900px 400px at 100% 0%, rgba(180, 83, 9, 0.08), transparent 50%),
-    var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
   color: var(--fg);
-  line-height: 1.65;
+  line-height: 1.6;
+  font-size: 15px;
 }
-a { color: var(--link); }
+a { color: inherit; }
 .wrap {
-  max-width: 42rem;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2.5rem 1.25rem 4rem;
+  padding: 2rem 1.25rem 4rem;
 }
-.top {
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+  line-height: 1.25;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.meta-row a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.meta-row a:hover { color: var(--fg); text-decoration: underline; }
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--fg);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list { list-style: none; padding: 0; margin: 0; }
+.item {
+  padding: 1.05rem 0 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+.item[hidden] { display: none; }
+.item a.item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.item-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 0.35rem;
+}
+.item-title {
+  font-weight: 650;
+  font-size: 1.02rem;
+}
+.item-date { color: var(--muted); font-size: 0.86rem; white-space: nowrap; }
+.item-topic {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.12rem 0.55rem;
+  margin-bottom: 0.45rem;
+}
+.item-summary {
+  margin: 0.55rem 0 0;
+  padding: 0.7rem 0.85rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  color: var(--fg);
+  font-size: 0.92rem;
+}
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+.keywords span {
+  font-size: 0.78rem;
+  color: var(--fg);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   align-items: baseline;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
-.brand {
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  color: var(--accent);
+.article-page .brand {
+  color: var(--muted);
   text-decoration: none;
+  font-size: 0.9rem;
 }
-.meta { color: var(--muted); font-size: 0.92rem; }
-h1 {
-  font-size: 1.85rem;
-  line-height: 1.25;
-  margin: 0 0 0.75rem;
-}
-.article, .card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 1.4rem 1.35rem;
-}
+.article-page .brand:hover { color: var(--fg); text-decoration: underline; }
 .article h1 { display: none; }
 .article h2 {
-  font-size: 1.15rem;
-  margin-top: 1.6rem;
-  border-bottom: 1px solid var(--line);
+  font-size: 1.05rem;
+  margin: 1.6rem 0 0.55rem;
   padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
 }
-.article ul { padding-left: 1.2rem; }
-.article li { margin: 0.35rem 0; }
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
 .article code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.92em;
+  font-size: 0.9em;
 }
-.list { list-style: none; padding: 0; margin: 0; }
-.list li + li { margin-top: 0.65rem; }
-.list a {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--card);
+`.trim();
 }
-.list a:hover { border-color: var(--accent); }
-.list .title { font-weight: 600; }
-.list .sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
-.empty { color: var(--muted); }
+
+/**
+ * Client-side topic + date filtering for the archive page.
+ */
+function archiveScript(): string {
+  return `
+(function () {
+  var topic = "all";
+  var date = "all";
+  var topicButtons = document.querySelectorAll("[data-topic-filter]");
+  var dateSelect = document.querySelector("[data-date-filter]");
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-note]"));
+  var empty = document.querySelector("[data-empty]");
+
+  function apply() {
+    var visible = 0;
+    items.forEach(function (item) {
+      var okTopic = topic === "all" || item.getAttribute("data-topic") === topic;
+      var okDate = date === "all" || item.getAttribute("data-date") === date;
+      var show = okTopic && okDate;
+      item.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  topicButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      topic = btn.getAttribute("data-topic-filter") || "all";
+      topicButtons.forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      apply();
+    });
+  });
+
+  if (dateSelect) {
+    dateSelect.addEventListener("change", function () {
+      date = dateSelect.value || "all";
+      apply();
+    });
+  }
+})();
 `.trim();
 }
 
@@ -267,9 +426,7 @@ function renderNotePage(input: {
   date: string;
   topic: string;
   bodyHtml: string;
-  pagesBaseUrl?: string;
 }): string {
-  const homeHref = "../index.html";
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -278,12 +435,13 @@ function renderNotePage(input: {
   <title>${escapeHtml(input.title)}</title>
   <style>${siteStyles()}</style>
 </head>
-<body>
+<body class="article-page">
   <main class="wrap">
     <div class="top">
-      <a class="brand" href="${homeHref}">Pocket</a>
-      <div class="meta">${escapeHtml(input.topic)} · ${escapeHtml(input.date)}</div>
+      <a class="brand" href="../index.html">← 历史归档</a>
+      <div class="eyebrow">${escapeHtml(topicLabel(input.topic))} · ${escapeHtml(input.date)}</div>
     </div>
+    <p class="eyebrow">Pocket</p>
     <h1>${escapeHtml(input.title)}</h1>
     <article class="article">
 ${input.bodyHtml}
@@ -295,52 +453,94 @@ ${input.bodyHtml}
 }
 
 /**
- * Renders the archive index page.
+ * Renders the archive index page with topic tabs and date filter.
  */
-function renderIndexPage(input: {
-  notes: SiteNote[];
-  pagesBaseUrl?: string;
-}): string {
+function renderIndexPage(input: { notes: SiteNote[] }): string {
+  const topics = [...new Set(input.notes.map((note) => note.topic))].sort();
+  const dates = [...new Set(input.notes.map((note) => note.date))].sort((a, b) =>
+    b.localeCompare(a),
+  );
+  const latestDate = dates[0] ?? "—";
+
+  const topicCounts = new Map<string, number>();
+  for (const note of input.notes) {
+    topicCounts.set(note.topic, (topicCounts.get(note.topic) ?? 0) + 1);
+  }
+
+  const tabs = [
+    `<button type="button" class="active" data-topic-filter="all">全部<span class="count">${input.notes.length}</span></button>`,
+    ...topics.map(
+      (topic) =>
+        `<button type="button" data-topic-filter="${escapeHtml(topic)}">${escapeHtml(topicLabel(topic))}<span class="count">${topicCounts.get(topic) ?? 0}</span></button>`,
+    ),
+  ].join("\n      ");
+
+  const dateOptions = [
+    `<option value="all">全部日期</option>`,
+    ...dates.map((date) => `<option value="${escapeHtml(date)}">${escapeHtml(date)}</option>`),
+  ].join("\n        ");
+
   const items =
     input.notes.length === 0
-      ? `<p class="empty">No notes yet.</p>`
-      : `<ul class="list">
-${input.notes
-  .map(
-    (note) => `  <li>
-    <a href="./${escapeHtml(note.relativeHtmlPath)}">
-      <div class="title">${escapeHtml(note.title)}</div>
-      <div class="sub">${escapeHtml(note.topic)} · ${escapeHtml(note.date)}</div>
+      ? ""
+      : input.notes
+          .map((note) => {
+            const keywords =
+              note.keywords.length === 0
+                ? ""
+                : `<div class="keywords">${note.keywords
+                    .map((word) => `<span>${escapeHtml(word)}</span>`)
+                    .join("")}</div>`;
+            const summary = note.summary
+              ? `<p class="item-summary">${escapeHtml(note.summary)}</p>`
+              : "";
+            return `  <li class="item" data-note data-topic="${escapeHtml(note.topic)}" data-date="${escapeHtml(note.date)}">
+    <a class="item-link" href="./${escapeHtml(note.relativeHtmlPath)}">
+      <div class="item-topic">${escapeHtml(topicLabel(note.topic))}</div>
+      <div class="item-top">
+        <div class="item-title">${escapeHtml(note.title)}</div>
+        <div class="item-date">${escapeHtml(note.date)}</div>
+      </div>
+      ${summary}
+      ${keywords}
     </a>
-  </li>`,
-  )
-  .join("\n")}
-</ul>`;
-
-  const baseHint = input.pagesBaseUrl
-    ? `<p class="meta">Public site: ${escapeHtml(input.pagesBaseUrl)}</p>`
-    : "";
+  </li>`;
+          })
+          .join("\n");
 
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pocket Notes</title>
+  <title>Pocket — Notes</title>
   <style>${siteStyles()}</style>
 </head>
 <body>
   <main class="wrap">
-    <div class="top">
-      <span class="brand">Pocket</span>
-      <div class="meta">${input.notes.length} note${input.notes.length === 1 ? "" : "s"}</div>
+    <p class="eyebrow">Pocket 笔记</p>
+    <h1>${escapeHtml(latestDate)}</h1>
+    <div class="meta-row">
+      <span>${input.notes.length} notes · newest first</span>
     </div>
-    <h1>Notes archive</h1>
-    ${baseHint}
-    <div class="card" style="margin-top: 1rem; border: 0; padding: 0; background: transparent;">
+
+    <div class="tabs" role="tablist">
+      ${tabs}
+    </div>
+
+    <div class="filters">
+      <label for="date-filter">日期</label>
+      <select id="date-filter" data-date-filter>
+        ${dateOptions}
+      </select>
+    </div>
+
+    <ul class="list">
 ${items}
-    </div>
+    </ul>
+    <p class="empty" data-empty ${input.notes.length === 0 ? "" : "hidden"}>没有符合筛选的笔记。</p>
   </main>
+  <script>${archiveScript()}</script>
 </body>
 </html>
 `;
