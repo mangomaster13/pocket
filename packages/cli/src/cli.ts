@@ -5,7 +5,9 @@ import {
   getJob,
   listJobs,
   loadConfig,
+  notifyDailySummary,
   notifyJob,
+  resolveJobCategory,
   resolvePagesBaseUrl,
   runJob,
 } from "@pocket/daily";
@@ -54,7 +56,10 @@ async function listCommand(): Promise<void> {
   const config = loadConfig();
   for (const job of listJobs(config, true)) {
     const flag = job.enabled ? "on " : "off";
-    console.log(`${flag}  ${job.id.padEnd(20)}  topic=${job.topic}  llm=${job.llm.provider}`);
+    const category = resolveJobCategory(job);
+    console.log(
+      `${flag}  ${job.id.padEnd(22)}  cat=${category.padEnd(10)}  topic=${job.topic}  llm=${job.llm.provider}`,
+    );
     if (job.description) {
       console.log(`      ${job.description}`);
     }
@@ -79,11 +84,16 @@ async function runCommand(args: string[]): Promise<void> {
   }
 
   for (const job of jobs) {
-    console.log(`\n▶ Running job: ${job.id}`);
+    console.log(`\n▶ Running job: ${job.id} (${resolveJobCategory(job)})`);
     const result = await runJob(config, job, {
       date: flags.date,
       skipDelivery: flags.skipDelivery,
     });
+    if (result.skipped) {
+      console.log(`  skipped : optional source empty`);
+      continue;
+    }
+    console.log(`  category: ${result.category}`);
     console.log(`  sources : ${result.sourceIds.join(", ")}`);
     console.log(`  note    : ${result.notePath}`);
     if (result.pagePath) {
@@ -116,14 +126,30 @@ async function siteCommand(): Promise<void> {
  */
 async function notifyCommand(args: string[]): Promise<void> {
   const flags = parseFlags(args);
-  if (!flags.job) {
-    throw new Error('Specify --job <id>. Example: npm run notify -- --job english-morning');
+  const config = loadConfig();
+
+  if (flags.all) {
+    console.log("\n▶ Notify daily summary");
+    const result = await notifyDailySummary(config, listJobs(config), { date: flags.date });
+    console.log(`  date       : ${result.date}`);
+    console.log(`  categories : ${result.categories.join(", ")}`);
+    console.log(`  url        : ${result.pageUrl ?? "(missing PAGES_BASE_URL)"}`);
+    console.log("  delivered  : true");
+    return;
   }
 
-  const config = loadConfig();
+  if (!flags.job) {
+    throw new Error('Specify --job <id> or --all. Example: npm run notify -- --all');
+  }
+
   const job = getJob(config, flags.job);
   console.log(`\n▶ Notify job: ${job.id}`);
   const result = await notifyJob(config, job, { date: flags.date });
+  if (result.skipped) {
+    console.log(`  skipped : note not found (${result.notePath})`);
+    return;
+  }
+  console.log(`  category: ${result.category}`);
   console.log(`  note    : ${result.notePath}`);
   console.log(`  title   : ${result.title}`);
   if (result.pageUrl) {
@@ -269,6 +295,7 @@ Commands:
   run --job <id> --date YYYY-MM-DD
   site                          Rebuild site/ HTML from notes/
   notify --job <id>             Bark-push an existing note (after Pages deploy)
+  notify --all                  One Bark summary linking to the archive index
   bark --list                   List Bark device aliases
   bark --presets                List title presets
   bark --to <alias|all> --body "..." [--preset id | --title "..."] [--url "..."]

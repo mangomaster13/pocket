@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       job:
-        description: "Job id (default: english-morning)"
+        description: "Job id, or 'all' for every enabled category"
         required: false
-        default: "english-morning"
+        default: "all"
       skip_delivery:
         description: "Skip Bark push"
         type: boolean
@@ -46,10 +46,14 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Generate note (no Bark yet)
+      - name: Generate notes (no Bark yet)
         run: |
-          JOB="${{ github.event.inputs.job || 'english-morning' }}"
-          npm run run:job -- --job "$JOB" --skip-delivery
+          JOB="${{ github.event.inputs.job || 'all' }}"
+          if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
+            npm run run:job -- --all --skip-delivery
+          else
+            npm run run:job -- --job "$JOB" --skip-delivery
+          fi
 
       - name: Build site
         run: npm run site
@@ -76,7 +80,10 @@ jobs:
       - name: Bark notify with Pages link
         if: ${{ github.event.inputs.skip_delivery != true && github.event.inputs.skip_delivery != 'true' }}
         run: |
-          JOB="${{ github.event.inputs.job || 'english-morning' }}"
-          # Give Pages a moment to become reachable after deploy.
+          JOB="${{ github.event.inputs.job || 'all' }}"
           sleep 15
-          npm run notify -- --job "$JOB"
+          if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
+            npm run notify -- --all
+          else
+            npm run notify -- --job "$JOB"
+          fi

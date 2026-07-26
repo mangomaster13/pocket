@@ -67,6 +67,8 @@ export interface TopicContext {
 export interface PipelineResult {
   jobId: string;
   date: string;
+  /** Notes/site category folder used for this run. */
+  category: string;
   notePath: string;
   /** Generated HTML note page path, when site build succeeds. */
   pagePath?: string;
@@ -75,4 +77,6 @@ export interface PipelineResult {
   sourceIds: string[];
   delivered: boolean;
   preview: string;
+  /** True when the job was skipped because the source was empty/optional. */
+  skipped?: boolean;
 }

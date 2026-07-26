@@ -7,6 +7,12 @@ import { resolvePagesBaseUrl } from "./urls.js";
 
 /** Human labels for topic folder names. */
 const TOPIC_LABELS: Record<string, string> = {
+  world: "World",
+  business: "Business",
+  tech: "Tech",
+  dev: "Dev",
+  music: "Music",
+  horror: "Horror",
   english: "English",
   finance: "Finance",
 };

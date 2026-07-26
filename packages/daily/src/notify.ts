@@ -1,9 +1,9 @@
 import { push, resolveTitle } from "@pocket/bark";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { AppConfig, JobConfig } from "./config.js";
-import { resolveNotePageUrl } from "./site/urls.js";
-import { getTopic } from "./topics/registry.js";
+import { resolveJobCategory } from "./job-path.js";
+import { resolveNotePageUrl, resolvePagesBaseUrl } from "./site/urls.js";
 import { shortDateLabel, todayInTimeZone } from "./utils/date.js";
 import { buildBarkPreview, buildBarkTeaser } from "./utils/text.js";
 
@@ -17,10 +17,12 @@ export interface NotifyJobOptions {
 export interface NotifyJobResult {
   jobId: string;
   date: string;
+  category: string;
   notePath: string;
   pageUrl?: string;
   title: string;
   preview: string;
+  skipped?: boolean;
 }
 
 /**
@@ -34,16 +36,28 @@ export async function notifyJob(
   const cwd = options.cwd ?? process.cwd();
   const date = options.date ?? todayInTimeZone(job.schedule?.timezone ?? "Asia/Shanghai");
   const notesDir = resolve(cwd, process.env.NOTES_DIR ?? config.defaults.notesDir);
-  const topic = getTopic(job.topic);
-  const notePath = resolve(notesDir, topic.label, `${date}.md`);
-  const noteBody = readFileSync(notePath, "utf8");
+  const category = resolveJobCategory(job);
+  const notePath = resolve(notesDir, category, `${date}.md`);
 
-  const pageUrl = resolveNotePageUrl(topic.label, date);
+  if (!existsSync(notePath)) {
+    return {
+      jobId: job.id,
+      date,
+      category,
+      notePath,
+      title: "",
+      preview: "",
+      skipped: true,
+    };
+  }
+
+  const noteBody = readFileSync(notePath, "utf8");
+  const pageUrl = resolveNotePageUrl(category, date);
   const preview = pageUrl
     ? buildBarkTeaser(noteBody)
     : buildBarkPreview(noteBody, config.defaults.barkMaxChars);
   const dateLabel = shortDateLabel(date);
-  const titlePrefix = job.delivery.titlePrefix ?? topic.label;
+  const titlePrefix = job.delivery.titlePrefix ?? category;
   const title = resolveJobTitle(job, dateLabel, titlePrefix);
 
   if (job.delivery.type === "none") {
@@ -60,11 +74,61 @@ export async function notifyJob(
   return {
     jobId: job.id,
     date,
+    category,
     notePath,
     pageUrl,
     title,
     preview,
   };
+}
+
+/**
+ * Sends one Bark summary for all notes generated on a date (link to archive index).
+ */
+export async function notifyDailySummary(
+  config: AppConfig,
+  jobs: JobConfig[],
+  options: NotifyJobOptions = {},
+): Promise<{ date: string; categories: string[]; pageUrl?: string }> {
+  const cwd = options.cwd ?? process.cwd();
+  const date =
+    options.date ??
+    todayInTimeZone(jobs[0]?.schedule?.timezone ?? "Asia/Shanghai");
+  const notesDir = resolve(cwd, process.env.NOTES_DIR ?? config.defaults.notesDir);
+
+  const categories: string[] = [];
+  for (const job of jobs) {
+    if (job.delivery.type === "none") {
+      continue;
+    }
+    const category = resolveJobCategory(job);
+    const notePath = resolve(notesDir, category, `${date}.md`);
+    if (existsSync(notePath) && !categories.includes(category)) {
+      categories.push(category);
+    }
+  }
+
+  if (categories.length === 0) {
+    throw new Error(`No notes found for ${date} to notify`);
+  }
+
+  const dateLabel = shortDateLabel(date);
+  const title = resolveTitle({ preset: "english", fallback: "Pocket" });
+  const titled = `${title} · ${dateLabel}`;
+  const pageUrl = resolvePagesBaseUrl();
+  const preview = [
+    `今日更新 ${categories.length} 篇：${categories.join(", ")}`,
+    "",
+    "👉 点击通知查看归档",
+  ].join("\n");
+
+  await push({
+    title: titled,
+    body: preview,
+    url: pageUrl,
+  });
+
+  return { date, categories, pageUrl };
 }
 
 /**

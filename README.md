@@ -32,9 +32,9 @@ cp .env.example .env
 # fill PAGES_BASE_URL=https://<user>.github.io/<repo>
 
 npm install
-npm run run:job -- --job english-morning --skip-delivery   # generate note + site
-npm run site                                               # rebuild site/ only
-npm run run:job -- --job english-morning                   # generate + Bark
+npm run run:job -- --all --skip-delivery   # all categories → notes + site
+npm run site                               # rebuild site/ only
+npm run run:job -- --job tech-daily        # one category + Bark
 npm run list
 npm run bark -- --presets
 ```
@@ -51,13 +51,15 @@ notes/      # generated markdown
 site/       # generated HTML (gitignored; published to gh-pages)
 ```
 
-## English workflow
+## Categories & workflow
 
-1. Paste article text into `inbox/english.md` (Economist etc.), **or** leave it empty to use the BBC RSS fallback in `jobs.yaml`.
-2. Run `english-morning`.
-3. Note is saved to `notes/english/YYYY-MM-DD.md`.
-4. HTML is built under `site/english/YYYY-MM-DD.html`.
-5. Bark receives a short teaser + link to GitHub Pages (when `PAGES_BASE_URL` is set).
+Pages tabs: **world / business / tech / dev / music / horror**.
+
+1. Optional: paste an article into `inbox/<category>.md` (title on the `#` line, body below `---`).
+2. Or leave inbox empty → RSS fallback (music/horror skip if both empty).
+3. Run all: `npm run run:job -- --all --skip-delivery`
+4. Notes land in `notes/<category>/YYYY-MM-DD.md` and `site/<category>/...html`.
+5. Bark can summarize with `npm run notify -- --all` (links to the archive index).
 
 ## Switch LLM
 
@@ -110,14 +112,14 @@ Title presets live in `config/bark-presets.yaml`:
 ```bash
 npm run bark -- --presets
 npm run bark -- --to daj --preset stranger --body "在吗"
-npm run bark -- --to lzx --preset english --body "今日笔记已生成" --url "https://mangomaster13.github.io/pocket/english/2026-07-26.html"
+npm run bark -- --to lzx --preset english --body "今日笔记已生成" --url "https://mangomaster13.github.io/pocket/business/2026-07-26.html"
 npm run bark -- --to all --title "自定义标题" --body "test"
 ```
 
 ## Local button / Shortcut
 
 ```bash
-npm run run:job -- --job english-morning
+npm run run:job -- --all
 ```
 
 Wrap that command in macOS Shortcuts / Raycast / a Dock Automator app for one-click runs.

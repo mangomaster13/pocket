@@ -1,5 +1,6 @@
 # Daily digest jobs. Add new topics/sources/providers without changing core pipeline code.
 #
+# Categories (Pages tabs): world / business / tech / dev / music / horror
 # Cron times below are documented in local China time for readability;
 # GitHub Actions should use UTC equivalents (see .github/workflows/daily.yml).
 
@@ -10,52 +11,137 @@ defaults:
   barkMaxChars: 850
 
 jobs:
-  - id: english-morning
+  - id: world-daily
     enabled: true
-    description: English vocab notes from inbox or RSS
-    # Beijing 06:00 ≈ UTC 22:00 previous day
+    description: World news English notes
+    category: world
     schedule:
       timezone: Asia/Shanghai
       runAt: "06:00"
       pushAt: "08:00"
     topic: english-vocab
     source:
-      # Try inbox first; fall back to RSS when inbox is empty
       type: inbox-or-rss
-      inboxFile: inbox/english.md
+      inboxFile: inbox/world.md
       rssUrl: https://feeds.bbci.co.uk/news/world/rss.xml
       rssItemCount: 1
     llm:
-      # Default: Cursor Cloud Agent. Switch to openai-compatible later if needed.
       provider: cursor-cloud-agent
-      # "default" = Auto (from GET /v1/models). Alternatives: composer-2.5, grok-4.5, ...
       model: default
-      # provider: openai-compatible
-      # model: deepseek-chat
     delivery:
       type: bark
       titlePreset: english
       appendDate: true
-      # titlePrefix: "English"   # used only when titlePreset is omitted
-      # Omit targets to push all aliases in BARK_DEVICES (daj, lzx)
-      # targets: [lzx]
 
-  - id: finance-brief
-    enabled: false
-    description: Finance briefing (enable when ready)
+  - id: business-daily
+    enabled: true
+    description: Business / finance English notes
+    category: business
     schedule:
       timezone: Asia/Shanghai
-      runAt: "07:00"
+      runAt: "06:05"
       pushAt: "08:00"
-    topic: finance-brief
+    topic: english-vocab
     source:
-      type: rss
+      type: inbox-or-rss
+      inboxFile: inbox/business.md
       rssUrl: https://feeds.bbci.co.uk/news/business/rss.xml
-      rssItemCount: 3
+      rssItemCount: 1
     llm:
       provider: cursor-cloud-agent
       model: default
     delivery:
       type: bark
-      titlePreset: finance
+      titlePreset: english
+      appendDate: true
+
+  - id: tech-daily
+    enabled: true
+    description: Tech / iOS / gadgets English notes
+    category: tech
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "06:10"
+      pushAt: "08:00"
+    topic: english-vocab
+    source:
+      type: inbox-or-rss
+      inboxFile: inbox/tech.md
+      rssUrl: https://9to5mac.com/feed/
+      rssItemCount: 1
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePreset: english
+      appendDate: true
+
+  - id: dev-daily
+    enabled: true
+    description: Frontend / web development English notes
+    category: dev
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "06:15"
+      pushAt: "08:00"
+    topic: english-vocab
+    source:
+      type: inbox-or-rss
+      inboxFile: inbox/dev.md
+      rssUrl: https://web.dev/feed.xml
+      rssItemCount: 1
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePreset: english
+      appendDate: true
+
+  - id: music-daily
+    enabled: true
+    description: Music / Taylor / reviews (inbox preferred)
+    category: music
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "06:20"
+      pushAt: "08:00"
+    topic: english-vocab
+    source:
+      type: inbox-or-rss
+      inboxFile: inbox/music.md
+      # Fallback when inbox is empty
+      rssUrl: https://pitchfork.com/feed/feed-news/rss
+      rssItemCount: 1
+      optional: true
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePreset: english
+      appendDate: true
+
+  - id: horror-daily
+    enabled: true
+    description: Horror film reviews / essays (inbox preferred)
+    category: horror
+    schedule:
+      timezone: Asia/Shanghai
+      runAt: "06:25"
+      pushAt: "08:00"
+    topic: english-vocab
+    source:
+      type: inbox-or-rss
+      inboxFile: inbox/horror.md
+      rssUrl: https://bloody-disgusting.com/feed/
+      rssItemCount: 1
+      optional: true
+    llm:
+      provider: cursor-cloud-agent
+      model: default
+    delivery:
+      type: bark
+      titlePreset: english
       appendDate: true

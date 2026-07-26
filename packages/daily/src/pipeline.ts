@@ -2,6 +2,7 @@ import { push, resolveTitle } from "@pocket/bark";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import type { AppConfig, JobConfig } from "./config.js";
+import { resolveJobCategory } from "./job-path.js";
 import { createLlmProvider } from "./providers/registry.js";
 import { buildSite } from "./site/build-site.js";
 import { resolveNotePageUrl } from "./site/urls.js";
@@ -32,10 +33,24 @@ export async function runJob(
   const date = options.date ?? todayInTimeZone(job.schedule?.timezone ?? "Asia/Shanghai");
   const notesDir = resolve(cwd, process.env.NOTES_DIR ?? config.defaults.notesDir);
   const inboxDir = resolve(cwd, process.env.INBOX_DIR ?? config.defaults.inboxDir);
+  const category = resolveJobCategory(job);
 
   const source = getSourceProvider(job.source.type);
   const docs = await source.fetch(job, { cwd, inboxDir, notesDir });
   if (docs.length === 0) {
+    if (job.source.optional) {
+      console.log(`  skipped : no source documents (optional)`);
+      return {
+        jobId: job.id,
+        date,
+        category,
+        notePath: resolve(notesDir, category, `${date}.md`),
+        sourceIds: [],
+        delivered: false,
+        preview: "",
+        skipped: true,
+      };
+    }
     throw new Error(`Job "${job.id}" produced no source documents`);
   }
 
@@ -51,20 +66,20 @@ export async function runJob(
     ? topic.finalize(llmResult.text, { jobId: job.id, date, docs })
     : `${llmResult.text.trim()}\n`;
 
-  const notePath = resolve(notesDir, topic.label, `${date}.md`);
+  const notePath = resolve(notesDir, category, `${date}.md`);
   mkdirSync(dirname(notePath), { recursive: true });
   writeFileSync(notePath, noteBody, "utf8");
 
   const site = buildSite({ cwd, notesDir });
-  const page = site.notes.find((item) => item.topic === topic.label && item.date === date);
-  const pageUrl = resolveNotePageUrl(topic.label, date);
+  const page = site.notes.find((item) => item.topic === category && item.date === date);
+  const pageUrl = resolveNotePageUrl(category, date);
   const pagePath = page?.htmlPath;
 
   const preview = pageUrl
     ? buildBarkTeaser(noteBody)
     : buildBarkPreview(noteBody, config.defaults.barkMaxChars);
   const dateLabel = shortDateLabel(date);
-  const titlePrefix = job.delivery.titlePrefix ?? topic.label;
+  const titlePrefix = job.delivery.titlePrefix ?? category;
   const title = resolveJobTitle(job, dateLabel, titlePrefix);
 
   let delivered = false;
@@ -87,6 +102,7 @@ export async function runJob(
   return {
     jobId: job.id,
     date,
+    category,
     notePath,
     pagePath,
     pageUrl,

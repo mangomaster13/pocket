@@ -8,6 +8,11 @@ const sourceSchema = z.object({
   inboxFile: z.string().optional(),
   rssUrl: z.string().url().optional(),
   rssItemCount: z.number().int().positive().optional(),
+  /**
+   * When true, an empty source skips the job instead of failing
+   * (useful for inbox-only categories like music / horror).
+   */
+  optional: z.boolean().optional(),
 });
 
 const llmSchema = z.object({
@@ -38,6 +43,11 @@ const jobSchema = z.object({
   id: z.string().min(1),
   enabled: z.boolean().default(true),
   description: z.string().optional(),
+  /**
+   * Notes/site category folder (e.g. world, tech).
+   * Falls back to the topic label when omitted.
+   */
+  category: z.string().min(1).optional(),
   schedule: scheduleSchema,
   topic: z.enum(["english-vocab", "finance-brief"]),
   source: sourceSchema,
