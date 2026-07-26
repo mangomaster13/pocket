@@ -294,6 +294,13 @@ function escapeHtml(value: string): string {
 }
 
 /**
+ * Escapes HTML then renders inline Markdown emphasis (**bold**).
+ */
+function formatInlineMarkdown(value: string): string {
+  return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
+/**
  * Removes H1 / Lead / 中文摘要 / Summary so they can be rendered as page chrome.
  */
 function stripChromeSections(markdown: string): string {
@@ -1070,10 +1077,10 @@ function renderNotePage(input: {
     ? ` · <a href="${escapeHtml(input.sourceUrl)}">数据来源</a>`
     : "";
   const lead = input.lead.trim()
-    ? `<p class="lead">${escapeHtml(input.lead.trim())}</p>`
+    ? `<p class="lead">${formatInlineMarkdown(input.lead.trim())}</p>`
     : "";
   const zh = input.zhSummary.trim()
-    ? `<div class="zh-summary"><span class="label">中文摘要</span>${escapeHtml(input.zhSummary.trim())}</div>`
+    ? `<div class="zh-summary"><span class="label">中文摘要</span>${formatInlineMarkdown(input.zhSummary.trim())}</div>`
     : "";
   const archiveHref =
     input.app === "invest" ? "./index.html" : "../articles/index.html";
@@ -1165,10 +1172,10 @@ function renderArchivePage(input: {
                     .map((word) => `<span>${escapeHtml(word)}</span>`)
                     .join("")}</div>`;
             const lead = note.lead
-              ? `<p class="card-lead">${escapeHtml(note.lead)}</p>`
+              ? `<p class="card-lead">${formatInlineMarkdown(note.lead)}</p>`
               : "";
             const zh = note.summary
-              ? `<p class="card-zh">${escapeHtml(note.summary)}</p>`
+              ? `<p class="card-zh">${formatInlineMarkdown(note.summary)}</p>`
               : "";
             const href =
               input.app === "invest"
