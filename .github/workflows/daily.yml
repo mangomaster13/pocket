@@ -1,20 +1,19 @@
 name: Articles daily
 
+# China (Asia/Shanghai, UTC+8, no DST):
+#   07:30 generate AI notes → site → Pages
+#   08:00 Bark push is a separate workflow: articles-notify.yml
+
 on:
   schedule:
-    # Beijing 06:00 = UTC 22:00 (previous calendar day in UTC)
-    - cron: "0 22 * * *"
+    # Beijing 07:30 = UTC 23:30 (previous calendar day in UTC)
+    - cron: "30 23 * * *"
   workflow_dispatch:
     inputs:
       job:
         description: "Job id, or 'all' for every enabled Articles job"
         required: false
         default: "all"
-      skip_delivery:
-        description: "Skip Bark push"
-        type: boolean
-        required: false
-        default: false
 
 jobs:
   run-digest:
@@ -46,7 +45,7 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Generate article notes (no Bark yet)
+      - name: Generate article notes (no Bark)
         run: |
           JOB="${{ github.event.inputs.job || 'all' }}"
           if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
@@ -76,14 +75,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
           force_orphan: true
-
-      - name: Bark notify with Pages link
-        if: ${{ github.event.inputs.skip_delivery != true && github.event.inputs.skip_delivery != 'true' }}
-        run: |
-          JOB="${{ github.event.inputs.job || 'all' }}"
-          sleep 15
-          if [ "$JOB" = "all" ] || [ -z "$JOB" ]; then
-            npm run notify -- --all --app articles
-          else
-            npm run notify -- --job "$JOB"
-          fi

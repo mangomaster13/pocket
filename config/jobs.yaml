@@ -3,8 +3,11 @@
 # Pocket Hub apps: articles | invest
 # Article categories: world / business / tech / dev / music / horror
 # Invest category: invest (watchlist in config/funds.yaml)
-# Cron times below are documented in local China time for readability;
-# GitHub Actions should use UTC equivalents (see .github/workflows/).
+# Schedule times below are China local (Asia/Shanghai).
+# Actions crons are UTC equivalents in .github/workflows/:
+#   Articles generate 07:30 → daily.yml
+#   Articles Bark     08:00 → articles-notify.yml
+#   Invest            14:40 → invest.yml
 
 defaults:
   notesDir: notes
@@ -20,7 +23,7 @@ jobs:
     category: world
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:00"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:
@@ -43,7 +46,7 @@ jobs:
     category: business
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:05"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:
@@ -67,7 +70,7 @@ jobs:
     category: tech
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:10"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:
@@ -90,7 +93,7 @@ jobs:
     category: dev
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:15"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:
@@ -113,7 +116,7 @@ jobs:
     category: music
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:20"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:
@@ -137,7 +140,7 @@ jobs:
     category: horror
     schedule:
       timezone: Asia/Shanghai
-      runAt: "06:25"
+      runAt: "07:30"
       pushAt: "08:00"
     topic: english-vocab
     source:

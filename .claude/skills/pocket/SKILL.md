@@ -64,7 +64,8 @@ cd /path/to/pocket
 | English note prompt | `packages/daily/src/topics/english-vocab.ts` |
 | Fund advice prompt | `packages/daily/src/topics/fund-watch.ts` |
 | Fund NAV fetcher | `packages/daily/src/sources/funds.ts` |
-| Articles schedule | `.github/workflows/daily.yml` (morning) |
+| Articles generate | `.github/workflows/daily.yml` (Beijing **07:30**) |
+| Articles Bark | `.github/workflows/articles-notify.yml` (Beijing **08:00**) |
 | Invest schedule | `.github/workflows/invest.yml` (Beijing 14:40, before 15:00 close) |
 
 ## Categories (Articles tabs)
@@ -121,13 +122,16 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 
 ## GitHub Actions
 
-**Articles** — `.github/workflows/daily.yml` (morning)
+**Articles generate** — `.github/workflows/daily.yml` (Beijing 07:30 / UTC 23:30)
 
 1. Generate `--all --app articles --skip-delivery`
 2. `npm run site`
 3. Commit `notes/`
 4. Deploy `site/` → `gh-pages`
-5. `notify --all --app articles`
+
+**Articles Bark** — `.github/workflows/articles-notify.yml` (Beijing 08:00 / UTC 00:00)
+
+1. `notify --all --app articles` (link to Articles archive)
 
 **Invest** — `.github/workflows/invest.yml` (Beijing 14:40 / UTC 06:40)
 

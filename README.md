@@ -73,6 +73,8 @@ Articles tabs: **world / business / tech / dev / music / horror**.
 5. Notes land in `notes/<category>/YYYY-MM-DD.md`; Hub rebuild via `npm run site`
 6. Bark: `npm run notify -- --all --app articles` or `--job invest-daily`
 
+Scheduled (China / Asia/Shanghai): **Articles** AI at **07:30**, Bark at **08:00**; **Invest** at **14:40**.
+
 ## Switch LLM
 
 Default is Cursor Cloud Agent:
