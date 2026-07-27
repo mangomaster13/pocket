@@ -2,11 +2,7 @@
  * A-share session helpers for Invest (pre-close 14:30 briefs).
  */
 
-const EASTMONEY_HEADERS = {
-  Referer: "https://quote.eastmoney.com/",
-  "User-Agent":
-    "Mozilla/5.0 (compatible; PocketInvest/0.1; +https://github.com/mangomaster13/pocket)",
-};
+import { fetchEastmoneyPushJson } from "./eastmoney-http.js";
 
 export interface MarketSession {
   /** Calendar date being evaluated (YYYY-MM-DD, Asia/Shanghai). */
@@ -38,11 +34,11 @@ export async function resolveAshareSession(date: string): Promise<MarketSession>
 
   const lastTradeDate = await fetchShanghaiTrendDate();
   if (!lastTradeDate) {
-    return {
-      date,
-      isTradingDay: false,
-      reason: "无法获取上证分时，今日不做买卖建议",
-    };
+    // Weekday with no tape usually means the quote API failed — do not pretend
+    // the market is closed (that produced false "休市" notes on live days).
+    throw new Error(
+      `Unable to fetch 上证分时 for ${date}; refusing to mark a weekday as closed`,
+    );
   }
 
   if (lastTradeDate !== date) {
@@ -95,18 +91,14 @@ export function weekdayInShanghai(date: string): number {
  * Reads the trade date from the latest Shanghai Composite minute bar.
  */
 async function fetchShanghaiTrendDate(): Promise<string | undefined> {
-  const url =
-    "https://push2.eastmoney.com/api/qt/stock/trends2/get" +
+  const path =
+    "/api/qt/stock/trends2/get" +
     "?fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13" +
     "&fields2=f51,f53,f56,f58&ndays=1&iscr=0&secid=1.000001";
   try {
-    const response = await fetch(url, { headers: EASTMONEY_HEADERS });
-    if (!response.ok) {
-      return undefined;
-    }
-    const json = (await response.json()) as {
+    const json = await fetchEastmoneyPushJson<{
       data?: { trends?: string[] };
-    };
+    }>(path);
     const trends = json.data?.trends ?? [];
     const last = trends[trends.length - 1];
     if (!last) {

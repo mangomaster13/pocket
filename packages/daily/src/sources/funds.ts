@@ -1,14 +1,12 @@
 import type { JobConfig } from "../config.js";
 import type { SourceDocument } from "../types.js";
 import { todayInTimeZone } from "../utils/date.js";
+import {
+  fetchEastmoneyJson,
+  fetchEastmoneyPushJson,
+} from "./eastmoney-http.js";
 import { loadFundsCatalog, type FundWatchEntry } from "./funds-catalog.js";
 import type { SourcePaths, SourceProvider } from "./types.js";
-
-const EASTMONEY_HEADERS = {
-  Referer: "https://fund.eastmoney.com/",
-  "User-Agent":
-    "Mozilla/5.0 (compatible; PocketInvest/0.1; +https://github.com/mangomaster13/pocket)",
-};
 
 interface NavPoint {
   date: string;
@@ -177,11 +175,7 @@ async function fetchFundMeta(code: string): Promise<{
     "https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo" +
     `?Fcodes=${encodeURIComponent(code)}&pageIndex=1&pageSize=1` +
     "&deviceid=pocket&plat=Android&product=EFund&version=1";
-  const response = await fetch(url, { headers: EASTMONEY_HEADERS });
-  if (!response.ok) {
-    return { name: "" };
-  }
-  const json = (await response.json()) as {
+  const json = await fetchEastmoneyJson<{
     Datas?: Array<{
       SHORTNAME?: string;
       GSZ?: string | null;
@@ -189,7 +183,13 @@ async function fetchFundMeta(code: string): Promise<{
       GZTIME?: string | null;
     }>;
     Expansion?: { GZTIME?: string };
-  };
+  }>(url, {
+    headers: { Referer: "https://fund.eastmoney.com/" },
+    allowHttpError: true,
+  });
+  if (!json) {
+    return { name: "" };
+  }
   const row = json.Datas?.[0];
   return {
     name: row?.SHORTNAME?.trim() ?? "",
@@ -206,11 +206,7 @@ async function fetchNavHistory(code: string, pageSize: number): Promise<NavPoint
   const url =
     "https://api.fund.eastmoney.com/f10/lsjz" +
     `?callback=&fundCode=${encodeURIComponent(code)}&pageIndex=1&pageSize=${pageSize}`;
-  const response = await fetch(url, { headers: EASTMONEY_HEADERS });
-  if (!response.ok) {
-    throw new Error(`Eastmoney lsjz failed for ${code}: HTTP ${response.status}`);
-  }
-  const json = (await response.json()) as {
+  const json = await fetchEastmoneyJson<{
     Data?: {
       LSJZList?: Array<{
         FSRQ?: string;
@@ -219,7 +215,10 @@ async function fetchNavHistory(code: string, pageSize: number): Promise<NavPoint
         JZZZL?: string;
       }>;
     };
-  };
+  }>(url, { headers: { Referer: "https://fund.eastmoney.com/" } });
+  if (!json) {
+    throw new Error(`Eastmoney lsjz failed for ${code}`);
+  }
   const rows = json.Data?.LSJZList ?? [];
   return rows
     .filter((row) => row.FSRQ && row.DWJZ)
@@ -235,19 +234,10 @@ async function fetchNavHistory(code: string, pageSize: number): Promise<NavPoint
  * Fetches 上证 / 深证 / 沪深300 snapshot (price + volume + amount).
  */
 async function fetchMarketBoard(): Promise<IndexQuote[]> {
-  const url =
-    "https://push2.eastmoney.com/api/qt/ulist.np/get" +
+  const path =
+    "/api/qt/ulist.np/get" +
     "?fltt=2&fields=f12,f14,f2,f3,f5,f6,f8&secids=1.000001,0.399001,1.000300";
-  const response = await fetch(url, {
-    headers: {
-      ...EASTMONEY_HEADERS,
-      Referer: "https://quote.eastmoney.com/",
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`Market board fetch failed: HTTP ${response.status}`);
-  }
-  const json = (await response.json()) as {
+  const json = await fetchEastmoneyPushJson<{
     data?: {
       diff?: Array<{
         f12?: string;
@@ -259,7 +249,7 @@ async function fetchMarketBoard(): Promise<IndexQuote[]> {
         f8?: number;
       }>;
     };
-  };
+  }>(path);
   return (json.data?.diff ?? []).map((row) => ({
     code: String(row.f12 ?? ""),
     name: String(row.f14 ?? ""),
@@ -278,35 +268,30 @@ async function fetchIndexTrends(
   secid: string,
   tail: number,
 ): Promise<IndexTrendPoint[]> {
-  const url =
-    "https://push2.eastmoney.com/api/qt/stock/trends2/get" +
+  const path =
+    "/api/qt/stock/trends2/get" +
     "?fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13" +
     "&fields2=f51,f53,f56,f58&ndays=1&iscr=0" +
     `&secid=${encodeURIComponent(secid)}`;
-  const response = await fetch(url, {
-    headers: {
-      ...EASTMONEY_HEADERS,
-      Referer: "https://quote.eastmoney.com/",
-    },
-  });
-  if (!response.ok) {
+  try {
+    const json = await fetchEastmoneyPushJson<{
+      data?: { trends?: string[] };
+    }>(path);
+    const trends = json.data?.trends ?? [];
+    const sliced = trends.slice(Math.max(0, trends.length - tail));
+    return sliced
+      .map((line) => {
+        const [time, price, volume] = line.split(",");
+        return {
+          time: time ?? "",
+          price: Number(price ?? 0),
+          volume: Number(volume ?? 0),
+        };
+      })
+      .filter((point) => point.time);
+  } catch {
     return [];
   }
-  const json = (await response.json()) as {
-    data?: { trends?: string[] };
-  };
-  const trends = json.data?.trends ?? [];
-  const sliced = trends.slice(Math.max(0, trends.length - tail));
-  return sliced
-    .map((line) => {
-      const [time, price, volume] = line.split(",");
-      return {
-        time: time ?? "",
-        price: Number(price ?? 0),
-        volume: Number(volume ?? 0),
-      };
-    })
-    .filter((point) => point.time);
 }
 
 /**
