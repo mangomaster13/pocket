@@ -10,7 +10,7 @@ Pocket Hub is a **personal toolkit** with two apps:
 | App | Pipeline |
 |-----|----------|
 | **Articles** | inbox or RSS (one article) → Cursor Cloud Agent → `notes/<category>/*.md` |
-| **Invest** | `config/funds.yaml` → Eastmoney NAV + market volume + fund page/chart URLs → Cursor Cloud Agent (14:40 分时) → `notes/invest/*.md` |
+| **Invest** | `config/funds.yaml` → Eastmoney NAV + market volume + fund page/chart URLs → Cursor Cloud Agent (14:30 分时) → `notes/invest/*.md` |
 
 Shared:
 
@@ -66,7 +66,8 @@ cd /path/to/pocket
 | Fund NAV fetcher | `packages/daily/src/sources/funds.ts` |
 | Articles generate | `.github/workflows/daily.yml` (Beijing **07:30**) |
 | Articles Bark | `.github/workflows/articles-notify.yml` (Beijing **08:00**) |
-| Invest schedule | `.github/workflows/invest.yml` (Beijing 14:40, before 15:00 close) |
+| Invest generate | `.github/workflows/invest.yml` (Beijing **14:30**) |
+| Invest Bark | `.github/workflows/invest-notify.yml` (Beijing **14:40**) |
 
 ## Categories (Articles tabs)
 
@@ -104,7 +105,7 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 ## Invest notes
 
 - Watchlist: `config/funds.yaml` (`code` + optional `name`)
-- Runs ~**14:40** Asia/Shanghai so the agent can read **分时** + market volume before 15:00 close
+- Runs ~**14:30** Asia/Shanghai so the agent can read **分时** + market volume; Bark at **14:40**
 - **Trading-day gate**: weekends / holidays / stale 上证分时 → write 休市 note, **skip LLM**, no A–D grades
 - Live days only: topic `fund-watch` requires per fund **买入等级** and **卖出等级** (`A`–`D`) plus the grade legend
 - Site: Invest pages skip English vocab highlighting; grade badges styled on live notes
@@ -133,11 +134,14 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 
 1. `notify --all --app articles` (link to Articles archive)
 
-**Invest** — `.github/workflows/invest.yml` (Beijing 14:40 / UTC 06:40)
+**Invest generate** — `.github/workflows/invest.yml` (Beijing 14:30 / UTC 06:30)
 
 1. `run:job -- --job invest-daily --skip-delivery`
 2. `npm run site` + commit + deploy
-3. `notify --job invest-daily`
+
+**Invest Bark** — `.github/workflows/invest-notify.yml` (Beijing 14:40 / UTC 06:40)
+
+1. `notify --job invest-daily`
 
 Secrets: `CURSOR_API_KEY`, `BARK_DEVICES`, `BARK_KEY_daj`, `BARK_KEY_lzx`, optional `BARK_SERVER`.
 

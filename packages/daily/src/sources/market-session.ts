@@ -1,5 +1,5 @@
 /**
- * A-share session helpers for Invest (pre-close 14:40 briefs).
+ * A-share session helpers for Invest (pre-close 14:30 briefs).
  */
 
 const EASTMONEY_HEADERS = {
@@ -140,7 +140,7 @@ Invest · 休市 · ${date}
 Market closed — no live intraday tape, so no buy/sell grades today.
 
 ## 中文摘要
-今日 A 股不开市（${session.reason}），**没有当日实时分时/成交量**，因此不给出买入/卖出等级，也不给操作建议。请下一交易日 14:40 再看。
+今日 A 股不开市（${session.reason}），**没有当日实时分时/成交量**，因此不给出买入/卖出等级，也不给操作建议。请下一交易日 14:30 再看。
 
 ## 状态
 - 日期：${date}

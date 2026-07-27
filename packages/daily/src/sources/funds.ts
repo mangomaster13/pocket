@@ -108,7 +108,7 @@ export class FundsSource implements SourceProvider {
 }
 
 /**
- * Session banner for the LLM (14:40 pre-close framing).
+ * Session banner for the LLM (14:30 pre-close framing).
  */
 function formatSessionHeader(input: {
   fetchedAt: string;
@@ -122,7 +122,7 @@ function formatSessionHeader(input: {
     `- liveSession: ${input.liveSession ? "yes" : "no"}`,
     `- shanghaiTrendDate: ${input.trendDate ?? "n/a"}`,
     `- Fetched at (UTC): ${input.fetchedAt}`,
-    "- Intended local window: ~14:40 Asia/Shanghai (before 15:00 close)",
+    "- Intended local window: ~14:30 Asia/Shanghai (before 15:00 close)",
     "- Official fund NAV usually publishes after the close; prefer intraday estimate + 分时 when present",
     input.liveSession
       ? "- LIVE: grades must be based on today's tape / volume"

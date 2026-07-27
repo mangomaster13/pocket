@@ -20,7 +20,7 @@ const GRADE_LEGEND = [
 ].join("\n");
 
 /**
- * Daily fund watch topic — pre-close (14:40) intraday read + A–D buy/sell grades.
+ * Daily fund watch topic — pre-close (14:30) intraday read + A–D buy/sell grades.
  */
 export const fundWatchTopic: TopicDefinition = {
   id: "fund-watch",
@@ -41,7 +41,7 @@ export const fundWatchTopic: TopicDefinition = {
 
     const systemPrompt = [
       "You are a Chinese A-share mutual-fund watch assistant for Pocket Hub · Invest.",
-      "The job runs around 14:40 Beijing time (before 15:00 close).",
+      "The job runs around 14:30 Beijing time (before 15:00 close).",
       "HARD RULE: If source Session says liveSession: no, or shanghaiTrendDate != sessionDate,",
       "you MUST refuse grades — say 休市/无当日实时分时 and give NO 买入等级/卖出等级.",
       "Only when liveSession: yes may you inspect each fund's 分时 / valuation page URLs,",
@@ -56,13 +56,13 @@ export const fundWatchTopic: TopicDefinition = {
     const userPrompt = [
       `Date: ${context.date}`,
       `Job: ${context.jobId}`,
-      "Session: pre-close briefing (~14:40 Asia/Shanghai); official fund NAV publishes after 15:00.",
+      "Session: pre-close briefing (~14:30 Asia/Shanghai); official fund NAV publishes after 15:00.",
       "",
       "Produce a note with EXACTLY these sections:",
       "",
       `# Fund Watch · ${context.date}`,
       "",
-      "Invest · 14:40 分时观察 · ${context.date}",
+      "Invest · 14:30 分时观察 · ${context.date}",
       "",
       "## Lead",
       "- One English sentence on today's pre-close stance",

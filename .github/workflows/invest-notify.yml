@@ -1,0 +1,40 @@
+name: Invest notify
+
+# China (Asia/Shanghai, UTC+8, no DST):
+#   Bark push at 14:40 after the 14:30 Invest daily generate + Pages deploy.
+
+on:
+  schedule:
+    # Beijing 14:40 = UTC 06:40
+    - cron: "40 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      PAGES_BASE_URL: https://mangomaster13.github.io/pocket
+      BARK_DEVICES: ${{ secrets.BARK_DEVICES }}
+      BARK_KEY_daj: ${{ secrets.BARK_KEY_daj }}
+      BARK_KEY_lzx: ${{ secrets.BARK_KEY_lzx }}
+      BARK_KEY: ${{ secrets.BARK_KEY }}
+      BARK_SERVER: ${{ secrets.BARK_SERVER }}
+      BARK_ICON: ${{ secrets.BARK_ICON }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Wait for Pages CDN
+        run: sleep 20
+
+      - name: Bark notify Invest note
+        run: npm run notify -- --job invest-daily
