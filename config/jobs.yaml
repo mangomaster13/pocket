@@ -179,3 +179,4 @@ jobs:
       type: bark
       titlePreset: invest
       appendDate: true
+      targets: [lzx]
