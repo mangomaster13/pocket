@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New to the web platform in June</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">开发 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>New to the web platform in June</h1>
+    <p class="meta">Source · 2026-07-30 · <a href="https://web.dev/blog/web-platform-06-2026">数据来源</a></p>
+    <p class="lead">Chrome 149, Chrome 150, and Firefox 152 shipped in June 2026 with useful CSS, scrolling, keyboard, and caching updates. Several features, including `field-sizing` and basic shapes in `shape-outside`, reached Baseline Newly available. Beta builds of Firefox 153 and Safari 27 also preview upcoming platform changes.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>2026 年 6 月，Chrome 149/150 与 Firefox 152 正式发布，带来表单自适应、滚动 Promise、`focusgroup` 等多项 Web 能力更新。 部分 CSS 特性已进入 Baseline，Firefox 153 与 Safari 27 的 Beta 也预告了下一轮平台变化。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://web.dev/blog/web-platform-06-2026">https://web.dev/blog/web-platform-06-2026</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>In June 2026, Chrome 149, Chrome 150, and Firefox 152 reached stable release. Safari did not ship a stable update that month. Rachel Andrew’s web.dev roundup walks through the most interesting features that landed for everyday frontend work.</p>
+<p>Two CSS capabilities became <mark class="hl-kw">Baseline Newly available</mark> across major engines. Firefox 152 added support for <code><mark class="hl-kw">field-sizing</mark></code>, so form controls such as text inputs and textareas can grow or shrink with their content instead of staying at a fixed default size. That removes a common need for JavaScript resizing hacks. Chrome 149 also completed support for the <code>rect()</code> and <code>xywh()</code> shape functions in <code>shape-outside</code>, giving developers a clearer way to define rectangular float exclusion areas without writing awkward <code>polygon()</code> coordinates.</p>
+<p>Chrome’s releases focused heavily on layout and interaction polish. Chrome 150 introduced <code>text-fit</code>, which can automatically scale font size to fit a container’s width. Chrome 149 brought CSS <mark class="hl-kw">gap decorations</mark> for grid and flex layouts, letting developers style the gaps themselves with rules similar to <code>column-rule</code>. Chrome 150 added <code>background-clip: border-area</code>, which clips a background to the border region and makes gradient borders and frame effects easier without extra wrappers or pseudo-elements.</p>
+<p>Interaction APIs also moved forward. Programmatic scroll methods such as <code>scrollTo()</code>, <code>scrollBy()</code>, and <code>scrollIntoView()</code> now return a Promise that resolves when smooth scrolling finishes, so follow-up work can wait for the motion to settle. The new <code>focusgroup</code> attribute lets developers declare arrow-key navigation for toolbars, tablists, and menus without hand-written keyboard listeners. Chrome 149 also allows pages with active WebSocket connections to enter the Back/Forward Cache: the browser closes those sockets on entry, then restores the page instantly when the user navigates back.</p>
+<p>Firefox 152 improved measurement and notifications. It added <code>firstInterimResponseStart</code> and <code>finalResponseHeadersStart</code> on <code>PerformanceResourceTiming</code>, helping teams time interim and final HTTP responses. It also added notification action buttons through the <code>actions</code> property. Looking ahead, Firefox 153 beta and Safari 27 beta preview stack-trace controls, IndexedDB helpers, transform-aware anchor positioning, a <code>:heading</code> pseudo-class, and other upcoming platform features.</p>
+<h3>中文全文翻译</h3>
+<p>2026 年 6 月，Chrome 149、Chrome 150 和 Firefox 152 正式发布到稳定版；当月没有 Safari 稳定版更新。Rachel Andrew 在 web.dev 的月度盘点中梳理了这些对日常前端开发最有价值的新能力。</p>
+<p>两项 CSS 能力已在主流引擎中成为 <mark class="hl-kw">Baseline Newly available</mark>。Firefox 152 支持了 <code><mark class="hl-kw">field-sizing</mark></code>，文本输入框和 textarea 等表单控件可以随内容伸缩，而不必固定在默认尺寸，从而减少常见的 JavaScript 自适应尺寸方案。Chrome 149 也补齐了 <code>shape-outside</code> 中的 <code>rect()</code> 与 <code>xywh()</code> 形状函数，让开发者能更清楚地定义矩形环绕排除区域，而不必写复杂的 <code>polygon()</code> 坐标。</p>
+<p>Chrome 的更新重点落在布局与交互体验。Chrome 150 引入了 <code>text-fit</code>，可按容器宽度自动缩放字号。Chrome 149 为网格和弹性布局带来 CSS <mark class="hl-kw">gap decorations</mark>，开发者能像使用 <code>column-rule</code> 一样直接装饰间距。Chrome 150 还支持 <code>background-clip: border-area</code>，可将背景裁剪到边框区域，更方便实现渐变边框和装饰性外框，而无需额外包裹层或伪元素。</p>
+<p>交互相关 API 也在推进。<code>scrollTo()</code>、<code>scrollBy()</code>、<code>scrollIntoView()</code> 等编程式滚动方法现在会返回 Promise，并在平滑滚动结束后兑现，便于在滚动稳定后再执行后续逻辑。新的 <code>focusgroup</code> 属性让开发者能声明式地为工具栏、选项卡列表和菜单管理方向键导航，而不必手写键盘事件监听。Chrome 149 还允许带有活动 WebSocket 连接的页面进入往返缓存：进入缓存时浏览器会关闭这些套接字，用户后退时即可立即恢复页面。</p>
+<p>Firefox 152 增强了性能测量与通知能力。它在 <code>PerformanceResourceTiming</code> 上新增了 <code>firstInterimResponseStart</code> 与 <code>finalResponseHeadersStart</code>，便于测量中间响应与最终响应头的到达时间；同时通过 <code>actions</code> 属性支持通知操作按钮。展望下一版本，Firefox 153 与 Safari 27 的 Beta 已预告堆栈深度控制、IndexedDB 辅助方法、感知变换的锚点定位、<code>:heading</code> 伪类等更多平台特性。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">Baseline Newly available</mark></strong></p>
+<ul>
+<li>英文释义: a compatibility status meaning a feature is now supported across the major browser engines</li>
+<li>中文释义: 表示某特性已在主流浏览器引擎中可用的兼容性状态</li>
+<li>例句: Firefox 152 introduces support for the <mark class="hl-kw">field-sizing</mark> CSS property, making automatic form control sizing <mark class="hl-kw">Baseline Newly available</mark> across all major browser engines.</li>
+<li>记忆提示: Baseline = 基线；Newly available = 新近全线可用</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">field-sizing</mark></strong></p>
+<ul>
+<li>英文释义: a CSS property that lets form controls resize to fit their content or stay fixed</li>
+<li>中文释义: 让表单控件按内容自适应大小，或保持固定尺寸的 CSS 属性</li>
+<li>例句: The <mark class="hl-kw">field-sizing</mark> property lets form controls shrink or grow dynamically to fit their content instead of remaining fixed at a default size.</li>
+<li>记忆提示: field（表单字段）+ sizing（尺寸）= 字段尺寸策略</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">gap decorations</mark></strong></p>
+<ul>
+<li>英文释义: CSS styling applied directly to the spacing between grid or flex items</li>
+<li>中文释义: 直接装饰网格或弹性布局间距的 CSS 能力</li>
+<li>例句: <mark class="hl-kw">Gap decorations</mark> let you add lines and styling directly to the spacing between grid and flex items, similar to column-rule in multi-column layouts.</li>
+<li>记忆提示: gap 是间距，decorations 是装饰线/样式</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">declaratively</mark></strong></p>
+<ul>
+<li>英文释义: by describing the desired result in markup or CSS, rather than writing step-by-step event code</li>
+<li>中文释义: 以声明方式描述期望结果，而不是逐步编写事件处理代码</li>
+<li>例句: <mark class="hl-sent">The focusgroup attribute lets developers declaratively manage arrow key navigation across composite UI controls without manually writing keyboard event listeners.</mark></li>
+<li>记忆提示: declare（声明）→ <mark class="hl-kw">declaratively</mark>（声明式地），与 imperative（命令式）相对</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">ineligible</mark></strong></p>
+<ul>
+<li>英文释义: not qualified or allowed to take part in something</li>
+<li>中文释义: 不符合资格的；不被允许的</li>
+<li>例句: <mark class="hl-sent">Previously, an open WebSocket connection rendered a page ineligible for bfcache.</mark></li>
+<li>记忆提示: in-（否定）+ eligible（合格）= 不合格/不可进入</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The field-sizing property lets form controls like text inputs and textareas shrink or grow dynamically to fit their content instead of remaining fixed at a default size.</mark></p>
+<ul>
+<li>结构: 主语 The <mark class="hl-kw">field-sizing</mark> property + 谓语 lets + 宾语 form controls + 不带 to 的不定式 shrink or grow + 目的状语 to fit... + 对比状语 instead of...</li>
+<li>中文: <mark class="hl-kw">field-sizing</mark> 属性让文本输入框和 textarea 等表单控件可以随内容动态缩小或放大，而不必固定在默认尺寸。</li>
+<li>仿写: The new layout mode lets sidebar panels expand or collapse smoothly to fit available space instead of staying locked at a hardcoded width.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The focusgroup attribute lets developers declaratively manage arrow key navigation across composite UI controls without manually writing keyboard event listeners.</mark></p>
+<ul>
+<li>结构: 主语 The focusgroup attribute + 谓语 lets + 宾语 developers + 不定式 manage... + 方式状语 <mark class="hl-kw">declaratively</mark> + 范围状语 across... + 伴随否定状语 without...</li>
+<li>中文: focusgroup 属性让开发者能够以声明方式管理复合 UI 控件中的方向键导航，而不必手动编写键盘事件监听器。</li>
+<li>仿写: The new form schema lets teams <mark class="hl-kw">declaratively</mark> validate nested fields across multi-step wizards without manually wiring custom submit handlers.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Previously, an open WebSocket connection rendered a page ineligible for bfcache.</mark></p>
+<ul>
+<li>结构: 时间状语 Previously + 主语 an open WebSocket connection + 谓语 rendered + 宾语 a page + 宾语补足语 <mark class="hl-kw">ineligible</mark> for bfcache</li>
+<li>中文: 此前，未关闭的 WebSocket 连接会使页面无法进入往返缓存。</li>
+<li>仿写: Previously, an unfinished animation rendered the component <mark class="hl-kw">ineligible</mark> for safe unmounting during route changes.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

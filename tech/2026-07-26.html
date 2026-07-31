@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS 26.6 Is Coming Next Week for iPhone</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>iOS 26.6 Is Coming Next Week for iPhone</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://9to5mac.com/2026/07/24/ios-26-6-is-coming-next-week-for-iphone-heres-whats-new/">数据来源</a></p>
+    <p class="lead">Apple is preparing to release iOS 26.6 early next week, with Monday, July 27 as the earliest likely date. The update focuses on bug fixes, security patches, and optimizing the Spotlight index so iPhones are ready for iOS 27 this fall. It also adds a blocked-contacts alert and contains code for an anti-theft feature that may arrive later.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>苹果预计下周初向公众推送 iOS 26.6，最早可能在 7 月 27 日周一发布。更新以修复漏洞、加强安全和优化 Spotlight 索引为主，以便为秋季的 iOS 27 做好准备。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://9to5mac.com/2026/07/24/ios-26-6-is-coming-next-week-for-iphone-heres-whats-new/">https://9to5mac.com/2026/07/24/ios-26-6-is-coming-next-week-for-iphone-heres-whats-new/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Apple is getting ready to ship iOS 26.6 to the public early next week. Earlier this week, the company sent a <mark class="hl-kw">release candidate</mark> build to developers and public beta testers, a sign that the final version is close. The update is expected to arrive alongside companion software such as macOS Tahoe 26.6, and Monday, July 27 looks like the earliest possible launch day.</p>
+<p>According to Apple’s release notes, iOS 26.6 is not a feature-heavy release. Instead, it aims to make iOS 26 more stable, secure, and free of bugs while also preparing iPhones for iOS 27. Apple says the update includes bug fixes, security updates, and work that <mark class="hl-kw">optimize</mark>s the Spotlight <mark class="hl-kw">index</mark> ahead of the next major system. Specific security details will be published when the software ships.</p>
+<p>The Spotlight change is the most notable part of the notes. iOS 27 is scheduled for this fall and will bring a major redesign of Spotlight search. To support that shift, iOS 26.6 will start optimizing each iPhone’s Spotlight <mark class="hl-kw">index</mark> in advance. When the first iOS 27 developer beta arrived, testers found that <mark class="hl-kw">index</mark>ing could take a week or longer. By beginning that process now, Apple hopes users will have a smoother experience when they upgrade in the fall.</p>
+<p>The update also includes a new alert for people who have reached the maximum number of blocked contacts. In addition, the software contains code related to a new anti-theft feature, though that capability may not become available until a later release. Overall, iOS 26.6 looks like a practical bridge update: it cleans up the current system and quietly lays groundwork for what comes next.</p>
+<h3>中文全文翻译</h3>
+<p>苹果正准备在下周初向公众推送 iOS 26.6。本周早些时候，公司已向开发者和公测用户发布了候选版本，这意味着正式版已经不远。该更新预计会与 macOS Tahoe 26.6 等配套系统一并到来，7 月 27 日周一看起来是最早可能的发布日。</p>
+<p>根据苹果的更新说明，iOS 26.6 并不是以新功能为主的版本。它更侧重于让 iOS 26 更稳定、更安全、更少漏洞，同时为 iPhone 升级到 iOS 27 做准备。苹果表示，这次更新包含错误修复、安全更新，以及为下一版系统提前优化 Spotlight 索引的工作。具体安全细节将在软件正式发布时公布。</p>
+<p>Spotlight 相关变化是说明中最值得关注的一点。iOS 27 计划于今年秋季推出，并将对 Spotlight 搜索进行大幅改版。为配合这一转变，iOS 26.6 会提前开始优化每台 iPhone 上的 Spotlight 索引。当首个 iOS 27 开发者测试版发布时，测试者发现索引过程可能需要一周甚至更久。通过现在就开始这项工作，苹果希望用户在秋季升级时能获得更顺畅的体验。</p>
+<p>此次更新还会在用户达到可屏蔽联系人上限时弹出新提示。此外，软件中还包含与一项新防盗功能相关的代码，不过该功能可能要等到后续版本才会真正推出。总体来看，iOS 26.6 更像一次务实的过渡更新：既整理当前系统，也悄悄为下一阶段打好基础。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">release candidate</mark></strong></p>
+<ul>
+<li>英文释义: a near-final software build sent out for last testing before public release</li>
+<li>中文释义: 正式发布前供最后测试的候选版本</li>
+<li>例句: Earlier this week, Apple shipped the <mark class="hl-kw">release candidate</mark> build of iOS 26.6 to developers and public beta testers.</li>
+<li>记忆提示: release（发布）+ candidate（候选人）→ 即将“当选”的正式版</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">companion update</mark></strong></p>
+<ul>
+<li>英文释义: a related software update released for another Apple platform at the same time</li>
+<li>中文释义: 同期发布的配套系统更新</li>
+<li>例句: We’re expecting iOS 26.6 to debut early next week alongside <mark class="hl-kw">companion update</mark>s like macOS Tahoe 26.6.</li>
+<li>记忆提示: companion 是“同伴”，指和其他系统一起上线的更新</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">optimize</mark></strong></p>
+<ul>
+<li>英文释义: to improve something so it works more efficiently or is better prepared for a future change</li>
+<li>中文释义: 优化；使更高效或更适合未来变化</li>
+<li>例句: This update includes bug fixes, security updates and <mark class="hl-kw">optimize</mark>s the Spotlight <mark class="hl-kw">index</mark> to prepare for iOS 27.</li>
+<li>记忆提示: opt- 与“最佳”相关 → 做到更好状态</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">index</mark></strong></p>
+<ul>
+<li>英文释义: a structured database that helps a system find information quickly during search</li>
+<li>中文释义: 索引；便于快速检索的数据结构</li>
+<li>例句: iOS 26.6 will begin the work of optimizing your iPhone’s Spotlight <mark class="hl-kw">index</mark>.</li>
+<li>记忆提示: 像书后的“索引”，帮系统快速找到内容</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">revamp</mark></strong></p>
+<ul>
+<li>英文释义: a major redesign or overhaul that significantly changes how something works</li>
+<li>中文释义: 重大改版；全面翻新</li>
+<li>例句: iOS 27 launches this fall, and includes a total <mark class="hl-kw">revamp</mark> of the Spotlight search feature.</li>
+<li>记忆提示: re-（重新）+ vamp（修补改造）→ 大改一版</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">These new updates don’t focus on adding features, but instead aim to make iOS 26 as stable, secure, and bug-free as possible while also preparing your iPhone for iOS 27.</mark></p>
+<ul>
+<li>结构: 主句（don’t focus... but instead aim...）+ 目的补语（to make...）+ while 伴随从句（preparing...）</li>
+<li>中文: 这些新更新并不以增加功能为重点，而是力求让 iOS 26 尽可能稳定、安全、少漏洞，同时也在为 iPhone 升级到 iOS 27 做准备。</li>
+<li>仿写: The meeting didn’t focus on new products, but instead aimed to make the roadmap as clear, realistic, and actionable as possible while also preparing the team for next quarter.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">When the first iOS 27 developer beta arrived, testers found that Spotlight indexing could take quite a while—up to a week or longer.</mark></p>
+<ul>
+<li>结构: When 时间状语从句 + 主句（testers found that...）+ 破折号补充说明时长</li>
+<li>中文: 当首个 iOS 27 开发者测试版到来时，测试者发现 Spotlight 索引可能要花相当长的时间——长达一周甚至更久。</li>
+<li>仿写: When the first draft of the report arrived, managers found that the review process could take quite a while—up to three days or longer.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">By getting the process started in advance with iOS 26.6, users should have a smoother initial experience when iOS 27 launches.</mark></p>
+<ul>
+<li>结构: By + 动名词短语作方式状语 + 主句（users should have...）+ when 时间从句</li>
+<li>中文: 通过在 iOS 26.6 中提前启动这一流程，用户在 iOS 27 发布时应能获得更顺畅的初始体验。</li>
+<li>仿写: By getting the onboarding materials ready in advance, new hires should have a smoother first week when the project officially begins.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

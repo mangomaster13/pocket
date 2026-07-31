@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apple Upgrade leasing program launches for iPhone, Mac, iPad</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-29</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Apple Upgrade leasing program launches for iPhone, Mac, iPad</h1>
+    <p class="meta">Source · 2026-07-29 · <a href="https://9to5mac.com/2026/07/28/apple-upgrade-leasing-program-debuts-how-it-works/">数据来源</a></p>
+    <p class="lead">Apple has launched Apple Upgrade, a Klarna-backed leasing plan in the United States for iPhone, Apple Watch, Mac, and iPad. Customers can choose fixed lease terms, trade in old devices, and upgrade, buy out, or return hardware at the end of the term. With the launch, Apple is ending the older iPhone Upgrade Program and iPhone Payments financing for new enrollments.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>苹果在美国正式推出由 Klarna 支持的 Apple Upgrade 租赁计划，覆盖 iPhone、Apple Watch、Mac 和 iPad。 用户可按固定租期付款并在期满后升级、买断或退还设备；同时旧版 iPhone Upgrade Program 与 iPhone Payments 将停止面向新用户开放。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://9to5mac.com/2026/07/28/apple-upgrade-leasing-program-debuts-how-it-works/">https://9to5mac.com/2026/07/28/apple-upgrade-leasing-program-debuts-how-it-works/</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>Apple has officially introduced Apple Upgrade, a new product <mark class="hl-kw">leasing program</mark> that starts today in the United States. Backed by Klarna, the plan lets shoppers lease an iPhone, Apple Watch, Mac, or iPad and upgrade more easily when the lease ends. The offering sits next to other checkout choices on Apple’s website, in the Apple Store app, and in Apple retail stores.</p>
+<p>Lease lengths depend on the product. iPhone and Apple Watch customers can pick 12-month or 24-month terms, while Mac and iPad leases run for 24 or 36 months. Starting prices include about $17.99 a month for iPhone 17e, $11.99 for Apple Watch Series 11, $24.99 for MacBook Air, and $15.99 for iPad mini. Sample configurations show an iPhone 17 Pro 256GB at $31.99 a month for 24 months or $45.99 for 12 months, and a MacBook Pro with 16GB of memory and 1TB of storage at $38.99 for 36 months or $53.99 for 24 months.</p>
+<p>During checkout, shoppers can <mark class="hl-kw">trade in</mark> Apple devices or Android phones to reduce monthly payments. Eligibility uses a <mark class="hl-kw">soft credit check</mark> that does not affect a credit score. Klarna handles approvals and payments, and customers manage due dates and payment details in the Klarna app. AppleCare is not included by default, though buyers can add it for an extra monthly fee or attach the device to an existing AppleCare One bundle. Apple Card users can earn 3% Daily Cash on lease payments. Education pricing is not available with Apple Upgrade.</p>
+<p>At any time, including the end of the lease, customers may upgrade to a new device, buy the current one by paying the remaining difference from the list price, or return it and leave the program. Early upgrades or exits require paying the remaining balance, with no extra fees or interest. If nothing is done at the end of the term, the lease can continue month to month for up to six months, payments may rise, and the customer is later charged the purchase amount. Missed payments roll into the next month without late fees, but three consecutive missed payments end the agreement and require the full <mark class="hl-kw">outstanding balance</mark>.</p>
+<p>Some products are excluded, including iPhone 16 and iPhone 16 Plus, Apple Watch SE, MacBook Neo, Mac mini, iPad (A16), and Studio Display. iPhone leases also require a postpaid plan with AT&amp;T, T-Mobile, or Verizon, though the phone is unlocked. As Apple Upgrade arrives, Apple is discontinuing the iPhone Upgrade Program and iPhone Payments; existing Upgrade Program members can continue until they are ready to move to a new option.</p>
+<h3>中文全文翻译</h3>
+<p>苹果已正式推出 Apple Upgrade，这是一项即日起在美国上线的全新产品租赁计划。该计划由 Klarna 提供支持，允许消费者租赁 iPhone、Apple Watch、Mac 或 iPad，并在租期结束时更轻松地升级。该选项会出现在苹果官网结账流程、Apple Store App 以及苹果零售店的其他购机方案旁边。</p>
+<p>租期因产品而异。iPhone 与 Apple Watch 可选 12 个月或 24 个月；Mac 与 iPad 可选 24 个月或 36 个月。起步月租大约为：iPhone 17e 17.99 美元、Apple Watch Series 11 11.99 美元、MacBook Air 24.99 美元、iPad mini 15.99 美元。举例来看，256GB 的 iPhone 17 Pro 24 个月月租 31.99 美元，或 12 个月月租 45.99 美元；配备 16GB 内存与 1TB 存储的 MacBook Pro，36 个月月租 38.99 美元，或 24 个月月租 53.99 美元。</p>
+<p>结账时可折抵苹果设备或安卓手机，以降低月付。资格审核采用不影响信用分的软性征信查询。Klarna 负责审批与收款，用户在 Klarna App 中管理付款日与支付信息。默认不含 AppleCare，但可另付月费添加，或将设备纳入已有的 AppleCare One。使用 Apple Card 支付租金可获得 3% Daily Cash。Apple Upgrade 不支持教育优惠价。</p>
+<p>在租期内任意时点以及租期结束时，用户都可升级到新设备、按标价差额买断当前设备，或退还设备并退出计划。提前升级或退出需付清剩余余额，没有额外手续费或利息。若到期不做选择，租约可按月延续最多六个月，月付可能上调，之后将收取买断金额。逾期付款会计入下月账单且无滞纳金，但连续三个月未付将终止协议，并须结清全部未付余额。</p>
+<p>部分产品不在计划内，包括 iPhone 16 与 iPhone 16 Plus、Apple Watch SE、MacBook Neo、Mac mini、iPad (A16) 以及 Studio Display。租赁 iPhone 还需开通 AT&amp;T、T-Mobile 或 Verizon 的后付费套餐，不过手机为解锁机。随着 Apple Upgrade 上线，苹果将停办 iPhone Upgrade Program 与 iPhone Payments；现有 Upgrade Program 用户可继续使用，直到准备转入新的购机方案。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">leasing program</mark></strong></p>
+<ul>
+<li>英文释义: a plan that lets customers use a product for regular payments instead of buying it all at once</li>
+<li>中文释义: 以分期租金使用产品、而非一次性买断的租赁方案</li>
+<li>例句: Apple has officially announced Apple Upgrade, a new product <mark class="hl-kw">leasing program</mark> available starting today in the United States.</li>
+<li>记忆提示: lease 是“租”，program 是“方案”，合起来就是租赁计划</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">soft credit check</mark></strong></p>
+<ul>
+<li>英文释义: a credit review that checks eligibility without lowering a person’s credit score</li>
+<li>中文释义: 不影响信用评分的资格征信查询</li>
+<li>例句: After you configure your device and choose Apple Upgrade, you’ll then check your eligibility with a <mark class="hl-kw">soft credit check</mark> that doesn’t impact your credit score.</li>
+<li>记忆提示: soft 强调“轻量、不留硬伤”，相对 hard inquiry（硬查询）</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">trade in</mark></strong></p>
+<ul>
+<li>英文释义: to give an old device as part of payment toward a new one</li>
+<li>中文释义: 以旧换新，用旧设备抵扣部分费用</li>
+<li>例句: You can also <mark class="hl-kw">trade in</mark> an existing device during the process to lower the lease payments over the initial lease term.</li>
+<li>记忆提示: trade（交易）+ in（交进去）= 把旧机交进去换优惠</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">outstanding balance</mark></strong></p>
+<ul>
+<li>英文释义: the amount of money still unpaid on an agreement</li>
+<li>中文释义: 尚未结清的剩余应付金额</li>
+<li>例句: If you miss three consecutive payments, the lease agreement ends and you must pay the full <mark class="hl-kw">outstanding balance</mark>.</li>
+<li>记忆提示: outstanding 此处不是“出色”，而是“未了结、还欠着”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">discontinue</mark></strong></p>
+<ul>
+<li>英文释义: to stop offering a product, service, or program</li>
+<li>中文释义: 停止提供；停办；停售</li>
+<li>例句: As part of the Apple Upgrade launch, Apple is discontinuing the iPhone Upgrade Program and iPhone Payments financing.</li>
+<li>记忆提示: dis-（取消）+ continue（继续）= 不再继续提供</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Apple Upgrade, which is backed by Klarna, lets users lease iPhone, Apple Watch, Mac, and iPad purchases, with the option to easily upgrade at the end of the lease term.</mark></p>
+<ul>
+<li>结构: 主句（Apple Upgrade lets users lease...）+ 非限制性定语从句（which is backed by Klarna）+ with 介词短语补充结果选项</li>
+<li>中文: 由 Klarna 支持的 Apple Upgrade 允许用户租赁 iPhone、Apple Watch、Mac 和 iPad，并在租期结束时轻松升级。</li>
+<li>仿写: The corporate phone plan, which is managed by a third-party lender, lets employees lease flagship devices, with the option to switch models after twenty-four months.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">If you do nothing at the end of the lease term, the lease converts to month-to-month for up to six months, payments may increase, and at the end of that you’re charged the purchase amount.</mark></p>
+<ul>
+<li>结构: 条件状语从句（If you do nothing...）+ 三个并列结果分句（converts / may increase / you’re charged）</li>
+<li>中文: 若在租期结束时不做任何选择，租约会转为按月续租最多六个月，月付可能上涨，到期后还将收取买断金额。</li>
+<li>仿写: If you ignore the renewal notice at the end of the contract, the service shifts to month-to-month for three months, fees may rise, and afterward you are billed for the remaining hardware cost.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Existing iPhone Upgrade Program customers can stay until they’re ready to upgrade, then transition into one of the new options.</mark></p>
+<ul>
+<li>结构: 主句（customers can stay）+ until 时间状语从句 + then 引出后续动作（transition into...）</li>
+<li>中文: 现有 iPhone Upgrade Program 用户可以继续留在原计划中，直到准备升级，然后再转入新的购机选项之一。</li>
+<li>仿写: Current subscribers can remain on the legacy plan until they are ready to renew, then move into one of the redesigned billing packages.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

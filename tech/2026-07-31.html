@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS 27 Will Bring Five Unannounced Features, Per Rumors</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-31</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>iOS 27 Will Bring Five Unannounced Features, Per Rumors</h1>
+    <p class="meta">Source · 2026-07-31 · <a href="https://9to5mac.com/2026/07/30/ios-27-will-bring-five-new-features-not-yet-announced-per-rumors/">数据来源</a></p>
+    <p class="lead">iOS 27 is already in beta and due for a fall release, but several rumored features have not shown up yet. According to Bloomberg’s Mark Gurman, Apple may still add chatbot choice for Siri, Health AI tools, third-party image and text generation, a customizable Camera UI, and foldable multitasking.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>iOS 27 已进入测试阶段，预计今秋正式推送，但多家传闻中的功能尚未出现在当前测试版中。 据彭博社 Mark Gurman 报道，苹果或将陆续加入第三方聊天机器人、健康 AI、可定制相机界面，以及面向折叠屏的分屏多任务等能力。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://9to5mac.com/2026/07/30/ios-27-will-bring-five-new-features-not-yet-announced-per-rumors/">https://9to5mac.com/2026/07/30/ios-27-will-bring-five-new-features-not-yet-announced-per-rumors/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>iOS 27 is already in <mark class="hl-kw">public beta</mark> and is expected to reach all users this fall. Even so, several features that Bloomberg reporter Mark Gurman described before WWDC still have not appeared in the current beta. 9to5Mac notes that these tools might arrive later in iOS 27.0, or they could land in a follow-up release such as iOS 27.1.</p>
+<p>One of the biggest unfinished items is broader chatbot choice inside Siri. ChatGPT is already available, but Apple is said to be opening Siri to other outside assistants as well. In the Search or Ask view, users would be able to switch among chatbots. Apple has reportedly tested Claude and Gemini in addition to ChatGPT. The toggle interface already exists in iOS 27, yet ChatGPT remains the only third-party option for now.</p>
+<p>Apple’s Health app is also expected to gain new AI features that once belonged to a larger health-coach project internally known as “Mulberry.” That project was <mark class="hl-kw">scaled back</mark>, but related upgrades—including better blood-sugar tracking and camera-based workout monitoring—are still on the roadmap. These Health changes are not expected in the first iOS 27 release and may be announced after WWDC.</p>
+<p>Beyond Siri, Apple plans to let third-party AI providers power image and text generation in tools such as Image Playground and Writing Tools. Today those features can use ChatGPT; later, alternatives could be installed through App Store apps. Apple has again tested Claude and Gemini for this work. Separately, Gurman has said the Camera app will become fully <mark class="hl-kw">customizable</mark>, letting users choose control “widgets” along the top of the interface. A Siri mode has already arrived in Camera, but the deeper customization has not.</p>
+<p>Finally, iOS 27 is expected to add software built for Apple’s rumored foldable phone, often called iPhone Ultra. Many Apple apps already support landscape mode in iOS 27, which looks like preparation for a wider screen. Gurman has also reported that <mark class="hl-kw">side-by-side</mark> app multitasking will arrive with the foldable device.</p>
+<h3>中文全文翻译</h3>
+<p>iOS 27 已进入公开测试阶段，预计将于今秋面向全部用户正式发布。即便如此，彭博社记者 Mark Gurman 在 WWDC 前披露的若干功能，仍未出现在当前测试版中。9to5Mac 指出，这些功能或许会在 iOS 27.0 晚些时候加入，也可能随后续版本（例如 iOS 27.1）推出。</p>
+<p>尚未落地的重点之一，是在 Siri 中提供更广泛的聊天机器人选择。ChatGPT 已经可用，但据称苹果还计划向其他外部助手开放 Siri。在“搜索”或“询问”界面中，用户将能够在不同聊天机器人之间切换。除 ChatGPT 外，苹果据报已测试 Claude 与 Gemini。切换界面在 iOS 27 中已经存在，但目前第三方选项仍只有 ChatGPT。</p>
+<p>苹果健康应用预计也将获得一批新的 AI 功能，它们原本属于一个内部代号为 “Mulberry” 的更大健康教练项目。该项目已被收缩，但相关升级——包括更完善的血糖追踪，以及用设备摄像头监测锻炼——仍在规划中。这些健康功能预计不会随 iOS 27 首发版本上线，也可能在 WWDC 之后再公布。</p>
+<p>除 Siri 外，苹果还计划让第三方 AI 服务商为 Image Playground、Writing Tools 等工具中的图像与文本生成功能提供支持。目前这些功能可调用 ChatGPT；之后，替代方案或可通过 App Store 应用安装。苹果同样为此测试过 Claude 与 Gemini。另外，Gurman 称相机应用将实现全面可定制，用户可自行选择界面顶部的控制“小组件”。相机已加入 Siri 模式，但更深层次的自定义尚未出现。</p>
+<p>最后，iOS 27 预计还将加入面向苹果传闻中折叠屏手机（常被称为 iPhone Ultra）的软件能力。许多苹果应用已在 iOS 27 中支持横屏，这看起来像是在为更宽屏幕做准备。Gurman 还报道称，并排应用多任务将随这款折叠设备一并到来。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">public beta</mark></strong></p>
+<ul>
+<li>英文释义: a pre-release version of software offered to ordinary users for testing before the final launch</li>
+<li>中文释义: 向普通用户开放的公开测试版</li>
+<li>例句: iOS 27 is currently in beta, and launches to all users this fall.</li>
+<li>记忆提示: public（公开的）+ beta（测试版）→ 正式发布前的公开试用</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">toggle between</mark></strong></p>
+<ul>
+<li>英文释义: to switch from one option to another, often with a simple control</li>
+<li>中文释义: 在不同选项之间切换</li>
+<li>例句: In the Search or Ask view, users will be able to <mark class="hl-kw">toggle between</mark> chatbots.</li>
+<li>记忆提示: 想象开关来回拨动，在 A 与 B 之间切换</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">scaled back</mark></strong></p>
+<ul>
+<li>英文释义: reduced in size, scope, or ambition compared with the original plan</li>
+<li>中文释义: 缩减规模；收缩原计划</li>
+<li>例句: The features were originally planned for a comprehensive health coach service that was <mark class="hl-kw">scaled back</mark>.</li>
+<li>记忆提示: scale（规模）+ back（往回）→ 把计划往回收</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">customizable</mark></strong></p>
+<ul>
+<li>英文释义: able to be changed to match a user’s preferences</li>
+<li>中文释义: 可定制的；可按个人喜好调整的</li>
+<li>例句: Apple is planning to make the iOS 27 Camera app interface fully <mark class="hl-kw">customizable</mark>.</li>
+<li>记忆提示: custom（定制）+ -izable（可……的）→ 可以自己改</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">side-by-side</mark></strong></p>
+<ul>
+<li>英文释义: placed next to each other at the same time</li>
+<li>中文释义: 并排的；左右同时显示的</li>
+<li>例句: Gurman says Apple will also enable <mark class="hl-kw">side-by-side</mark> app multitasking when the iPhone Ultra arrives.</li>
+<li>记忆提示: side（一侧）by side（挨着另一侧）→ 两个应用并排运行</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">But there are a handful of features Gurman reported on that haven’t yet arrived in the iOS 27 beta.</mark></p>
+<ul>
+<li>结构: 主句 there are a handful of features + 定语从句 Gurman reported on + 再修饰 features 的定语从句 that haven’t yet arrived...</li>
+<li>中文: 但还有少数 Gurman 曾报道过的功能，至今仍未出现在 iOS 27 测试版中。</li>
+<li>仿写: There are several tools the team promised that haven’t yet shipped in the current release.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The upgrade, which includes improved blood sugar-related tracking and the ability to use a device camera to monitor a person’s workout, is not expected to arrive in the initial release of iOS 27.</mark></p>
+<ul>
+<li>结构: 主语 The upgrade + 非限制性定语从句 which includes A and B + 谓语 is not expected to arrive...</li>
+<li>中文: 这一升级包括改进的血糖相关追踪，以及用设备摄像头监测锻炼的能力，预计不会在 iOS 27 的首发版本中推出。</li>
+<li>仿写: The redesign, which includes faster search and clearer navigation, is not expected to ship in the first public build.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Many Apple apps now support landscape mode in iOS 27, clearly in anticipation of the widescreen foldable.</mark></p>
+<ul>
+<li>结构: 主句说明现状 + 状语 clearly in anticipation of... 解释原因/目的</li>
+<li>中文: 许多苹果应用现已在 iOS 27 中支持横屏模式，显然是在为宽屏折叠设备做准备。</li>
+<li>仿写: Several office apps now support split view, clearly in anticipation of larger foldable screens.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

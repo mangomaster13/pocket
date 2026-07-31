@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>More than 300,000 flee wildfires in France and Spain</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">国际 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>More than 300,000 flee wildfires in France and Spain</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://www.bbc.co.uk/news/articles/cd7le0d53y2o">数据来源</a></p>
+    <p class="lead">More than 300,000 people have fled wildfires raging across south-west France and parts of Spain, as strong winds and high heat make the blazes hard to control. French officials say flames are pushing toward Bordeaux, while Spain’s government has declared a state of emergency and warned of “complex hours” ahead. The EU is sending aircraft and firefighting teams as the fire season looks set to break previous damage records.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>法国西南部和西班牙多地野火持续蔓延，逾30万人撤离；强风高温让火势难控，波尔多告急，西班牙已进入紧急状态。欧盟正调派飞机与消防队伍支援，官员警告今年欧洲火灾损失可能再创纪录。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.co.uk/news/articles/cd7le0d53y2o">https://www.bbc.co.uk/news/articles/cd7le0d53y2o</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Firefighters in south-west France are struggling to <mark class="hl-kw">contain</mark> wildfires as strong winds drive flames toward the city of Bordeaux. One official said crews were “far from having the fire under control.” Across France and Spain, more than 300,000 people have fled fires that have burned for days, while high temperatures continue to hinder <mark class="hl-kw">contain</mark>ment efforts.</p>
+<p>In France, another 55,000 people were ordered to leave late on Saturday, lifting the total in the Gironde and Landes regions to about 250,000. Firefighter Captain Nicolas Braz told AFP that the blaze had created “its own winds — complete with whirlwinds” and called it “<mark class="hl-kw">erratic</mark> and unmanageable.” France has sent the military to clear brush and cut <mark class="hl-kw">fire break</mark>s, and President Emmanuel Macron pledged that the government would “rebuild” and stay with affected communities “for as long as is needed.” Smoke drifted into Bordeaux, and tourists described an acrid smell, ash-covered pools, and a frightening race to escape.</p>
+<p>Spain has declared a state of emergency. A change in weather helped firefighters outside Madrid, but Interior Minister Fernando Grande-Marlaska said officials were “rather more pessimistic” than the day before and warned that the night would not be “very positive or very friendly.” Nearly 60,000 people have been <mark class="hl-kw">evacuate</mark>d from the Madrid and Ávila regions, and more than 28,000 remain confined to their homes. Authorities in València confirmed that a man believed to be in his 70s was found dead in his car. Madrid’s regional president called the blaze the “worst fire in the history of the region,” and Prime Minister Pedro Sánchez said 130,000 hectares had already burned in Spain this year — above the decade’s annual average of about 100,000 hectares.</p>
+<p>The crisis is reshaping daily life and sport. Organizers shortened Sunday’s final stage of the Tour de France so security forces could move to fire-hit areas. France’s Interior Minister said 98,000 hectares have burned nationwide since the start of 2026, and Macron was due to hold an emergency meeting as some 30 fires burned across the country. Elsewhere, Sicily reported hundreds of fires, and emergency services in Scotland declared a major incident over a wildfire in the Cairngorms that had burned for ten days.</p>
+<p>EU crisis management commissioner Hadja Lahbib warned that damage from European wildfires is likely to surpass previous records, noting that the season began earlier than usual. France has activated the EU <mark class="hl-kw">civil protection mechanism</mark> and will receive water bombers, helicopters, and specialist teams from several member states, while Commission President Ursula von der Leyen said more planes and helicopters from the EU firefighting fleet had already been sent to France and Spain.</p>
+<h3>中文全文翻译</h3>
+<p>法国西南部的消防员正艰难扑救野火，强风把火舌推向波尔多方向。一名官员表示，队伍“远未把火势控制住”。法西两国已有逾30万人因持续多日的火灾撤离，高温也持续妨碍灭火。</p>
+<p>法国在周六晚间又下令约5.5万人撤离，使吉伦特省与朗德省的撤离总数升至约25万。消防队长尼古拉·布拉兹告诉法新社，大火已制造“自己的风——还伴随着旋风”，并称火势“飘忽不定、难以驾驭”。法国已出动军队清理灌木、开辟防火带；总统马克龙承诺政府将“重建”，并“需要多久就陪伴多久”。烟雾飘向波尔多，游客形容空气刺鼻、泳池落满灰烬，逃生过程令人恐惧。</p>
+<p>西班牙已宣布进入紧急状态。天气变化一度帮助马德里外围的消防员，但内政大臣费尔南多·格兰德-马拉斯卡表示，官方比前一天“更加悲观”，并警告夜晚“不会友好”。马德里与阿维拉地区已有近6万人撤离，另有逾2.8万人仍被困居家中。瓦伦西亚当局证实一名据信70多岁的男子被发现死在车内。马德里自治区主席称这是“该地区史上最严重的火灾”；首相桑切斯说，西班牙今年已烧毁13万公顷土地，高于过去十年约10万公顷的年均水平。</p>
+<p>危机也改变了日常生活与体育赛事。环法自行车赛周日最后一程被缩短，以便安保力量调往火区。法国内政部长称，自2026年初以来全国已烧毁9.8万公顷；马克龙将召开紧急会议，因全国约有30处火情。西西里报告数百起火灾，苏格兰应急部门也因凯恩戈姆国家公园持续十天的野火宣布重大事件。</p>
+<p>欧盟危机管理专员哈贾·拉赫比警告，欧洲野火造成的损失很可能超过以往纪录，并指出本季火灾开始得更早。法国已启动欧盟民防机制，将获得多国水上灭火飞机、直升机与专业队伍；欧委会主席冯德莱恩表示，欧盟消防机队已向法西增派更多飞机与直升机。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">contain</mark></strong></p>
+<ul>
+<li>英文释义: to keep something harmful, such as a fire, from spreading further</li>
+<li>中文释义: 控制；遏制（使不再扩散）</li>
+<li>例句: Firefighters are struggling to <mark class="hl-kw">contain</mark> wildfires in south-west France.</li>
+<li>记忆提示: con-（一起）+ tain（握住）→ 把火“按住”不让蔓延</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">evacuate</mark></strong></p>
+<ul>
+<li>英文释义: to move people away from a dangerous place for safety</li>
+<li>中文释义: 撤离；疏散</li>
+<li>例句: In France, a further 55,000 were ordered to <mark class="hl-kw">evacuate</mark> late on Saturday.</li>
+<li>记忆提示: 和 vacuum（真空）有关：把人“抽离”危险区</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">erratic</mark></strong></p>
+<ul>
+<li>英文释义: changing in an irregular, unpredictable way</li>
+<li>中文释义: 飘忽不定的；难以预料的</li>
+<li>例句: A firefighter said the blaze was <mark class="hl-kw">erratic</mark> and unmanageable.</li>
+<li>记忆提示: error（出错）的感觉 → 行为乱、难预测</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">fire break</mark></strong></p>
+<ul>
+<li>英文释义: a cleared strip of land meant to stop or slow a spreading fire</li>
+<li>中文释义: 防火带</li>
+<li>例句: Army reinforcements were sent to help create <mark class="hl-kw">fire break</mark>s.</li>
+<li>记忆提示: fire + break → 把火“打断”的隔离带</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">civil protection mechanism</mark></strong></p>
+<ul>
+<li>英文释义: an EU system that lets a country request emergency help from other members</li>
+<li>中文释义: （欧盟）民防机制</li>
+<li>例句: France has activated the <mark class="hl-kw">civil protection mechanism</mark> and will receive water bombers and specialist teams.</li>
+<li>记忆提示: civil（民用）+ protection（防护）→ 跨国救援的应急开关</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> Firefighters are struggling to <mark class="hl-kw">contain</mark> wildfires in south-west France as strong winds push flames towards the city of Bordeaux, with one official saying they &quot;are far from having the fire under control.&quot;</p>
+<ul>
+<li>结构: 主句（Firefighters are struggling...）+ as 原因/伴随从句 + with + 独立主格（one official saying...）补充引语</li>
+<li>中文: 法国西南部的消防员正艰难扑救野火，强风把火舌推向波尔多，一名官员称他们“远未把火势控制住”。</li>
+<li>仿写: Doctors are racing to treat patients in the overcrowded ward as temperatures climb above 40C, with one nurse saying they &quot;are far from having the situation under control.&quot;</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The final leg of the Tour de France, due to take place Sunday, has been shortened from 133km (83 miles) to 89km (55 miles) so that security forces can be redeployed to areas affected by wildfires, organisers and police have said.</mark></p>
+<ul>
+<li>结构: 主语（The final leg...）+ 插入语（due to...）+ 被动完成时谓语 + so that 目的状语从句 + 句末信息来源（organisers and police have said）</li>
+<li>中文: 原定周日举行的环法最后赛段已从133公里缩短至89公里，以便安保力量调往受野火影响地区，组织方与警方表示。</li>
+<li>仿写: The championship final, due to take place Saturday, has been delayed by two hours so that emergency crews can be redeployed to flooded neighborhoods, city officials have said.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> She said fires had started earlier in the year when, in April, the Netherlands activated the EU&#39;s <mark class="hl-kw">civil protection mechanism</mark> which triggers support and reinforcements from other countries.</p>
+<ul>
+<li>结构: 主句 She said + 宾语从句（fires had started...）+ when 时间从句 + which 定语从句修饰 mechanism</li>
+<li>中文: 她说，火灾今年开始得更早——四月荷兰就启动了欧盟民防机制，该机制可调动其他国家的支援与增援。</li>
+<li>仿写: He explained that shortages had begun earlier in the quarter when, in March, the company activated its contingency plan which triggers support from partner factories.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rental searches for pet friendly properties drop after law change</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">商业 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Rental searches for pet friendly properties drop after law change</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://www.bbc.co.uk/news/articles/cj3gd312d8yo">数据来源</a></p>
+    <p class="lead">Rightmove data shows searches for pet-friendly rentals in England fell by more than half in May and June after the Renters’ Rights Act made it harder for landlords to refuse pets without a good reason. Agents warn that some renters wrongly assume permission is automatic, while landlords still raise concerns about damage, unsuitable homes, and limited ways to cover extra costs.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>英格兰《租客权利法》生效后，Rightmove上“可养宠物”房源的搜索量在5月和6月同比下降逾五成。中介称部分租客误以为养宠物必然获准，房东则仍可因合理理由拒绝，并对损坏风险与额外成本表示担忧。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.co.uk/news/articles/cj3gd312d8yo">https://www.bbc.co.uk/news/articles/cj3gd312d8yo</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Searches on Rightmove for rental homes that allow pets have fallen sharply since England’s new renting rules took effect. In May and June, pet-related rental searches dropped by more than 50% compared with the same months a year earlier—down 54% in May and 52% in June, according to figures shared with the BBC. Under changes introduced in May through the Renters’ Rights Act, landlords in England cannot <mark class="hl-kw">unreasonably refuse</mark> pets. Agents say some renters now believe permission is guaranteed, while landlords argue that some properties remain unsuitable for large dogs or several animals.</p>
+<p>Letting professionals stress that the law shifts the process rather than removing all discretion. Megan Eighteen, immediate past president of ARLA Propertymark, said landlords must consider requests fairly and cannot refuse them without a valid reason, but they can still decline when circumstances justify it. She also warned of “potential for misunderstanding” among tenants about what “pet-friendly” really means. Marc von Grundherr, of agency Benham and Reeves, said some tenants disclose a pet only after signing a tenancy, or are discovered during inspections. In his view, the <mark class="hl-kw">balance of power</mark> has shifted: landlords can no longer rely on a blanket “no pets” policy, and talks about pet ownership may arise later in the letting process.</p>
+<p>Pets remain the most common search term on Rightmove—ahead of gardens, garages, and furnishings—but the lead is shrinking as fewer renters filter for pet-friendly homes up front. Landlords may still refuse a pet if another tenant has an allergy, the home is too small, the animal is illegal, or a freeholder bans pets on a leasehold property. For tenants, the change can feel personal. Eve Williamson, a former hairdresser in London, once had to give up her American Bulldog, Khan, or face eviction, even though she had previously kept a dog there. Khan has since been re-homed, and she welcomed the reform. Katie Smith, from Swindon, lives with two cats and says choice still shrinks sharply on portals when pets are involved; she wants landlords to give pet owners a chance. Russell Hunt, founder of Pets Lets, says some landlords still find excuses to refuse, and urges them to judge each request on its merits—using “pet CVs” and weighing factors such as older dogs that are calmer.</p>
+<p>Landlord groups say they understand the companionship pets provide, but they still worry about costly damage. Chris Norris of the National Residential Landlords Association noted that landlords cannot compel tenants to buy insurance or demand an extra deposit, yet may bear repair costs if a pet causes harm. The UK’s chief property ombudsman, Lesley Horton, said landlords should not charge pet surcharges outside permitted fees, though they can deduct proven pet-related damage from the tenancy deposit at the end of a lease.</p>
+<h3>中文全文翻译</h3>
+<p>自英格兰新租房规则生效以来，Rightmove上对允许养宠物的出租房搜索量大幅下降。与去年同期相比，5月和6月与宠物相关的租房搜索下降逾50%——据分享给BBC的数据显示，5月下降54%，6月下降52%。根据5月起通过《租客权利法》实施的修改，英格兰房东不得无理拒绝养宠物。中介表示，一些租客现在以为许可是板上钉钉的；房东则认为，部分房屋仍不适合大型犬或多只宠物。</p>
+<p>租赁业人士强调，法律改变的是流程，并非取消所有裁量权。ARLA Propertymark前任会长Megan Eighteen表示，房东必须公平考虑申请，不能在没有正当理由时拒绝，但在情况确有必要时仍可拒绝。她还警告，租客对“可养宠物”究竟意味着什么存在“误解空间”。Benham and Reeves中介公司的Marc von Grundherr说，有些租客直到签完租约后才透露有宠物，或是在房屋检查时才被发现。在他看来，权力天平已经倾斜：房东不能再依赖一刀切的“禁止宠物”政策，关于养宠物的讨论可能会出现在租赁流程更晚的阶段。</p>
+<p>在Rightmove上，宠物仍是最常见的搜索词——排在花园、车库和家具之前——但领先优势正在缩小，因为越来越少的租客一开始就筛选可养宠物的房源。若其他租客有过敏、房屋太小、宠物不合法，或是租赁物业的自由保有人禁止养宠物，房东仍可拒绝。对租客而言，这一变化可能非常个人化。伦敦前美发师Eve Williamson曾不得不放弃她的美国斗牛犬Khan，否则面临驱逐，尽管她此前曾在同一处住所养过狗。Khan现已成功找到新家，她也对改革表示欢迎。来自斯温登的Katie Smith与两只猫同住，她说一旦涉及宠物，门户网站上的可选房源仍会急剧减少；她希望房东给养宠物的人一个机会。Pets Lets创始人Russell Hunt表示，仍有房东找借口拒绝，并呼吁他们按个案 merit 判断——例如使用“宠物履历”，并考虑年长犬更安静等因素。</p>
+<p>房东团体称，他们理解宠物带来的陪伴价值，但仍担心昂贵的损坏。全国住宅房东协会的Chris Norris指出，房东无法强制租客购买保险，也无权要求额外押金，却可能在宠物造成损坏时承担维修费用。英国首席房产监察专员Lesley Horton表示，房东不应在允许费用范围之外收取宠物附加费，但若能证明宠物相关损坏，可在租期结束时从押金中扣除。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">plummet</mark></strong></p>
+<ul>
+<li>英文释义: to fall suddenly and by a large amount</li>
+<li>中文释义: （数量、价格等）骤降、暴跌</li>
+<li>例句: Rightmove searches for rental properties that allow pets have <mark class="hl-kw">plummet</mark>ed since law changes gave renters more rights.</li>
+<li>记忆提示: 联想“铅锤 plumb 往下坠”——数字一下子掉下去。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">unreasonably refuse</mark></strong></p>
+<ul>
+<li>英文释义: to reject something without a fair or valid reason</li>
+<li>中文释义: 无理拒绝；没有正当理由地拒绝</li>
+<li>例句: Landlords in England cannot <mark class="hl-kw">unreasonably refuse</mark> pets in their properties under changes made in May in the Renters&#39; Rights Act.</li>
+<li>记忆提示: un-（不）+ reason（理由）→ 不合理地拒绝。</li>
+</ul>
+</li>
+<li><p><strong>blanket &#39;no pets&#39; policy</strong></p>
+<ul>
+<li>英文释义: a rule that bans pets in all cases, with no case-by-case exceptions</li>
+<li>中文释义: 一刀切的“禁止宠物”政策</li>
+<li>例句: Landlords can no longer rely on a blanket &#39;no pets&#39; policy to deter applications.</li>
+<li>记忆提示: blanket 像毯子“盖住全部”→ 一律适用、没有例外。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">balance of power</mark></strong></p>
+<ul>
+<li>英文释义: the relative strength or advantage held by different sides in a relationship</li>
+<li>中文释义: 权力天平；双方力量对比</li>
+<li>例句: Tenants now understand the <mark class="hl-kw">balance of power</mark> has shifted.</li>
+<li>记忆提示: 天平一端沉了，谁更有话语权就变了。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">levy / pet surcharge</mark></strong></p>
+<ul>
+<li>英文释义: to impose an extra charge; a fee added because a tenant keeps a pet</li>
+<li>中文释义: 征收；宠物附加费</li>
+<li>例句: Landlords should not be levying pet surcharges as this fell outside permitted fees.</li>
+<li>记忆提示: levy 像“强制收取”；surcharge = sur（额外）+ charge（费用）。</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Following the introduction of the new rules, pet searches dropped by more than 50% in May and June compared with a year earlier.</mark></p>
+<ul>
+<li>结构: 时间状语（Following...）+ 主句（pet searches dropped...）+ 比较状语（compared with...）</li>
+<li>中文: 新规出台后，5月和6月的宠物相关搜索量较一年前下降逾50%。</li>
+<li>仿写: Following the launch of the remote-work policy, office attendance dropped by more than 40% in the first quarter compared with a year earlier.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The reality is that tenants now understand the balance of power has shifted.</mark></p>
+<ul>
+<li>结构: The reality is that + 宾语从句；从句中含 understand + 省略 that 的宾语从句</li>
+<li>中文: 现实是，租客现在明白权力天平已经倾斜。</li>
+<li>仿写: The reality is that suppliers now understand the <mark class="hl-kw">balance of power</mark> has shifted toward large retailers.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Many landlords have legitimate concerns about the risk that some irresponsible pet owners pose to rental properties, or that some owners may try to keep pets in properties that are not appropriate for animals.</mark></p>
+<ul>
+<li>结构: 主句 + about the risk + 两个 that 同位语从句（pose... / may try...）+ 定语从句（that are not appropriate...）</li>
+<li>中文: 许多房东对某些不负责任的宠物主人给出租物业带来的风险，或某些主人试图在不适合饲养动物的房屋中养宠物，抱有合理担忧。</li>
+<li>仿写: Many managers have legitimate concerns about the risk that rushed product launches pose to brand trust, or that teams may ship features that are not ready for customers.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Becky Threequel Has a Blast Destroying Nazis</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">惊悚 · 2026-07-27</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Becky Threequel Has a Blast Destroying Nazis</h1>
+    <p class="meta">Source · 2026-07-27 · <a href="https://bloody-disgusting.com/reviews/3960721/the-last-temptation-of-becky-review/">数据来源</a></p>
+    <p class="lead">At Fantasia 2026, *The Last Temptation of Becky* continues the bloody saga of Lulu Wilson’s reluctant action heroine as she faces Nazis for a third time. Directed by Jenn Wexler, the threequel leans into spy-movie tropes, dark comedy, and cathartic violence while keeping Becky proudly rule-breaking. The review praises Wilson’s prickly charm even as it notes uneven effects and a few soft action beats.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>《贝基的最后诱惑》在 Fantasia 2026 首映，延续 Lulu Wilson 饰演的暴力少女特工贝基与纳粹对抗的血腥系列。 影评称赞其黑色幽默与解压式打戏，同时指出特效与部分动作场面仍有短板。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://bloody-disgusting.com/reviews/3960721/the-last-temptation-of-becky-review/">https://bloody-disgusting.com/reviews/3960721/the-last-temptation-of-becky-review/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Across three films, Lulu Wilson’s Becky Hooper has become one of horror’s most unlikely action heroines. The story began with the brutal 2020 thriller <em>Becky</em>, expanded into a full franchise with 2023’s <em>The Wrath of Becky</em>, and now reaches a third and possibly final chapter in <em>The Last Temptation of Becky</em>. The new film is directed by Jenn Wexler, known for <em>The Ranger</em> and <em>The Sacrifice Game</em>, and co-written with Matt Angel from a story by Angel and Suzanne Coote.</p>
+<p>This entry opens with an adult Becky already working for the CIA. Her latest mission collapses into bloody failure, and director Baker warns that she is too much of a <mark class="hl-kw">loose cannon</mark>. Flashbacks make clear that Becky has never recovered from her father’s murder by white supremacists, so the return of Nazis feels like a full-circle choice. Her new enemy is General Wilhelm Reuss, played <mark class="hl-kw">against type</mark> by Neil Patrick Harris, a devoted defender of the Reich who relocates his family, enforcer, and Dr. Friedrich Metzger to the Wolf’s Lair in Poland. Despite years of supposed growth, Becky still refuses to follow rules, even with handler Montana and fellow agent Rigby trying to guide her. One last chance to prove herself puts her on a collision course with Reuss and his equally dangerous family.</p>
+<p>Wilson remains the film’s main attraction: prickly, quippy, and trigger-happy, with sharp voiceover and dinner-table banter that keep the tone wicked and funny. The movie borrows spy-thriller toys—gadget briefings, fencing practice, and a duel with Reuss’s daughter Luisa—and treats Nazis as both a real threat and a punchline. Some effects and fight scenes miss the mark, especially when CGI replaces practical blood and fire, but the <mark class="hl-kw">cathartic</mark> violence still lands. If you want a heroine who destroys Nazis with gleeful force, this Fantasia premiere is firmly in your lane, and the review hopes Wilson keeps returning to Becky every few years.</p>
+<h3>中文全文翻译</h3>
+<p>三部电影下来，Lulu Wilson 饰演的贝基·胡珀已成为恐怖片里最出人意料的动作女英雄之一。故事始于 2020 年残酷惊悚片《贝基》，2023 年《贝基之怒》把它做成完整系列，如今第三部、也可能是最终章《贝基的最后诱惑》接棒。新片由执导过《巡林员》和《献祭游戏》的 Jenn Wexler 掌镜，并与 Matt Angel 共同编剧，故事则来自 Angel 与 Suzanne Coote。</p>
+<p>本集开场时，成年贝基已为 CIA 效力。她最新任务以血腥失败收场，局长贝克警告她太像一枚失控的炮弹。闪回清楚表明，父亲被白人至上主义者杀害后，贝基从未真正走出阴影，因此纳粹再度登场像是一次首尾呼应。她的新对手是 Neil Patrick Harris 反类型出演的威廉·罗伊斯将军——这位狂热的帝国拥护者把家人、打手和弗里德里希·梅茨格医生一并迁到波兰的狼穴。尽管故事里已过去数年，贝基仍不愿守规矩，即便有负责人蒙大拿和同僚里格比从旁引导。她获得最后一次证明自己的机会，也因此与罗伊斯及其同样危险的家人正面相撞。</p>
+<p>Wilson 仍是影片最大卖点：尖刻、爱吐槽、枪不离手，旁白与餐桌上的互怼让整部片又坏又好笑。电影借用间谍片套路——装备简报、击剑训练，以及与罗伊斯之女路易莎的决斗——并把纳粹既写成真正威胁，也写成嘲讽对象。部分特效与打斗不够扎实，尤其是用 CGI 取代写实血火时更显廉价，但解压的暴力场面依旧奏效。若你想看一位以畅快武力痛击纳粹的女主角，这部 Fantasia 首映作正对胃口；影评也希望 Wilson 每隔几年就再回来演一次贝基。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">loose cannon</mark></strong></p>
+<ul>
+<li>英文释义: a person who is unpredictable and hard to control, especially in a high-stakes job</li>
+<li>中文释义: 难以管束、容易惹祸的人；失控的“炮弹”</li>
+<li>例句: CIA director Baker explains that Becky is too much of a <mark class="hl-kw">loose cannon</mark>.</li>
+<li>记忆提示: cannon 是大炮；loose 一松，炮弹乱飞——比喻不听指挥的人</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">full-circle moment</mark></strong></p>
+<ul>
+<li>英文释义: a point when events return to an earlier theme or starting place, often with new meaning</li>
+<li>中文释义: 首尾呼应、绕回原点的时刻</li>
+<li>例句: Bringing Nazis back to the forefront feels like a <mark class="hl-kw">full-circle moment</mark> for the series.</li>
+<li>记忆提示: 画一个圆又回到起点——故事主题也“转了一圈”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">against type</mark></strong></p>
+<ul>
+<li>英文释义: casting an actor in a role very different from their usual image</li>
+<li>中文释义: 反类型出演；打破演员固有形象的选角</li>
+<li>例句: The series gets good mileage casting <mark class="hl-kw">against type</mark> for its villains, including Neil Patrick Harris.</li>
+<li>记忆提示: against = 违背；type = 类型——故意不按“老戏路”演</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">put someone through the wringer</mark></strong></p>
+<ul>
+<li>英文释义: to subject someone to severe physical or emotional strain</li>
+<li>中文释义: 让人吃尽苦头；把人“拧干”般折磨</li>
+<li>例句: The film isn’t afraid to put its characters through the wringer—Becky sports a broken nose for most of the last act.</li>
+<li>记忆提示: wringer 是旧式洗衣机的挤压辊；被“拧过”= 受尽折腾</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">cathartic</mark></strong></p>
+<ul>
+<li>英文释义: providing emotional release, especially through intense or violent storytelling</li>
+<li>中文释义: 宣泄情绪的；令人解压、畅快的</li>
+<li>例句: There are, naturally, some extremely <mark class="hl-kw">cathartic</mark> Nazi casualties.</li>
+<li>记忆提示: 联想 “catharsis 宣泄”——看坏人遭报应时心里那口恶气终于吐出来</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">When Becky is given one final opportunity to prove her worth to the CIA, it sets up a collision course between her and Reuss that is guaranteed to be an all-out bloodbath.</mark></p>
+<ul>
+<li>结构: When 时间状语从句 + 主句（it sets up...）+ between A and B + that 定语从句修饰 collision course</li>
+<li>中文: 当贝基获得最后一次向 CIA 证明自己价值的机会时，这便铺好了她与罗伊斯的对撞之路，而且这场对撞注定是一场全面血战。</li>
+<li>仿写: When the intern was given one final chance to prove her worth to the firm, it set up a collision course between her and the senior partner that was guaranteed to be tense.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> While there’s a disappointing lack of rocket launchers in this entry, by employing the tropes of the spy movie, <em>The Last Temptation of Becky</em> does get to have its James Bond/Q moment when Montana walks her pint-sized agent through a litany of Chekhov’s items that are inevitably used to destroy Nazis later.</p>
+<ul>
+<li>结构: While 让步从句 + by doing 方式状语 + 主句 + when 时间从句 + that 定语从句修饰 items</li>
+<li>中文: 尽管这一部令人失望地缺少火箭筒，但通过借用间谍片套路，《贝基的最后诱惑》仍迎来了它的詹姆斯·邦德／Q 时刻：蒙大拿带这位娇小特工逐一过目一长串“契诃夫道具”，而这些道具后来不可避免地被用来摧毁纳粹。</li>
+<li>仿写: While there’s a disappointing lack of plot twists in this episode, by employing the tropes of the heist movie, the show does get to have its master-plan moment when the mentor walks the rookie through a litany of tools that are inevitably used later.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">If there’s a misstep, it’s the film’s uneasy mix of practical FX and CGI.</mark></p>
+<ul>
+<li>结构: If 条件从句（there’s a misstep）+ 主句（it’s...）用名词短语点明问题所在</li>
+<li>中文: 如果说有什么失误，那就是影片在实用特效与电脑特效之间别扭的混用。</li>
+<li>仿写: If there’s a misstep, it’s the presentation’s uneasy mix of hard data and vague slogans.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

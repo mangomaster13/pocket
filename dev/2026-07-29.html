@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New to the web platform in May</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">开发 · 2026-07-29</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>New to the web platform in May</h1>
+    <p class="meta">Source · 2026-07-29 · <a href="https://web.dev/blog/web-platform-05-2026">数据来源</a></p>
+    <p class="lead">In May 2026, Chrome 148, Firefox 151, and Safari 26.5 shipped features that pushed several CSS and platform APIs into Baseline Newly available status. Highlights include the `:open` pseudo-class, name-only and style container queries, lazy-loaded media, Document Picture-in-Picture, and wider Web Serial support. Beta builds of Chrome 149 and Firefox 152 also preview gap decorations, shape functions, promise-based scrolling, and auto-sizing form fields.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>2026年5月，Chrome、Firefox与Safari稳定版带来多项新能力，使 `:open`、仅按名称的容器查询、容器样式查询等进入 Baseline Newly available。 同期还有音视频懒加载、Document Picture-in-Picture、Web Serial 平台扩展，以及 Chrome 149 / Firefox 152 beta 中的预览特性。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://web.dev/blog/web-platform-05-2026">https://web.dev/blog/web-platform-05-2026</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>May 2026 brought a busy round of stable browser releases: Chrome 148, Firefox 151, and Safari 26.5. Together they moved several long-awaited web platform features into <mark class="hl-kw">Baseline Newly available</mark> territory, giving developers clearer signals about what is safe to use across the core browser set.</p>
+<p>On the CSS side, Safari 26.5 completed support for the <code>:open</code> <mark class="hl-kw">pseudo-class</mark>, so authors can style open states of elements such as <code>&lt;details&gt;</code>, <code>&lt;dialog&gt;</code>, and form controls with picker interfaces without relying on attribute selectors like <code>details[open]</code>. Chrome 148 made name-only <mark class="hl-kw">container queries</mark> <mark class="hl-kw">Baseline Newly available</mark>: you can query a named container without an extra size or style condition, and without setting <code>container-type</code> when you only care about the name. Firefox 151 then closed the loop on container style queries for custom properties, allowing <code>@container style(--theme: dark)</code> patterns to apply theme-aware styles based on a parent container’s custom properties.</p>
+<p>Performance and rich UI also advanced. Chrome 148 added native <code>loading=&quot;lazy&quot;</code> for <code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code>, so browsers can defer media until it nears the viewport—similar to lazy images and iframes—to cut bandwidth and improve load times. Firefox 151 shipped the Document Picture-in-Picture API on desktop, letting pages open an <mark class="hl-kw">always-on-top</mark> window with arbitrary HTML for conference grids, tickers, or timers that remain visible while users navigate away. Web Serial expanded as well: Firefox 151 supports it on desktop (with a permission add-on), and Chrome 148 brings it to Android for talking to microcontrollers, printers, and other serial hardware.</p>
+<p>Beta channels preview what comes next. Chrome 149 beta highlights CSS gap decorations for flex and grid gaps, more basic shape functions in <code>shape-outside</code>, Promise-returning smooth scroll methods, and BFCache eligibility for pages with active WebSockets. Firefox 152 beta adds full <code>field-sizing</code> support so form controls can grow with their content, plus Notification <code>actions</code> / <code>maxActions</code> and <code>options.pseudoElement</code> in <code>Element.getAnimations()</code>. There was no Safari beta this month, but the stable and beta releases already give teams plenty to test before wider rollout.</p>
+<h3>中文全文翻译</h3>
+<p>2026年5月迎来一轮密集的浏览器稳定版发布：Chrome 148、Firefox 151 与 Safari 26.5。它们共同把多项期待已久的 Web 平台特性推入 <mark class="hl-kw">Baseline Newly available</mark>，让开发者更清楚哪些能力可以在核心浏览器集合中放心使用。</p>
+<p>在 CSS 方面，Safari 26.5 补齐了对 <code>:open</code> 伪类的支持，开发者可为 <code>&lt;details&gt;</code>、<code>&lt;dialog&gt;</code> 以及带选择器界面的表单控件的“打开”状态写样式，而不再依赖 <code>details[open]</code> 这类属性选择器。Chrome 148 使“仅按名称的容器查询”成为 <mark class="hl-kw">Baseline Newly available</mark>：查询命名容器时不必再附加尺寸或样式条件；若只按名称查询，也不必再设置 <code>container-type</code>。Firefox 151 则补全了针对自定义属性的容器样式查询，使 <code>@container style(--theme: dark)</code> 这类写法能根据父容器的自定义属性应用主题相关样式。</p>
+<p>性能与富交互也有进展。Chrome 148 为 <code>&lt;video&gt;</code> 和 <code>&lt;audio&gt;</code> 增加了原生的 <code>loading=&quot;lazy&quot;</code>，浏览器可在媒体接近视口时再加载——类似懒加载图片与 iframe——从而节省带宽、改善加载表现。Firefox 151 在桌面端发布了 Document Picture-in-Picture API，页面可打开包含任意 HTML 的置顶窗口，用于会议网格、行情条或计时器等，即使用户离开原页面仍可保持可见。Web Serial 的平台覆盖也在扩大：Firefox 151 在桌面端支持该 API（需安装权限附加组件），Chrome 148 则把它带到 Android，便于与微控制器、打印机等串口硬件通信。</p>
+<p>Beta 渠道则预告下一步。Chrome 149 beta 亮点包括用于 flex/grid 间隙的 CSS gap decorations、<code>shape-outside</code> 中更多基本形状函数、在平滑滚动完成时 resolve 的 Promise 滚动方法，以及带活动 WebSocket 的页面也可进入 BFCache。Firefox 152 beta 完整支持 <code>field-sizing</code>，使表单控件可随内容自动调整尺寸，并增加 Notification 的 <code>actions</code> / <code>maxActions</code>，以及 <code>Element.getAnimations()</code> 中的 <code>options.pseudoElement</code>。本月没有 Safari beta，但已有的稳定版与 beta 已给团队提供了充足的测试空间。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">Baseline Newly available</mark></strong></p>
+<ul>
+<li>英文释义: A Baseline status meaning a feature is now supported across the core browser set and is newly ready for broad use.</li>
+<li>中文释义: Baseline 状态之一，表示该特性已在核心浏览器集合中可用，可较放心地采用。</li>
+<li>例句: Safari 26.5 includes support for the <code>:open</code> <mark class="hl-kw">pseudo-class</mark>, making this feature <mark class="hl-kw">Baseline Newly available</mark>.</li>
+<li>记忆提示: Newly = 刚达标；先记“新进可用”，再对比 Widely available。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">pseudo-class</mark></strong></p>
+<ul>
+<li>英文释义: A CSS selector keyword that matches elements in a particular state, such as open, hover, or invalid.</li>
+<li>中文释义: CSS 中表示元素某种状态的选择器关键字，如打开、悬停、无效等。</li>
+<li>例句: The <code>:open</code> <mark class="hl-kw">pseudo-class</mark> lets you style elements that have &quot;open&quot; and &quot;closed&quot; states when they are open.</li>
+<li>记忆提示: pseudo ≈ 伪；class ≈ 类 → “伪类”对应状态，而非真实 class 名。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">container queries</mark></strong></p>
+<ul>
+<li>英文释义: CSS rules that apply styles based on a parent container’s size, style, or name rather than the whole viewport.</li>
+<li>中文释义: 根据父级容器的尺寸、样式或名称（而非整个视口）来应用样式的 CSS 查询。</li>
+<li>例句: With Chrome 148 shipping this month, name-only <mark class="hl-kw">container queries</mark> are now <mark class="hl-kw">Baseline Newly available</mark>.</li>
+<li>记忆提示: 把 container 想成组件外壳：查外壳条件，而不是查整页宽度。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">lazy loading</mark></strong></p>
+<ul>
+<li>英文释义: Delaying the load of a resource until it is near the viewport to save bandwidth and speed up initial page load.</li>
+<li>中文释义: 推迟加载资源，直到其接近视口，以节省带宽并加快首屏加载。</li>
+<li>例句: Chrome 148 introduces native <mark class="hl-kw">lazy loading</mark> for <code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> elements with the <code>loading=&quot;lazy&quot;</code> attribute.</li>
+<li>记忆提示: lazy = 懒；浏览器“懒得早加载”，靠近再加载。</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">always-on-top</mark></strong></p>
+<ul>
+<li>英文释义: Describing a window that stays visible above other windows even when the user focuses elsewhere.</li>
+<li>中文释义: 描述始终浮在其他窗口之上、即使用户聚焦别处仍可见的窗口。</li>
+<li>例句: The Document Picture-in-Picture API lets you open an <mark class="hl-kw">always-on-top</mark> window containing arbitrary HTML content.</li>
+<li>记忆提示: always + on top = 永远在最上层，像画中画小窗。</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> Unlike the standard Picture-in-Picture API which lets you view a <code>&lt;video&gt;</code> element in an <mark class="hl-kw">always-on-top</mark> window, the Document Picture-in-Picture API lets you open an <mark class="hl-kw">always-on-top</mark> window containing arbitrary HTML content.</p>
+<ul>
+<li>结构: Unlike + 对比对象（含 which 定语从句），主句 the Document… API lets you…，现在分词 containing… 修饰 window。</li>
+<li>中文: 与只能把 <code>&lt;video&gt;</code> 放进置顶窗口的标准画中画 API 不同，Document Picture-in-Picture API 可打开包含任意 HTML 内容的置顶窗口。</li>
+<li>仿写: Unlike the basic modal dialog which only blocks the current tab, the new overlay lets you keep interactive controls visible in a floating panel.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> Previously, when writing a container query, you were required to specify a size or style query condition alongside the container name, and establish the container&#39;s type with the <code>container-type</code> property.</p>
+<ul>
+<li>结构: Previously 时间状语 + when 从句，主句 you were required to A and B（并列不定式）。</li>
+<li>中文: 以前写容器查询时，你必须在容器名称之外再指定尺寸或样式查询条件，并用 <code>container-type</code> 属性声明容器类型。</li>
+<li>仿写: Previously, when configuring the build, you were required to list every entry file by hand, and declare the output format in a separate config block.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> Just like <code>&lt;img&gt;</code> and <code>&lt;iframe&gt;</code> elements, you can now instruct the browser to delay loading media resources until they are close to the viewport.</p>
+<ul>
+<li>结构: Just like… 比较状语，主句 instruct… to delay…，until 时间从句说明延迟终点。</li>
+<li>中文: 就像 <code>&lt;img&gt;</code> 和 <code>&lt;iframe&gt;</code> 一样，你现在可以让浏览器推迟加载媒体资源，直到它们接近视口。</li>
+<li>仿写: Just like cached API responses, you can now instruct the client to delay fetching large reports until users open the analytics panel.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

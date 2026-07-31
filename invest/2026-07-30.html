@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fund Watch · 2026-07-30</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page invest-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="./index.html">← 历史归档</a>
+      <div class="eyebrow">投资 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Invest</p>
+    <h1>Fund Watch · 2026-07-30</h1>
+    <p class="meta">Invest · 2026-07-30</p>
+    <p class="lead">Risk-off into the close: growth/tech sold hard while index volume stayed heavy — stand aside on fresh buys and tighten exposure on theme funds.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>今日三大指数全线收跌，深证成指跌超2.7%、沪深300跌约1.1%，两市合计成交额约2.3万亿，属于“下跌放量”而非缩量阴跌。半导体设备、光模块、AI算力链条普遍深度回调，风险偏好明显收缩。两只主题基当日偏空：不宜抄底加仓，持仓宜优先控回撤。</div>
+    
+    <article class="article">
+<section class="grade-legend"><h2>等级说明</h2><p>买入等级（越高越倾向买）：</p>
+<ul>
+<li class="grade-legend-item"><span class="grade-badge grade-a grade-legend-badge" data-grade="A">A</span><span class="grade-legend-text">较强买入信号，可考虑建仓/加仓</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-b grade-legend-badge" data-grade="B">B</span><span class="grade-legend-text">偏多，可小仓或分批试探</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-c grade-legend-badge" data-grade="C">C</span><span class="grade-legend-text">中性偏弱，建议观望，暂缓买入</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-d grade-legend-badge" data-grade="D">D</span><span class="grade-legend-text">偏空，不建议买入</span></li>
+</ul>
+<p>卖出等级（越高越倾向卖）：</p>
+<ul>
+<li class="grade-legend-item"><span class="grade-badge grade-a grade-legend-badge" data-grade="A">A</span><span class="grade-legend-text">较强卖出信号，建议减仓/离场</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-b grade-legend-badge" data-grade="B">B</span><span class="grade-legend-text">偏弱，可考虑减仓控制回撤</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-c grade-legend-badge" data-grade="C">C</span><span class="grade-legend-text">中性，暂无必要卖出</span></li>
+<li class="grade-legend-item"><span class="grade-badge grade-d grade-legend-badge" data-grade="D">D</span><span class="grade-legend-text">偏强持有，不建议卖出</span></li>
+</ul></section>
+<h2>大盘与成交量</h2>
+<ul>
+<li><strong>上证指数</strong> 3804.69（-0.62%），成交额约 <strong>1.11万亿</strong>，换手 1.22%；尾盘分时在 3798–3802 附近震荡，15:00 收于 3804.69 并出现尾盘量能抬升，属弱市中的轻微回抽，未扭转全天偏弱格局。</li>
+<li><strong>深证成指</strong> 13285.8（<strong>-2.73%</strong>），成交额约 <strong>1.24万亿</strong>，换手 2.81%，成长股杀跌主导，量能配合下跌，偏“恐慌放量”。</li>
+<li><strong>沪深300</strong> 4549.72（-1.10%），成交额约 <strong>8036.97亿</strong>，换手 0.82%，权重同步承压。</li>
+<li><strong>含义</strong>：收盘前风险偏好仍低，科技成长方向抛压未充分缓和；放量下跌环境下，主题基日内估值承压，不宜抢反弹。</li>
+</ul>
+<h2>操作建议</h2>
+<h3>017811 · 东方人工智能主题混合C</h3>
+<ul>
+<li class="grade-row grade-row-buy"><span class="grade-label">买入等级</span><span class="grade-badge grade-d grade-buy" data-grade="D">D</span></li>
+<li class="grade-row grade-row-sell"><span class="grade-label">卖出等级</span><span class="grade-badge grade-b grade-sell" data-grade="B">B</span></li>
+<li><strong>估值/净值</strong>: 盘中估算未发布；最新公布净值 <strong>2026-07-29：3.2629（-1.34%）</strong>。按页面披露前十大持仓当日涨跌粗估，重仓半导体设备/AI硬件普遍大跌（如芯源微约-14.7%、中科飞测约-10.4%、精测电子约-9.5%、寒武纪约-9.1%等），前十大加权约 <strong>-7.4%</strong>，对整基粗估约 <strong>-6%</strong> 量级（非官方估值）。</li>
+<li><strong>分时观察</strong>: 官方 <code>pic6</code> 估值图为<strong>历史缓存</strong>（净值尺度约0.9x，与当前约3.26净值不符），<strong>不作为今日分时依据</strong>。今日以持仓股实时跌幅 + 深市放量杀跌判断：主题全天承压，未见可靠止跌结构。</li>
+<li><strong>结论</strong>: <strong>不买</strong>；已有仓位可考虑<strong>减仓</strong>控回撤（买D/卖B，方向一致偏空）。</li>
+</ul>
+<h3>006080 · 海富通电子传媒股票C</h3>
+<ul>
+<li class="grade-row grade-row-buy"><span class="grade-label">买入等级</span><span class="grade-badge grade-d grade-buy" data-grade="D">D</span></li>
+<li class="grade-row grade-row-sell"><span class="grade-label">卖出等级</span><span class="grade-badge grade-a grade-sell" data-grade="A">A</span></li>
+<li><strong>估值/净值</strong>: 已公布当日净值 <strong>2026-07-30：4.6803（-8.53%）</strong>；盘中估算未另见。前十大（光模块/PCB等）当日普遍重挫（新易盛约-11.9%、源杰科技约-17.2%、中际旭创约-9.2%等），与 <strong>-8.53%</strong> 净值吻合。</li>
+<li><strong>分时观察</strong>: 官方估值图同为<strong>历史缓存</strong>（净值尺度约1.9x，与当前约4.68不符），<strong>不采用</strong>。结合已落地净值与持仓跌幅，电子传媒/光通信链条今日为明确弱势，深市放量下跌放大回撤。</li>
+<li><strong>结论</strong>: <strong>不买</strong>；建议<strong>减仓/离场</strong>以控制连续回撤（买D/卖A；近两日含今日已出现双位数级别下挫，卖出优先级高于017811）。</li>
+</ul>
+<h2>收盘前关注</h2>
+<ul>
+<li>15:00 前后科技成长是否继续放量下杀，还是出现缩量止跌迹象。</li>
+<li>017811 官方净值落地幅度是否贴近持仓粗估（约-6%附近），偏离过大需复核仓位结构变化。</li>
+<li>外围科技情绪与隔夜美股相关板块，评估明日开盘溢价/折价风险。</li>
+</ul>
+<h2>风险提示</h2>
+<p>本笔记为算法辅助的个人研究备忘，<strong>非</strong>持牌投顾意见；基金净值一般于收盘后确认，盘中估算与持仓推演可能偏离；市场有风险，决策自负。</p>
+
+    </article>
+  </main>
+</body>
+</html>

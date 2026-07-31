@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hamas Agrees to Disarm Under Trump Peace Board Plan</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">国际 · 2026-07-31</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Hamas Agrees to Disarm Under Trump Peace Board Plan</h1>
+    <p class="meta">Source · 2026-07-31 · <a href="https://www.bbc.co.uk/news/articles/cj03m512r4go">数据来源</a></p>
+    <p class="lead">US President Donald Trump says the Board of Peace has reached an agreement for the complete disarmament of Hamas and other armed groups in Gaza. A senior Hamas official told the BBC the group has accepted the plan and will issue an official statement soon, while Israel has yet to comment publicly in detail. Trump linked Israeli withdrawal from Gaza to completed disarmament and described the deal as a step toward a new Palestinian government.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>特朗普称“和平委员会”已就哈马斯等武装组织在加沙全面解除武装达成协议；哈马斯高官向BBC确认同意该计划，以色列尚未正式表态。 协议拟分阶段推进：解除武装完成后以军撤离，国际稳定部队与新建巴勒斯坦警察力量接管安全，开罗还将就停火第二阶段召开调解方会议。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.co.uk/news/articles/cj03m512r4go">https://www.bbc.co.uk/news/articles/cj03m512r4go</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>US President Donald Trump said the Board of Peace had reached an agreement for the “complete <mark class="hl-kw">disarmament</mark>” of Hamas and other armed groups in Gaza. A senior Hamas official told the BBC that the group had agreed to the board’s plan to disarm fully in Gaza and that an official statement would be released soon. Israel had not yet issued a full public response.</p>
+<p>Trump argued that Israel would withdraw from Gaza “as <mark class="hl-kw">disarmament</mark> is completed” and called the deal “a critical step towards Gaza finally being governed by a new Palestinian government.” <mark class="hl-kw">Disarmament</mark> is part of the second phase of a US-brokered ceasefire plan, which also covers reconstruction. On Truth Social, Trump called the agreement a major <mark class="hl-kw">milestone</mark> in his 20-Point Plan and said it would move ahead in carefully structured phases. Once weapons were given up, he said, Israeli forces would pull out and an International <mark class="hl-kw">Stabilization</mark> Force would work with a new Palestinian police force to keep Gaza safe for residents and neighbors. He thanked <mark class="hl-kw">mediator</mark>s Egypt, Qatar, and Turkey.</p>
+<p>Egyptian state media, cited by AFP, said Cairo would host a <mark class="hl-kw">mediator</mark> meeting on the second phase. Earlier the same day, unnamed sources told Reuters that talks in Cairo between <mark class="hl-kw">mediator</mark>s and Hamas leaders had made rare progress, though an Israeli official said the proposed terms were not satisfactory. After Trump’s announcement, the Times of Israel, citing an unnamed source, reported that negotiators from Hamas, the board, and mediating countries had signed the agreement. The same report said an Israeli office stated that the <mark class="hl-kw">disarmament</mark> proposal did not meet Jerusalem’s demands. Israeli media had earlier said Israel opposed a deal under discussion with Hamas.</p>
+<p>In April, Hamas rejected a <mark class="hl-kw">disarmament</mark> plan linked to a top figure in Trump’s Gaza peace efforts, a senior Palestinian official familiar with the talks told the BBC. Earlier this month, Hamas elected Khalil al-Hayya as its new leader, replacing Yahya Sinwar, who was killed by Israeli forces in Gaza in October 2024. Hayya, previously the group’s chief negotiator, had led delegations in indirect ceasefire talks with <mark class="hl-kw">mediator</mark>s in Egypt and Qatar. The BBC reported earlier this year that the board was first thought to be focused on ending the Israel–Hamas war and overseeing reconstruction, yet its proposed charter does not mention the Palestinian territory and appears designed to take over some UN functions.</p>
+<p>Hamas’s attack on Israel on 7 October 2023 killed about 1,200 people and saw 251 taken hostage. Israel’s military campaign in Gaza has since killed more than 73,290 people, including 21,280 children, according to the territory’s Hamas-run health ministry.</p>
+<h3>中文全文翻译</h3>
+<p>美国总统唐纳德·特朗普表示，“和平委员会”（Board of Peace）已就哈马斯及其他武装组织在加沙“全面解除武装”达成协议。一名哈马斯高级官员告诉BBC，该组织已同意委员会提出的在加沙彻底缴械计划，并将很快发布正式声明。以色列尚未作出完整的公开回应。</p>
+<p>特朗普称，以色列将在“解除武装完成后”撤离加沙，并称该协议是“朝着加沙最终由新的巴勒斯坦政府治理迈出的关键一步”。解除武装属于美国斡旋的加沙停火计划第二阶段，该阶段还包括重建。特朗普在Truth Social上称这一协议是其“20点计划”落实过程中的重大里程碑，并将分阶段、审慎推进。他表示，一旦缴械完成，以军将撤离，国际稳定部队将与新建的巴勒斯坦警察部队合作，保障加沙对居民及邻国的安全。他还感谢了调解方埃及、卡塔尔和土耳其。</p>
+<p>法新社援引埃及官方媒体报道称，开罗将就停火计划第二阶段主办调解方会议。当天早些时候，匿名消息人士对路透社称，调解方与哈马斯领导人在开罗就落实美方斡旋的和平计划举行的会谈取得少有进展，但一名以色列官员表示拟议条款并不令人满意。特朗普宣布后，《以色列时报》援引匿名消息称，哈马斯谈判代表、委员会以及调解国已签署协议。同一报道称，一个以色列机构发表声明，指解除武装方案未达到耶路撒冷的要求。以色列媒体此前还报道，以色列反对正在与哈马斯讨论的交易。</p>
+<p>今年4月，一名熟悉谈判的巴勒斯坦高级官员告诉BBC，哈马斯曾拒绝与特朗普加沙和平努力中一位重要人物相关的解除武装计划。本月早些时候，哈马斯选举哈利勒·哈亚（Khalil al-Hayya）为新领导人，接替2024年10月在加沙被以色列军方击毙的叶海亚·辛瓦尔。哈亚此前担任该组织首席谈判代表，曾率团在埃及和卡塔尔与调解方进行间接停火谈判。BBC今年早些时候报道称，该委员会最初被认为旨在帮助结束以哈战争并监督重建，但其拟议章程并未提及巴勒斯坦领土，似乎意在取代联合国的部分职能。</p>
+<p>2023年10月7日，哈马斯对以色列发动袭击，约1200人丧生，251人被劫为人质。以色列随后在加沙展开大规模军事行动，据加沙地带由哈马斯掌管的卫生部门称，已有超过73290人死亡，其中包括21280名儿童。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">disarmament</mark></strong></p>
+<ul>
+<li>英文释义: the act of giving up or removing weapons, especially by an armed group or country</li>
+<li>中文释义: 解除武装；裁军</li>
+<li>例句: Trump says the Board of Peace has reached an agreement for the complete <mark class="hl-kw">disarmament</mark> of Hamas in Gaza.</li>
+<li>记忆提示: dis-（去掉）+ arm（武器）→ 去掉武器</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">milestone</mark></strong></p>
+<ul>
+<li>英文释义: an important stage or turning point in a process or project</li>
+<li>中文释义: 里程碑；重大进展</li>
+<li>例句: Trump called the agreement a major <mark class="hl-kw">milestone</mark> in the implementation of his 20-Point Plan.</li>
+<li>记忆提示: mile（英里）+ stone（石头）→ 路边里程碑，引申为关键节点</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">stabilization</mark></strong></p>
+<ul>
+<li>英文释义: the process of making a situation more secure, calm, and under control</li>
+<li>中文释义: 稳定；维稳</li>
+<li>例句: An International <mark class="hl-kw">Stabilization</mark> Force would work with a new Palestinian police force in Gaza.</li>
+<li>记忆提示: stable（稳定的）→ stabilize → <mark class="hl-kw">stabilization</mark>（使…稳定的过程）</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">mediator</mark></strong></p>
+<ul>
+<li>英文释义: a person or country that helps opposing sides reach an agreement</li>
+<li>中文释义: 调解人；斡旋方</li>
+<li>例句: Trump thanked <mark class="hl-kw">mediator</mark>s Egypt, Qatar, and Turkey for their role in the talks.</li>
+<li>记忆提示: media（中间）→ 站在中间促成和解的人</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">supplant</mark></strong></p>
+<ul>
+<li>英文释义: to take the place of something, often by replacing its role or authority</li>
+<li>中文释义: 取代；替代</li>
+<li>例句: The board’s proposed charter appears designed to <mark class="hl-kw">supplant</mark> functions of the UN.</li>
+<li>记忆提示: 想成“<mark class="hl-kw">supplant</mark> = plant（植入）一个新的东西把旧的挤掉”</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> A senior Hamas official has told the BBC they have agreed to the Board of Peace&#39;s plan to completely disarm in Gaza and that an official statement will be released soon.</p>
+<ul>
+<li>结构: 主句（official has told the BBC）+ 宾语从句1（they have agreed...）+ and + 宾语从句2（that an official statement will be released）</li>
+<li>中文: 一名哈马斯高级官员告诉BBC，他们已同意“和平委员会”在加沙全面解除武装的计划，并将很快发布正式声明。</li>
+<li>仿写: A company spokesperson told reporters they have accepted the regulator’s new safety rules and that a detailed plan will be published next week.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">As disarmament is completed, Israeli forces will withdraw, and the International Stabilization Force will work with a new Palestinian police force to take responsibility for Gaza being safe for its residents and its neighbors.</mark></p>
+<ul>
+<li>结构: 时间状语从句（As...）+ 并列主句1（Israeli forces will withdraw）+ and + 并列主句2（the Force will work with... to take responsibility for...）</li>
+<li>中文: 随着解除武装完成，以色列军队将撤离，国际稳定部队将与新建的巴勒斯坦警察部队合作，负责保障加沙对其居民及邻国的安全。</li>
+<li>仿写: As the renovation is completed, the old staff will leave, and the new management team will work with local partners to take responsibility for the building being safe for tenants and visitors.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Earlier in the day, unnamed sources who spoke to Reuters reported that talks between the mediators and Hamas leaders in Cairo on implementing the US-brokered Gaza peace plan had made rare progress, but an Israeli official said the proposed terms were not satisfactory.</mark></p>
+<ul>
+<li>结构: 时间状语 + 主语（unnamed sources who...）+ reported that 从句 + but 转折并列句（an Israeli official said...）</li>
+<li>中文: 当天早些时候，向路透社透露消息的匿名人士称，调解方与哈马斯领导人在开罗就落实美方斡旋的加沙和平计划举行的会谈取得少有进展，但一名以色列官员表示拟议条款并不令人满意。</li>
+<li>仿写: Earlier in the week, unnamed sources who spoke to the press reported that negotiations between the unions and factory owners on implementing the new pay deal had made rare progress, but a government official said the proposed terms were not satisfactory.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US launches 'heavy' strikes on Iran after attempted attack</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">国际 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>US launches 'heavy' strikes on Iran after attempted attack</h1>
+    <p class="meta">Source · 2026-07-30 · <a href="https://www.bbc.com/news/articles/c74gwdzywmeo">数据来源</a></p>
+    <p class="lead">The US military says it has finished a “heavy wave” of strikes on Iranian targets after Tehran’s attempted ballistic missile attacks on American forces. Centcom reported hits on dozens of IRGC sites, while Iranian media said civilians, including a young child, were killed on Qeshm island. The fighting has widened this week, including publicly announced joint US-Saudi strikes on Iran-linked groups in Iraq.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>美国军方称已完成对伊朗的“猛烈一轮”打击，以回应此前针对美军的弹道导弹袭击企图。 冲突本周进一步扩大，伊朗媒体报告平民伤亡，美沙还对伊拉克境内亲伊朗武装目标实施联合打击。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.com/news/articles/c74gwdzywmeo">https://www.bbc.com/news/articles/c74gwdzywmeo</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p><mark class="hl-sent">The US military says it has completed a “heavy wave” of strikes against Iran in retaliation for Tuesday’s attempted ballistic missile attacks on American forces.</mark> According to US Central Command (Centcom), American forces hit “dozens” of Islamic Revolutionary Guard Corps (IRGC) targets after Iran fired on US bases in Jordan and at ships in the Strait of Hormuz. Centcom described the operation as a “powerful response” to the attempted attacks on US forces based in the Middle East and said all of Iran’s missiles had been <mark class="hl-kw">intercept</mark>ed.</p>
+<p>The latest US wave began at 20:00 ET on Wednesday and lasted about an hour. Centcom said the strikes targeted military command centers, missile and drone facilities, coastal surveillance and defense sites, and <mark class="hl-kw">maritime</mark> capabilities. Iranian state media reported that the islands of Qeshm and Abadan, both important to the oil industry, were among the areas hit. Fars news agency, citing local medical authorities, said a US attack on a residential home in Qeshm killed three members of one family: a father, a mother, and their two-year-old child.</p>
+<p>The broader conflict has stretched far longer than early expectations. When the US and Israel launched military strikes on Iran in February, President Donald Trump said the war would last only a few weeks; five months later, it continues with no clear end. After Friday’s pause in an intensive US bombing campaign that had run for 13 consecutive nights, relative calm briefly returned and talks were reported. Trump called the contacts “very friendly negotiations,” though Tehran denied that discussions were taking place.</p>
+<p>That pause ended after Iran’s missile attack on a US base in Jordan on Tuesday. Trump vowed to hit back hard, telling reporters at the White House that it was America’s turn to strike. Jordan’s armed forces later said air defenses had shot down five Iranian missiles targeting the kingdom. The IRGC said it had targeted a US air base and a command center in Jordan and also claimed naval forces struck three oil tankers in the Strait of Hormuz after the vessels “ignored warnings.”</p>
+<p>The fighting has also expanded regionally. Centcom said joint US-Saudi strikes hit multiple logistics and weapons sites in eastern Iraq in response to more than 30 IRGC-directed drone attacks in 72 hours. Iraq’s Popular Mobilisation Forces said at least 20 of its members were killed, and Iraq’s presidency condemned the bombing as a violation of <mark class="hl-kw">sovereignty</mark>. Trump told Fox News the strikes had been coordinated with the Iraqi government. Axios separately reported that Saudi Arabia’s defense minister had conveyed Riyadh’s desire to <mark class="hl-kw">de-escalate</mark>; the BBC said it had asked the White House for comment.</p>
+<h3>中文全文翻译</h3>
+<p>美国军方表示，已完成对伊朗的“猛烈一轮”打击，以报复周二针对美军的弹道导弹袭击企图。美国中央司令部（Centcom）称，在伊朗向约旦境内的美军基地以及霍尔木兹海峡的船只开火后，美军打击了“数十个”伊斯兰革命卫队（IRGC）目标。Centcom 将此次行动描述为对中东美军遭遇袭击企图的“有力回应”，并表示伊朗发射的导弹全部被拦截。</p>
+<p>最新一轮美方打击于周三美东时间20:00开始，持续约一小时。Centcom 称，打击目标包括军事指挥中心、导弹与无人机设施、沿海监视与防务阵地，以及海上能力相关目标。伊朗官方媒体报道，对石油产业具有重要意义的格什姆岛和阿巴丹等地遭到打击。法尔斯通讯社援引当地医疗机构称，美方对格什姆一处民宅的袭击造成一家三口死亡：父亲、母亲和他们两岁的孩子。</p>
+<p>这场更大范围的冲突已远超早期预期。美以在二月对伊朗发动军事打击时，美国总统特朗普曾表示战争只会持续数周；五个月过去，冲突仍在继续，未见明确终点。上周五，美国暂停了此前连续13夜的密集轰炸后，双方一度相对平静，并有谈判重启的报道。特朗普称接触“非常友好”，但德黑兰否认存在任何讨论。</p>
+<p>在伊朗周二袭击约旦境内一处美军基地后，这一停歇结束。特朗普誓言要予以重击，并在白宫对记者表示“轮到我们打他们了”。约旦武装部队随后称，防空系统击落了五枚瞄准约旦领土的伊朗导弹。革命卫队则称其打击了约旦境内的美军空军基地和指挥中心，并宣称海军在霍尔木兹海峡袭击了三艘“无视警告”的油轮。</p>
+<p>战事也在地区层面扩大。Centcom 表示，美沙联合打击了伊拉克东部多处后勤与武器据点，以回应过去72小时内逾30次由革命卫队指挥的无人机袭击。伊拉克人民动员部队称至少20名成员被打死，伊拉克总统府谴责轰炸侵犯主权。特朗普对福克斯新闻称，打击已与伊拉克政府协调。Axios 另报道称，沙特国防大臣转达了利雅得希望降温的态度；BBC 表示已向白宫求证。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">retaliation</mark></strong></p>
+<ul>
+<li>英文释义: action taken to strike back after an attack or harmful act</li>
+<li>中文释义: 报复；反击</li>
+<li>例句: The US military says it has completed a “heavy wave” of strikes against Iran in <mark class="hl-kw">retaliation</mark> for Tuesday’s attempted ballistic missile attacks.</li>
+<li>记忆提示: re-（回）+ taliate（惩罚）→ 回击对方</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">intercept</mark></strong></p>
+<ul>
+<li>英文释义: to stop or catch something before it reaches its target</li>
+<li>中文释义: 拦截；截击</li>
+<li>例句: All of Iran’s missiles were <mark class="hl-kw">intercept</mark>ed, Centcom said.</li>
+<li>记忆提示: inter-（在中间）+ cept（抓住）→ 半路拦住</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">maritime</mark></strong></p>
+<ul>
+<li>英文释义: connected with the sea, shipping, or naval activity</li>
+<li>中文释义: 海上的；海事的</li>
+<li>例句: The US attack targeted coastal surveillance and defense sites, and <mark class="hl-kw">maritime</mark> capabilities.</li>
+<li>记忆提示: 联想 marine（海洋的）→ 与海相关的能力或事务</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">de-escalate</mark></strong></p>
+<ul>
+<li>英文释义: to reduce the intensity of a conflict or tense situation</li>
+<li>中文释义: 使局势降温；缓和升级</li>
+<li>例句: An unnamed US official said Saudi Arabia wants to <mark class="hl-kw">de-escalate</mark> tensions.</li>
+<li>记忆提示: de-（降低）+ escalate（升级）→ 让冲突往回走</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">sovereignty</mark></strong></p>
+<ul>
+<li>英文释义: a country’s right to govern itself without outside interference</li>
+<li>中文释义: 主权</li>
+<li>例句: The Iraqi presidency called the bombing “an unacceptable attack and a blatant violation of Iraq’s <mark class="hl-kw">sovereignty</mark>.”</li>
+<li>记忆提示: 国家“自己说了算”的最高权力</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The US military says it has completed a “heavy wave” of strikes against Iran in retaliation for Tuesday’s attempted ballistic missile attacks on American forces.</mark></p>
+<ul>
+<li>结构: 主句（The US military says）+ 宾语从句（it has completed...）+ 介词短语表原因（in <mark class="hl-kw">retaliation</mark> for...）</li>
+<li>中文: 美国军方表示，已完成对伊朗的“猛烈一轮”打击，以报复周二针对美军的弹道导弹袭击企图。</li>
+<li>仿写: The company says it has launched a major review of its supply chain in response to last month’s delayed shipments from overseas factories.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">When the US and Israel launched military strikes on Iran in February, President Donald Trump said the war would last only a few weeks, but it has gone on for five months with no end in sight.</mark></p>
+<ul>
+<li>结构: 时间状语从句（When...）+ 主句（Trump said...）+ 转折并列句（but it has gone on...）</li>
+<li>中文: 美以在二月对伊朗发动军事打击时，特朗普曾说战争只会持续数周，但它已持续五个月，看不到结束迹象。</li>
+<li>仿写: When the firm announced the merger in March, executives said integration would take only a few weeks, but it has dragged on for five months with no clear finish date.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Centcom said the joint US-Saudi strikes hit “multiple terrorist logistics and weapons sites across eastern Iraq in a strong response to over 30 IRGC-directed aerial drone attacks in the last 72 hours.”</mark></p>
+<ul>
+<li>结构: 主句（Centcom said）+ 宾语从句（the strikes hit...）+ 目的/原因状语（in a strong response to...）</li>
+<li>中文: Centcom 表示，美沙联合打击命中伊拉克东部多处“恐怖分子后勤与武器据点”，以有力回应过去72小时内逾30次由革命卫队指挥的无人机袭击。</li>
+<li>仿写: The police said the overnight operation closed several illegal warehouses across the district in a direct response to more than 20 reported thefts in the past week.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

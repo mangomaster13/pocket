@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket Hub · Articles</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../">← Pocket Hub</a>
+      <nav class="app-switch" aria-label="切换子应用">
+        <a class="active" href="./">文章</a>
+        <a href="../invest/">投资</a>
+      </nav>
+    </div>
+    <p class="eyebrow">Articles</p>
+    <h1>2026-07-31</h1>
+    <div class="meta-row">
+      <span>36 notes · newest first</span>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="active" data-topic-filter="all">全部<span class="count">36</span></button>
+      <button type="button" data-topic-filter="business">商业<span class="count">6</span></button>
+      <button type="button" data-topic-filter="dev">开发<span class="count">6</span></button>
+      <button type="button" data-topic-filter="horror">惊悚<span class="count">6</span></button>
+      <button type="button" data-topic-filter="music">音乐<span class="count">6</span></button>
+      <button type="button" data-topic-filter="tech">科技<span class="count">6</span></button>
+      <button type="button" data-topic-filter="world">国际<span class="count">6</span></button>
+    </div>
+
+    <div class="filters">
+      <label for="date-filter">日期</label>
+      <select id="date-filter" data-date-filter>
+        <option value="all">全部日期</option>
+        <option value="2026-07-31">2026-07-31</option>
+        <option value="2026-07-30">2026-07-30</option>
+        <option value="2026-07-29">2026-07-29</option>
+        <option value="2026-07-28">2026-07-28</option>
+        <option value="2026-07-27">2026-07-27</option>
+        <option value="2026-07-26">2026-07-26</option>
+      </select>
+    </div>
+
+    <ul class="list">
+  <li data-note data-topic="business" data-date="2026-07-31">
+    <a class="card" href="../business/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">Three things we learned about AI from Big Tech earnings</h3>
+      <p class="card-lead">Big Tech firms told Wall Street they will keep pouring money into AI, even as investors demand clearer proof of returns. Meta and Alphabet reported very weak free cash flow, while Microsoft and Amazon drew a warmer market response. Apple said strong demand for Macs, iPhones and iPads is running into chip shortages, and it sees paid potential in a rebuilt Siri.</p>
+      <p class="card-zh">微软、Meta、谷歌、苹果和亚马逊本周更新财报，共同信号是将继续大规模投入人工智能。 投资者要求更看得见的回报；Meta与Alphabet现金流承压，微软与亚马逊市场反应更好，苹果则因芯片短缺预警部分产品销售将放缓。</p>
+      <div class="card-keys"><span>tangible results</span><span>free cash flow</span><span>plunged</span><span>placated</span><span>impending</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-31">
+    <a class="card" href="../dev/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">June 2026 Baseline Monthly Digest</h3>
+      <p class="card-lead">In June 2026, the CSS `field-sizing` property became Baseline Newly available, so form controls can grow or shrink with their content. The same digest also highlights Baseline Alerts on the Web Platform Status dashboard and a long list of features that reached Baseline Widely available.</p>
+      <p class="card-zh">2026 年 6 月，CSS 的 `field-sizing` 进入 Baseline Newly available，表单控件可随内容自动伸缩。 同期，Web Platform Status 上的 Baseline Alerts 上线，另有多项 CSS、HTML 与 Web API 功能达到 Baseline Widely available。</p>
+      <div class="card-keys"><span>field-sizing</span><span>interoperable</span><span>subscribe</span><span>lazy loading</span><span>progressive enhancement</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-31">
+    <a class="card" href="../horror/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">Above &amp; Below Review: Antonio Banderas Steals the Show</h3>
+      <p class="card-lead">Action director Jesse V. Johnson’s shark thriller *Above &amp; Below* pits vacationers against both hungry sharks and violent criminals at sea. The review argues Antonio Banderas and the villains outshine a thin script, while underwater thrills and tense cross-cutting keep the film afloat. It opened in select theaters on July 29, 2026.</p>
+      <p class="card-zh">《Above &amp; Below》是一部把鲨鱼威胁与船上犯罪暴力交织在一起的鲨鱼惊悚片，评论认为安东尼奥·班德拉斯等反派表演最出彩。 导演调度与水下场面尚可，但剧本单薄、主题未展开，角色深度不足。</p>
+      <div class="card-keys"><span>ubiquitous</span><span>steal the show</span><span>loose cannon</span><span>meandering</span><span>set piece</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-31">
+    <a class="card" href="../music/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">Nick Hakim’s I Can See Favors Calm Over Drama</h3>
+      <p class="card-lead">Pitchfork reviews Nick Hakim’s fourth album, *I Can See*, as a subdued, mid-tempo set that softens the glitches and drama of his earlier work. Brief sparks of tension appear, yet the record often stays in a pleasant haze—and, oddly, keeps sounding new with each listen.</p>
+      <p class="card-zh">Pitchfork 评论称，Nick Hakim 第四张专辑《I Can See》整体偏温和平缓，少了以往作品中的戏剧张力与毛边质感。细听仍有少量张力，但整体像一层舒适的模糊；反复聆听时，它却总能显得新鲜。</p>
+      <div class="card-keys"><span>brooding</span><span>subdued</span><span>homogenized</span><span>soporific</span><span>elastic / elasticity</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-31">
+    <a class="card" href="../tech/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">iOS 27 Will Bring Five Unannounced Features, Per Rumors</h3>
+      <p class="card-lead">iOS 27 is already in beta and due for a fall release, but several rumored features have not shown up yet. According to Bloomberg’s Mark Gurman, Apple may still add chatbot choice for Siri, Health AI tools, third-party image and text generation, a customizable Camera UI, and foldable multitasking.</p>
+      <p class="card-zh">iOS 27 已进入测试阶段，预计今秋正式推送，但多家传闻中的功能尚未出现在当前测试版中。 据彭博社 Mark Gurman 报道，苹果或将陆续加入第三方聊天机器人、健康 AI、可定制相机界面，以及面向折叠屏的分屏多任务等能力。</p>
+      <div class="card-keys"><span>public beta</span><span>toggle between</span><span>scaled back</span><span>customizable</span><span>side-by-side</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-31">
+    <a class="card" href="../world/2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">Hamas Agrees to Disarm Under Trump Peace Board Plan</h3>
+      <p class="card-lead">US President Donald Trump says the Board of Peace has reached an agreement for the complete disarmament of Hamas and other armed groups in Gaza. A senior Hamas official told the BBC the group has accepted the plan and will issue an official statement soon, while Israel has yet to comment publicly in detail. Trump linked Israeli withdrawal from Gaza to completed disarmament and described the deal as a step toward a new Palestinian government.</p>
+      <p class="card-zh">特朗普称“和平委员会”已就哈马斯等武装组织在加沙全面解除武装达成协议；哈马斯高官向BBC确认同意该计划，以色列尚未正式表态。 协议拟分阶段推进：解除武装完成后以军撤离，国际稳定部队与新建巴勒斯坦警察力量接管安全，开罗还将就停火第二阶段召开调解方会议。</p>
+      <div class="card-keys"><span>disarmament</span><span>milestone</span><span>stabilization</span><span>mediator</span><span>supplant</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="business" data-date="2026-07-30">
+    <a class="card" href="../business/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">Shell profits double as oil prices rise due to Iran war</h3>
+      <p class="card-lead">Shell’s second-quarter profits more than doubled after the Iran conflict drove oil and LNG prices higher. Disruption through the Strait of Hormuz lifted Brent crude well above pre-war levels, and Shell’s first-half earnings rose about 70%. Energy majors also benefited from trading on sharp price swings.</p>
+      <p class="card-zh">受伊朗冲突推高油价影响，壳牌第二季度利润逾翻一番，上半年盈利约增七成。霍尔木兹海峡供应受阻推高布伦特原油，能源巨头也因油价剧烈波动中的交易获益。</p>
+      <div class="card-keys"><span>more than doubled</span><span>severe disruption</span><span>Strait of Hormuz</span><span>benchmark</span><span>bumper profits</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-30">
+    <a class="card" href="../dev/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">New to the web platform in June</h3>
+      <p class="card-lead">Chrome 149, Chrome 150, and Firefox 152 shipped in June 2026 with useful CSS, scrolling, keyboard, and caching updates. Several features, including `field-sizing` and basic shapes in `shape-outside`, reached Baseline Newly available. Beta builds of Firefox 153 and Safari 27 also preview upcoming platform changes.</p>
+      <p class="card-zh">2026 年 6 月，Chrome 149/150 与 Firefox 152 正式发布，带来表单自适应、滚动 Promise、`focusgroup` 等多项 Web 能力更新。 部分 CSS 特性已进入 Baseline，Firefox 153 与 Safari 27 的 Beta 也预告了下一轮平台变化。</p>
+      <div class="card-keys"><span>Baseline Newly available</span><span>field-sizing</span><span>gap decorations</span><span>declaratively</span><span>ineligible</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-30">
+    <a class="card" href="../horror/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">Kathryn Newton Leads Summer’s Best Shark Movie</h3>
+      <p class="card-lead">Bloody Disgusting argues that *The Devil’s Mouth*, starring Kathryn Newton, is the strongest killer-shark film of 2026 despite a crowded summer of similar movies. Five friends on a Thailand trip enter flooded caves and face a trapped bull shark, while the review praises the film’s suspense, visuals, and surprising craft from director Jeff Wadlow. The movie debuted globally on Prime Video on July 29.</p>
+      <p class="card-zh">《魔鬼之口》被评为2026年最佳鲨鱼恐怖片：凯瑟琳·牛顿领衔，泰国洞穴求生设定出色。 影评称导演杰夫·瓦德洛在视听与紧张感上明显进步，影片已于7月29日登陆Prime Video。</p>
+      <div class="card-keys"><span>drive the claim home</span><span>claustrophobic</span><span>set piece</span><span>harrowing</span><span>redemption</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-30">
+    <a class="card" href="../music/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">Nick Hakim’s I Can See Stays Softly Stuck</h3>
+      <p class="card-lead">Pitchfork’s review of Nick Hakim’s fourth studio album, *I Can See*, argues that the record lives in a mild middle ground of moderate tempos and subdued vocals. Brief flashes of tension and texture appear, the critic says, but they are often smoothed into a pleasant haze rather than pushed into real drama.</p>
+      <p class="card-zh">Pitchfork 评述 Nick Hakim 第四张录音室专辑《I Can See》，认为整张作品节奏克制、人声收敛，张力被抹平。 评论承认细听仍有趣味，但整体更像温和催眠，多数歌曲几乎原地徘徊。</p>
+      <div class="card-keys"><span>brooding</span><span>subdued</span><span>homogenized</span><span>soporific</span><span>recede / retreating</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-30">
+    <a class="card" href="../tech/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">iOS 27 Adds Three New iPhone Features You’ll Use</h3>
+      <p class="card-lead">iOS 27, arriving this fall, brings a rebuilt Siri AI, smarter proofreading with grammar checks, and a major search upgrade across Spotlight, Photos, and Mail. A 9to5Mac writer who has used the beta for nearly two months says these tools already feel like everyday essentials.</p>
+      <p class="card-zh">iOS 27 将于今秋发布，重点包括彻底重建的 Siri AI、由 Apple Intelligence 驱动的拼写与语法校对，以及 Spotlight、照片和邮件的搜索升级。 作者试用公测近两个月后认为，这些功能很可能成为很多用户的日常刚需。</p>
+      <div class="card-keys"><span>from the ground up</span><span>informed</span><span>proofreading</span><span>overhaul</span><span>comprehensive</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-30">
+    <a class="card" href="../world/2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">US launches 'heavy' strikes on Iran after attempted attack</h3>
+      <p class="card-lead">The US military says it has finished a “heavy wave” of strikes on Iranian targets after Tehran’s attempted ballistic missile attacks on American forces. Centcom reported hits on dozens of IRGC sites, while Iranian media said civilians, including a young child, were killed on Qeshm island. The fighting has widened this week, including publicly announced joint US-Saudi strikes on Iran-linked groups in Iraq.</p>
+      <p class="card-zh">美国军方称已完成对伊朗的“猛烈一轮”打击，以回应此前针对美军的弹道导弹袭击企图。 冲突本周进一步扩大，伊朗媒体报告平民伤亡，美沙还对伊拉克境内亲伊朗武装目标实施联合打击。</p>
+      <div class="card-keys"><span>retaliation</span><span>intercept</span><span>maritime</span><span>de-escalate</span><span>sovereignty</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="business" data-date="2026-07-29">
+    <a class="card" href="../business/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">Trump administration bans new Chinese humanoid robots</h3>
+      <p class="card-lead">The Trump administration has banned new imports of foreign-made humanoid and other advanced robots into the United States, citing national security risks. The FCC also blocked new foreign power inverters used in data centres and solar systems. China rejected the move as politicised trade policy and vowed to protect its interests.</p>
+      <p class="card-zh">特朗普政府以国家安全为由，禁止美国进口新型外国制造的人形等先进机器人，并同时限制外国逆变器进口。中国驻美使馆批评美方将贸易问题政治化，并表示将采取必要措施回应。</p>
+      <div class="card-keys"><span>unacceptable risks</span><span>Covered List</span><span>power inverter</span><span>malign actors</span><span>trade imbalances</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-29">
+    <a class="card" href="../dev/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">New to the web platform in May</h3>
+      <p class="card-lead">In May 2026, Chrome 148, Firefox 151, and Safari 26.5 shipped features that pushed several CSS and platform APIs into Baseline Newly available status. Highlights include the `:open` pseudo-class, name-only and style container queries, lazy-loaded media, Document Picture-in-Picture, and wider Web Serial support. Beta builds of Chrome 149 and Firefox 152 also preview gap decorations, shape functions, promise-based scrolling, and auto-sizing form fields.</p>
+      <p class="card-zh">2026年5月，Chrome、Firefox与Safari稳定版带来多项新能力，使 `:open`、仅按名称的容器查询、容器样式查询等进入 Baseline Newly available。 同期还有音视频懒加载、Document Picture-in-Picture、Web Serial 平台扩展，以及 Chrome 149 / Firefox 152 beta 中的预览特性。</p>
+      <div class="card-keys"><span>Baseline Newly available</span><span>pseudo-class</span><span>container queries</span><span>lazy loading</span><span>always-on-top</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-29">
+    <a class="card" href="../horror/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">The Mouths Review: Shimizu's Cursed Tree Horror Stumbles</h3>
+      <p class="card-lead">Takashi Shimizu’s latest horror film, *The Mouths*, follows four teens who investigate a cursed tree at the edge of a cemetery, only for the story’s late twists to scramble what audiences think they know. The review credits strong tension-building, ghostly imagery, and vivid sound design, but argues that a clumsy final reveal and uneven supporting roles keep the film from feeling essential.</p>
+      <p class="card-zh">清水崇新片《The Mouths》讲述四名少年调查墓地旁诅咒之树，前半段气氛与声音设计出色，后半段反转却执行混乱。 影评认为它对清水粉丝仍有可看之处，但关键揭示生硬、配角臃肿，整体扎实却略显多余。</p>
+      <div class="card-keys"><span>non-linear</span><span>urban legend</span><span>tantalizing</span><span>unreliable narrator</span><span>superfluous</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-29">
+    <a class="card" href="../music/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">Shannon Lay Reinvents Her Sound on Past the Veil</h3>
+      <p class="card-lead">Five years after her last album of original songs, Shannon Lay returns with *Past the Veil*, trading sparse folk for lush jazz and trip-hop textures. Pitchfork praises the record’s cohesive voice and memorable melodies, while noting that a few experimental production choices blur the music’s immediacy.</p>
+      <p class="card-zh">香农·莱（Shannon Lay）推出新专辑《Past the Veil》，从质朴民谣转向爵士与trip-hop风格的丰满编曲。乐评肯定其嗓音与旋律的凝聚力，也指出部分实验性制作略显浑浊。</p>
+      <div class="card-keys"><span>arresting</span><span>sparse instrumentation</span><span>cohesion</span><span>foreground</span><span>imbue … with</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-29">
+    <a class="card" href="../tech/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">Apple Upgrade leasing program launches for iPhone, Mac, iPad</h3>
+      <p class="card-lead">Apple has launched Apple Upgrade, a Klarna-backed leasing plan in the United States for iPhone, Apple Watch, Mac, and iPad. Customers can choose fixed lease terms, trade in old devices, and upgrade, buy out, or return hardware at the end of the term. With the launch, Apple is ending the older iPhone Upgrade Program and iPhone Payments financing for new enrollments.</p>
+      <p class="card-zh">苹果在美国正式推出由 Klarna 支持的 Apple Upgrade 租赁计划，覆盖 iPhone、Apple Watch、Mac 和 iPad。 用户可按固定租期付款并在期满后升级、买断或退还设备；同时旧版 iPhone Upgrade Program 与 iPhone Payments 将停止面向新用户开放。</p>
+      <div class="card-keys"><span>leasing program</span><span>soft credit check</span><span>trade in</span><span>outstanding balance</span><span>discontinue</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-29">
+    <a class="card" href="../world/2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">Japan Quake Kills 13 as Rescuers Race Against Time</h3>
+      <p class="card-lead">A magnitude 6.8 earthquake struck Kumamoto prefecture on Japan’s Kyushu island, killing at least 13 people. Rescuers are searching collapsed sites, including a shopping mall and a factory, while the prime minister calls the effort a race against time. Aftershocks continue as thousands shelter and power and rail services remain disrupted.</p>
+      <p class="card-zh">日本九州熊本县发生强震，至少13人死亡；救援人员仍在废墟中搜救幸存者。首相称这是一场与时间的赛跑，商场与工厂等地受损严重，余震仍在持续。</p>
+      <div class="card-keys"><span>race against time</span><span>death toll</span><span>evacuate</span><span>aftershock</span><span>epicentre</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="business" data-date="2026-07-28">
+    <a class="card" href="../business/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">Chip stocks slide in US and Asia as AI jitters rattle investors</h3>
+      <p class="card-lead">Major chipmakers and tech-heavy Asian indexes fell sharply as investors grew uneasy about the huge sums being poured into artificial intelligence. Nvidia’s drop handed Apple the crown as the world’s most valuable listed company, while South Korea’s Kospi hit a circuit breaker and closed deep in the red. Fresh competition from China’s memory-chip industry added another reason for caution in AI-related stocks.</p>
+      <p class="card-zh">受人工智能投资回报疑虑影响，美亚主要芯片股大跌；韩国股市触发熔断，英伟达跌落后苹果重夺全球市值第一。 分析称资金涌入AI及中国竞争加剧引发获利了结，而中国存储巨头长鑫在上海上市首日暴涨近470%。</p>
+      <div class="card-keys"><span>sell-off</span><span>circuit breaker</span><span>volatile</span><span>debut</span><span>taking profit off the table</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-28">
+    <a class="card" href="../dev/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">June 2026 Baseline Digest Highlights New Web Features</h3>
+      <p class="card-lead">In June 2026, the CSS property `field-sizing` became Baseline Newly available, so form controls can grow or shrink with their content. Many CSS, HTML, and Web API features also reached Baseline Widely available status, and developers can now subscribe to Baseline Alerts on the Web Platform Status dashboard.</p>
+      <p class="card-zh">2026 年 6 月，CSS 属性 `field-sizing` 进入 Baseline Newly available，表单控件可随内容自动伸缩。 同期大量 CSS、HTML 与 Web API 特性达到 Baseline Widely available；开发者还可在 Web Platform Status 上订阅 Baseline Alerts。</p>
+      <div class="card-keys"><span>interoperable</span><span>field-sizing</span><span>lazy loading</span><span>progressive enhancement</span><span>subscribe</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-28">
+    <a class="card" href="../horror/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">Bloody Ozploitation Debut Fuels Punk Horror Siege</h3>
+      <p class="card-lead">*Penny Lane is Dead*, Mia’Kate Russell’s raucous horror-comedy debut, turns a cruel birthday prank into an ’80s-flavored siege of practical gore and punk energy. The Fantasia premiere follows three friends trapped with sadistic invaders, carried by effects and a fierce heroine even when tone and villains grow cartoonish. The film hits Shudder on August 28 after its 2026 Fantasia world premiere.</p>
+      <p class="card-zh">《Penny Lane is Dead》是化妆师出身的导演 Mia’Kate Russell 的恐怖喜剧长片处女作，以残酷生日恶作剧引爆八零年代风格的围困与血腥暴力。 影评肯定其实体特效与朋克女主角的爆发力，但也指出反派卡通化、基调冲突，以及结尾宣泄感不足；影片已在 Fantasia 首映，并将于 8 月 28 日登陆 Shudder。</p>
+      <div class="card-keys"><span>Ozploitation</span><span>raucous</span><span>inciting</span><span>no-holds-barred</span><span>catharsis</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-28">
+    <a class="card" href="../music/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">Syd’s Beard Turns Ease Into Self-Knowledge</h3>
+      <p class="card-lead">Pitchfork reviews Syd’s third solo album, *Beard*, as a calm, lush portrait of self-acceptance after years of shaping alternative rap and R&amp;B. Written after quitting alcohol, getting married, and buying a house in her childhood Los Angeles neighborhood, the record favors spacious production and candid desire over restless curiosity. Even when some later tracks feel vague or slow, the album lands as a patient document of love rooted in knowing oneself.</p>
+      <p class="card-zh">Pitchfork 评价 Syd 第三张个人专辑《Beard》为一部从容、丰沛的自我认知之作，写于戒酒、结婚并在洛杉矶童年社区置业之后。 专辑音色宽阔不赶，虽有后半段偏缓、歌词偏空的问题，整体仍像一份关于爱与自我接纳的沉稳记录。</p>
+      <div class="card-keys"><span>paean</span><span>late bloomer</span><span>equanimity</span><span>gossamer</span><span>languid</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-28">
+    <a class="card" href="../tech/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">iOS 26.6 now available for iPhone with these changes</h3>
+      <p class="card-lead">Apple has released iOS 26.6 for compatible iPhones, focusing on bug fixes, security patches, and Spotlight index work ahead of iOS 27. The update also adds a clearer alert when users hit the blocked-contacts limit, while a reported anti-snatching lock feature remains unfinished.</p>
+      <p class="card-zh">苹果已向兼容 iPhone 推送 iOS 26.6，重点是修复漏洞、加强安全，并提前优化 Spotlight 索引以迎接 iOS 27。更新还新增“已达阻止联系人上限”提示；防抢夺锁屏功能虽在代码中现身，但本次尚未启用。</p>
+      <div class="card-keys"><span>release notes</span><span>Spotlight index</span><span>blocked contacts</span><span>anti-snatching</span><span>CVE</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-28">
+    <a class="card" href="../world/2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">Firefighters Race to Control Wildfires Near Madrid</h3>
+      <p class="card-lead">Firefighters in France and Spain are racing to contain major wildfires near Bordeaux and Madrid as another heatwave approaches. Hundreds of thousands of people have been evacuated, and officials warn that rising temperatures could make the blazes even harder to control.</p>
+      <p class="card-zh">法国与西班牙正全力扑灭波尔多与马德里附近的大型山火，新一轮热浪即将到来。已有数十万人撤离，高温干燥天气令火势更难控制。</p>
+      <div class="card-keys"><span>stabilised</span><span>evacuate</span><span>heatwave</span><span>firebreak</span><span>unprecedented</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="business" data-date="2026-07-27">
+    <a class="card" href="../business/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Primark Cuts Prices Under Pressure from Shein and Temu</h3>
+      <p class="card-lead">Primark is cutting prices by up to 29% on hundreds of clothing items as shoppers increasingly compare it with ultra-cheap online rivals Shein and Temu. The move comes as like-for-like sales slip and the retailer prepares for a possible stock-market spin-off. Analysts say the strategy echoes supermarket tactics: lure customers with cheap staples, then hope they fill their baskets with more.</p>
+      <p class="card-zh">Primark宣布将数百种服装降价最高达29%，以应对Shein、Temu等超低价线上平台的竞争。此举正值其同店销售额下滑、母公司计划分拆上市之际；分析人士认为，这类似超市用低价引流、带动其他消费的策略。</p>
+      <div class="card-keys"><span>like-for-like sales</span><span>race to the bottom</span><span>spin off</span><span>undercut</span><span>impulse buy</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-27">
+    <a class="card" href="../dev/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">New to the web platform in May</h3>
+      <p class="card-lead">In May 2026, Chrome 148, Firefox 151, and Safari 26.5 shipped several features that reached Baseline Newly available status. Highlights include the `:open` pseudo-class, stronger container queries, native lazy loading for video and audio, and wider support for Document Picture-in-Picture and the Web Serial API. Chrome 149 and Firefox 152 betas also preview upcoming CSS and API improvements.</p>
+      <p class="card-zh">2026 年 5 月，Chrome 148、Firefox 151 与 Safari 26.5 稳定版带来多项新能力，其中部分已进入 Baseline Newly available。文章还介绍了视频音频懒加载、Document Picture-in-Picture、Web Serial API 扩展，以及 Chrome 149 与 Firefox 152 测试版中的预览特性。</p>
+      <div class="card-keys"><span>Baseline Newly available</span><span>pseudo-class</span><span>container query</span><span>lazy loading</span><span>always-on-top</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-27">
+    <a class="card" href="../horror/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Becky Threequel Has a Blast Destroying Nazis</h3>
+      <p class="card-lead">At Fantasia 2026, *The Last Temptation of Becky* continues the bloody saga of Lulu Wilson’s reluctant action heroine as she faces Nazis for a third time. Directed by Jenn Wexler, the threequel leans into spy-movie tropes, dark comedy, and cathartic violence while keeping Becky proudly rule-breaking. The review praises Wilson’s prickly charm even as it notes uneven effects and a few soft action beats.</p>
+      <p class="card-zh">《贝基的最后诱惑》在 Fantasia 2026 首映，延续 Lulu Wilson 饰演的暴力少女特工贝基与纳粹对抗的血腥系列。 影评称赞其黑色幽默与解压式打戏，同时指出特效与部分动作场面仍有短板。</p>
+      <div class="card-keys"><span>loose cannon</span><span>full-circle moment</span><span>against type</span><span>put someone through the wringer</span><span>cathartic</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-27">
+    <a class="card" href="../music/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Ol’ Dirty Bastard Has His Own New York City Street Now</h3>
+      <p class="card-lead">Brooklyn has co-named a Bed-Stuy street after Wu-Tang Clan co-founder Ol’ Dirty Bastard, tying the honor to the block where his grandmother still lives. The renaming arrives more than twenty years after his death, as his family and city officials mark a lasting local legacy.</p>
+      <p class="card-zh">布鲁克林贝德福德-史岱文森一处街道获加冠名“ODB Jones Way”，纪念武当派联合创始人 Ol’ Dirty Bastard。 仪式选在其祖母仍居住的街区，距离他 2004 年去世已逾二十年。</p>
+      <div class="card-keys"><span>co-named</span><span>esteemed</span><span>influential</span><span>unauthorized</span><span>legacy</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-27">
+    <a class="card" href="../tech/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Apple TV and Music Down for Some Users</h3>
+      <p class="card-lead">Apple reported outages across several consumer and developer services, including Apple TV, Podcasts, and parts of the App Store. Status pages listed routine or scheduled maintenance for some products and active investigations for others. By early evening Pacific Time, Apple said the developer-site issues had been resolved.</p>
+      <p class="card-zh">苹果晚间出现多项服务异常，涉及 Apple TV、播客与 App Store 相关功能。随后苹果表示，开发者状态页上列出的问题均已恢复。</p>
+      <div class="card-keys"><span>temporarily unavailable</span><span>routine maintenance</span><span>scheduled maintenance</span><span>investigate</span><span>resolve</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-27">
+    <a class="card" href="../world/2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Firefighters battle wildfire as tens of thousands evacuated near Bordeaux</h3>
+      <p class="card-lead">Firefighters are racing to contain huge wildfires near Bordeaux after tens of thousands of people fled villages in southwest France overnight. Across France and Spain, more than 330,000 people have been evacuated as heat, dry vegetation, and strong winds push the blazes further. Officials say Bordeaux itself is unlikely to be evacuated for now, but the fire is still moving erratically toward the city.</p>
+      <p class="card-zh">法国西南部波尔多附近野火失控，一夜之间约5.5万人撤离，西南地区累计撤离逾22万人；法西两国合计已撤离超过33万人。 内政部长称局势“非常不利”，火势仍不规则地向波尔多推进，机场航班大面积延误，环法赛最终赛段亦被缩短以支援灭火。</p>
+      <div class="card-keys"><span>evacuate</span><span>erratically</span><span>unfavourable</span><span>magnitude</span><span>redeploy</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="business" data-date="2026-07-26">
+    <a class="card" href="../business/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">商业</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">Rental searches for pet friendly properties drop after law change</h3>
+      <p class="card-lead">Rightmove data shows searches for pet-friendly rentals in England fell by more than half in May and June after the Renters’ Rights Act made it harder for landlords to refuse pets without a good reason. Agents warn that some renters wrongly assume permission is automatic, while landlords still raise concerns about damage, unsuitable homes, and limited ways to cover extra costs.</p>
+      <p class="card-zh">英格兰《租客权利法》生效后，Rightmove上“可养宠物”房源的搜索量在5月和6月同比下降逾五成。中介称部分租客误以为养宠物必然获准，房东则仍可因合理理由拒绝，并对损坏风险与额外成本表示担忧。</p>
+      <div class="card-keys"><span>plummet</span><span>unreasonably refuse</span><span>blanket 'no pets' policy</span><span>balance of power</span><span>levy / pet surcharge</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="dev" data-date="2026-07-26">
+    <a class="card" href="../dev/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">开发</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">June 2026 Baseline Monthly Digest</h3>
+      <p class="card-lead">In June 2026, the CSS property `field-sizing` reached Baseline Newly available, so form controls can resize to their content without custom JavaScript. Many CSS, HTML, and Web API features also became Baseline Widely available, and Web Platform Status now offers Baseline Alerts for subscription updates.</p>
+      <p class="card-zh">2026 年 6 月，`field-sizing` 进入 Baseline Newly available，表单控件可随内容自动伸缩。 同期多项 CSS、HTML 与 Web API 特性达到 Baseline Widely available，Web Platform Status 还推出了可订阅的 Baseline Alerts。</p>
+      <div class="card-keys"><span>interoperable</span><span>subscribe</span><span>automatically</span><span>defer</span><span>broadly compatible</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="horror" data-date="2026-07-26">
+    <a class="card" href="../horror/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">惊悚</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">Carrie Seeks Friends in Flanagan’s Prime Video Teaser</h3>
+      <p class="card-lead">Prime Video has released the first teaser for Mike Flanagan’s new limited series *Carrie*, adapted from Stephen King’s classic. The eight-episode show premieres on October 7 and follows lonely teen Carrie White as bullying, social media pressure, and telekinetic powers collide. Flanagan writes, executive produces, and directs four episodes, with Stephen King also serving as an executive producer.</p>
+      <p class="card-zh">亚马逊 Prime Video 公布了迈克·弗拉纳根新版《魔女嘉莉》限时剧集的首支预告，八集将于 10 月 7 日上线。 剧集聚焦寄人篱下、遭欺凌并觉醒念力的少女嘉莉，弗拉纳根执笔并执导部分集数，斯蒂芬·金担任制片人。</p>
+      <div class="card-keys"><span>misfit</span><span>fiercely protective</span><span>viral bullying scandal</span><span>telekinetic powers</span><span>limited series</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="music" data-date="2026-07-26">
+    <a class="card" href="../music/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">音乐</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">Pitchfork Revisits Janet Jackson’s All for You</h3>
+      <p class="card-lead">Pitchfork’s Sunday Review looks back at Janet Jackson’s 2001 album *All for You*, made after a painful, very public divorce. The essay argues the record turns heartbreak into acceptance, blending pop, R&amp;B, and dance while answering doubts about her place in a changing charts era. For learners, it is rich in emotion vocabulary, career language, and long descriptive sentences.</p>
+      <p class="card-zh">Pitchfork 周日回顾专栏重读珍妮·杰克逊 2001 年专辑《All for You》，讲述她在离婚风波后如何把伤痛写进音乐。文章认为这张专辑最终走向释然与重生，并以巡演与商业成绩证明她仍是流行乐舞台上的重要人物。</p>
+      <div class="card-keys"><span>creative partner</span><span>household name</span><span>eclectic</span><span>bounce-back</span><span>galvanizing</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="tech" data-date="2026-07-26">
+    <a class="card" href="../tech/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">科技</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">iOS 26.6 Is Coming Next Week for iPhone</h3>
+      <p class="card-lead">Apple is preparing to release iOS 26.6 early next week, with Monday, July 27 as the earliest likely date. The update focuses on bug fixes, security patches, and optimizing the Spotlight index so iPhones are ready for iOS 27 this fall. It also adds a blocked-contacts alert and contains code for an anti-theft feature that may arrive later.</p>
+      <p class="card-zh">苹果预计下周初向公众推送 iOS 26.6，最早可能在 7 月 27 日周一发布。更新以修复漏洞、加强安全和优化 Spotlight 索引为主，以便为秋季的 iOS 27 做好准备。</p>
+      <div class="card-keys"><span>release candidate</span><span>companion update</span><span>optimize</span><span>index</span><span>revamp</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="world" data-date="2026-07-26">
+    <a class="card" href="../world/2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">国际</span>
+        <span class="card-meta">Source · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">More than 300,000 flee wildfires in France and Spain</h3>
+      <p class="card-lead">More than 300,000 people have fled wildfires raging across south-west France and parts of Spain, as strong winds and high heat make the blazes hard to control. French officials say flames are pushing toward Bordeaux, while Spain’s government has declared a state of emergency and warned of “complex hours” ahead. The EU is sending aircraft and firefighting teams as the fire season looks set to break previous damage records.</p>
+      <p class="card-zh">法国西南部和西班牙多地野火持续蔓延，逾30万人撤离；强风高温让火势难控，波尔多告急，西班牙已进入紧急状态。欧盟正调派飞机与消防队伍支援，官员警告今年欧洲火灾损失可能再创纪录。</p>
+      <div class="card-keys"><span>contain</span><span>evacuate</span><span>erratic</span><span>fire break</span><span>civil protection mechanism</span></div>
+    </a>
+  </li>
+    </ul>
+    <p class="empty" data-empty hidden>没有符合筛选的笔记。</p>
+  </main>
+  <script>(function () {
+  var topic = "all";
+  var date = "all";
+  var topicButtons = document.querySelectorAll("[data-topic-filter]");
+  var dateSelect = document.querySelector("[data-date-filter]");
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-note]"));
+  var empty = document.querySelector("[data-empty]");
+
+  function apply() {
+    var visible = 0;
+    items.forEach(function (item) {
+      var okTopic = topic === "all" || item.getAttribute("data-topic") === topic;
+      var okDate = date === "all" || item.getAttribute("data-date") === date;
+      var show = okTopic && okDate;
+      item.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  topicButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      topic = btn.getAttribute("data-topic-filter") || "all";
+      topicButtons.forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      apply();
+    });
+  });
+
+  if (dateSelect) {
+    dateSelect.addEventListener("change", function () {
+      date = dateSelect.value || "all";
+      apply();
+    });
+  }
+})();</script>
+</body>
+</html>

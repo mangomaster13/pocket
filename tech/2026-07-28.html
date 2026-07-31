@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS 26.6 now available for iPhone with these changes</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-28</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>iOS 26.6 now available for iPhone with these changes</h1>
+    <p class="meta">Source · 2026-07-28 · <a href="https://9to5mac.com/2026/07/27/ios-26-6-now-available-whats-new/">数据来源</a></p>
+    <p class="lead">Apple has released iOS 26.6 for compatible iPhones, focusing on bug fixes, security patches, and Spotlight index work ahead of iOS 27. The update also adds a clearer alert when users hit the blocked-contacts limit, while a reported anti-snatching lock feature remains unfinished.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>苹果已向兼容 iPhone 推送 iOS 26.6，重点是修复漏洞、加强安全，并提前优化 Spotlight 索引以迎接 iOS 27。更新还新增“已达阻止联系人上限”提示；防抢夺锁屏功能虽在代码中现身，但本次尚未启用。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://9to5mac.com/2026/07/27/ios-26-6-now-available-whats-new/">https://9to5mac.com/2026/07/27/ios-26-6-now-available-whats-new/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Apple has officially released iOS 26.6 for iPhone users. Compared with iOS 26.4 and iOS 26.5, the new build is lighter on visible features. Instead, it concentrates on bug fixes, security updates, and quiet preparation for the next major release. Apple’s own <mark class="hl-kw">release notes</mark> say the update includes those fixes and “optimizes the <mark class="hl-kw">Spotlight index</mark> to prepare for iOS 27.” Users can install it now through Settings → General → Software Update, or allow an automatic overnight update.</p>
+<p>The Spotlight change is the most important part of the release, even if most people never notice it. iOS 27 will bring major upgrades to Spotlight and Siri, and both depend on indexing content stored on the device. Early iOS 27 beta testers found that this background indexing could take a week or longer. By starting some of that work in iOS 26.6, Apple aims to make the fall upgrade feel smoother when iOS 27 arrives.</p>
+<p>There are a few smaller user-facing changes as well. iPhones have long limited how many contacts a person can block, but the system previously offered little explanation when that limit was reached. iOS 26.6 adds a “<mark class="hl-kw">Blocked Contacts</mark> Limit Reached” alert that tells users to remove an existing blocked contact in Settings before adding another. Separately, code found during the beta pointed to an <mark class="hl-kw">anti-snatching</mark> security feature meant to detect when an unlocked iPhone is suddenly taken and then lock it automatically. That feature does not appear to be turned on in this release, though Apple could enable it later.</p>
+<p>Security is another major reason to update. After shipping iOS 26.6 and iPadOS 26.6, Apple listed more than 75 security fixes for iPhone and iPad—78 vulnerability entries tied to 87 unique <mark class="hl-kw">CVE</mark> numbers. Apple has not said any of those issues were actively exploited in the wild. The company also published large sets of fixes for related platforms, including many for Mac. iOS 26.6 lands as Apple’s attention shifts toward iOS 27, which is already in developer and public beta testing and is expected for the public in September.</p>
+<h3>中文全文翻译</h3>
+<p>苹果已正式向 iPhone 用户发布 iOS 26.6。与 iOS 26.4、iOS 26.5 相比，此次版本在可见新功能上更克制，重点转向漏洞修复、安全更新，以及为下一版重大系统更新做静默准备。苹果发布说明写道，该更新包含上述修复，并“优化 Spotlight 索引以为 iOS 27 做准备”。用户可立即在“设置 → 通用 → 软件更新”中安装，也可让 iPhone 在夜间自动更新。</p>
+<p>即便多数人察觉不到，Spotlight 相关改动仍是本次更新最重要的部分。iOS 27 将对 Spotlight 和 Siri 进行大幅升级，二者都依赖对机内内容的索引。早期 iOS 27 测试者发现，这项后台索引可能耗时一周甚至更久。通过在 iOS 26.6 中提前启动部分工作，苹果希望在秋季升级到 iOS 27 时体验更顺畅。</p>
+<p>还有一些较小的面向用户的变化。iPhone 长期以来限制可阻止的联系人数量，但过去达到上限时系统几乎没有明确说明。iOS 26.6 新增“已达阻止联系人上限”提示，告知用户须先在设置中移除已有阻止联系人，才能再添加。此外，测试版代码还暴露出一项防抢夺安全功能：在未锁定的 iPhone 被突然夺走时检测并自动上锁。该功能在本次发布中似乎尚未启用，但苹果日后可能打开。</p>
+<p>安全也是值得更新的重要原因。在推出 iOS 26.6 与 iPadOS 26.6 后，苹果公布了针对 iPhone 和 iPad 的逾 75 项安全修复——共 78 条漏洞条目，对应 87 个独立 <mark class="hl-kw">CVE</mark> 编号。苹果未表示其中任何问题已在野外被积极利用。公司还为相关平台发布了大量修复，其中包括针对 Mac 的众多条目。iOS 26.6 发布之际，苹果注意力正转向 iOS 27；该系统已进入开发者与公开测试，预计于 9 月面向公众推出。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">release notes</mark></strong></p>
+<ul>
+<li>英文释义: the official summary of what changed in a software update</li>
+<li>中文释义: 软件更新的官方说明/发行说明</li>
+<li>例句: Apple’s <mark class="hl-kw">release notes</mark> say the update includes bug fixes, security updates, and <mark class="hl-kw">Spotlight index</mark> optimization.</li>
+<li>记忆提示: release（发布）+ notes（说明）= 发布时附带的变更清单</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">Spotlight index</mark></strong></p>
+<ul>
+<li>英文释义: the on-device database that helps Spotlight search find apps, files, and other content quickly</li>
+<li>中文释义: Spotlight 搜索所依赖的设备端索引数据库</li>
+<li>例句: The update optimizes the <mark class="hl-kw">Spotlight index</mark> to prepare for iOS 27.</li>
+<li>记忆提示: 把手机内容做成“目录卡片”，搜起来才快</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">blocked contacts</mark></strong></p>
+<ul>
+<li>英文释义: people whose calls, messages, or contact actions your phone has been told to reject or hide</li>
+<li>中文释义: 已被设为阻止/拉黑的联系人</li>
+<li>例句: iOS 26.6 adds a new alert when the <mark class="hl-kw">blocked contacts</mark> limit is reached.</li>
+<li>记忆提示: blocked = 被挡住；contacts = 联系人</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">anti-snatching</mark></strong></p>
+<ul>
+<li>英文释义: designed to stop thieves from grabbing and immediately using an unlocked phone</li>
+<li>中文释义: 防抢夺的（防止手机被突然抢走后继续使用）</li>
+<li>例句: Code from the beta suggested an <mark class="hl-kw">anti-snatching</mark> feature that could lock a phone taken abruptly.</li>
+<li>记忆提示: snatch = 一把夺走；anti- = 对抗</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">CVE</mark></strong></p>
+<ul>
+<li>英文释义: a public ID number used to track a specific known software vulnerability</li>
+<li>中文释义: 用于标识已知软件漏洞的公开编号</li>
+<li>例句: Apple’s advisory listed 78 vulnerability entries tied to 87 unique <mark class="hl-kw">CVE</mark> numbers.</li>
+<li>记忆提示: 把每个漏洞当成有“身份证号”的安全案件档案</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">By starting some of that work with iOS 26.6, Apple should be able to provide a smoother upgrade experience this fall.</mark></p>
+<ul>
+<li>结构: By starting...（方式状语）+ Apple should be able to...（主句：主语 + 情态 + 不定式）+ this fall（时间状语）</li>
+<li>中文: 通过在 iOS 26.6 中提前启动部分工作，苹果应能在今秋提供更顺畅的升级体验。</li>
+<li>仿写: By finishing the report before Friday, the team should be able to present a clearer plan next week.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The update is lighter on new features than iOS 26.4 and iOS 26.5, but it includes important bug fixes, security updates, and prepares your iPhone for iOS 27.</mark></p>
+<ul>
+<li>结构: 主句（比较结构 lighter on A than B）+ but 转折并列 + 三个并列动作/内容（includes... / prepares...）</li>
+<li>中文: 相较 iOS 26.4 与 iOS 26.5，这次更新的新功能更少，但包含重要漏洞修复与安全更新，并为 iPhone 迎接 iOS 27 做准备。</li>
+<li>仿写: The proposal is lighter on bold claims than last quarter’s draft, but it includes clearer numbers, stronger risks, and prepares the board for a final vote.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Across iOS 26.6 and iPadOS 26.6, Apple details more than 75 security fixes for iPhone and iPad.</mark></p>
+<ul>
+<li>结构: Across A and B（范围状语）+ 主语 Apple + 动词 details + 宾语 more than 75 security fixes + for...（对象）</li>
+<li>中文: 在 iOS 26.6 与 iPadOS 26.6 中，苹果详细列出了针对 iPhone 和 iPad 的逾 75 项安全修复。</li>
+<li>仿写: Across the two product lines, the company details more than 40 quality improvements for phones and tablets.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

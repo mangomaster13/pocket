@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Above &amp; Below Review: Antonio Banderas Steals the Show</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">惊悚 · 2026-07-31</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Above &amp; Below Review: Antonio Banderas Steals the Show</h1>
+    <p class="meta">Source · 2026-07-31 · <a href="https://bloody-disgusting.com/reviews/3961401/above-and-below-review/">数据来源</a></p>
+    <p class="lead">Action director Jesse V. Johnson’s shark thriller *Above &amp; Below* pits vacationers against both hungry sharks and violent criminals at sea. The review argues Antonio Banderas and the villains outshine a thin script, while underwater thrills and tense cross-cutting keep the film afloat. It opened in select theaters on July 29, 2026.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>《Above &amp; Below》是一部把鲨鱼威胁与船上犯罪暴力交织在一起的鲨鱼惊悚片，评论认为安东尼奥·班德拉斯等反派表演最出彩。 导演调度与水下场面尚可，但剧本单薄、主题未展开，角色深度不足。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://bloody-disgusting.com/reviews/3961401/above-and-below-review/">https://bloody-disgusting.com/reviews/3961401/above-and-below-review/</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>Killer shark movies are everywhere this year—more in number than in quality—and Jesse V. Johnson’s <em>Above &amp; Below</em> is the latest entry. Johnson, known for action films, steps into animal-attack horror for the first time. The film delivers hungry sharks and a high body count, yet most of the killing comes from dangerous men rather than from the creatures in the water.</p>
+<p>A group of friends on vacation in Mexico accepts an exclusive cage-diving trip on a luxury catamaran after Kyle, the group’s screw-up, brings them an offer they cannot refuse. Kyle’s sister Tatiana is hesitant, but her boyfriend and their couple friends overrule her. Quiet heavies with matching designer bags soon join the passenger list. Another boat arrives, and three armed men climb aboard—among them a terrifically entertaining Antonio Banderas. Before long, the sharks are no longer hungry, and the real nightmare is underway.</p>
+<p>Like recent titles such as <em>Dangerous Animals</em> and <em>The Bay</em>, the film treats sharks as an underlying threat instead of the only obstacle. The true antagonists are greedy, murderous humans, and the actors playing those villains give the movie its most engaging performances. Writer Anthony Steven Giordano gives the friends little drama or depth: Kyle is a troublemaker, Tatiana plans to break up with TJ, and otherwise there is not much between them. The bad guys, by contrast, have more to play with. Louis Mandylor’s Martin is a villainous <mark class="hl-kw">loose cannon</mark>; Jess Liaudin’s Garrison has a charismatic gentility that contrasts with his muscular frame. Banderas’s Carlos steals the show, shifting from joyous energy to abject cruelty and injecting craziness into otherwise serious, sometimes <mark class="hl-kw">meandering</mark> beats.</p>
+<p>The biggest performance issue, the review says, is Laura Marano’s Tatiana—especially in underwater dialogue. The SCUBA helmets are wired so divers can talk, and the scenes are shot underwater and look good, but the later recorded lines never match the intensity of bodies falling and sharks biting. Still, Johnson crafts thrills and suspense, cutting between criminal threats above and shark danger below while keeping tension alive. Viewers keep guessing who will survive. Below the surface, characters trapped in a cage on the ocean floor run low on air and must retrieve tanks from the dead, leading to eerie encounters with chewed-upon corpses. One sequence with Tatiana, Martin, and a great white is a high point of creativity and execution. The sharks are CG and mostly look solid; the CG blood is what most clearly looks fake.</p>
+<p>The story is set in Mexico but filmed in Bulgaria and the Canary Islands; limited land scenes and convincing offshore and underwater work sustain the illusion of dangerous isolation. In the end, Johnson’s direction and the turns by Banderas, Mandylor, and Liaudin may make <em>Above &amp; Below</em> worth watching. The script teases a theme about the danger of keeping secrets but ultimately does little with it—or with logic. A stronger script could have given everyone more to work with, yet audiences rarely come to these movies for the writing. <em>Above &amp; Below</em> swam into select theaters on July 29, 2026.</p>
+<h3>中文全文翻译</h3>
+<p>今年杀手鲨鱼片铺天盖地——数量多于质量——而杰西·V·约翰逊的《Above &amp; Below》是最新一部。约翰逊以动作片见长，首次涉足动物袭击类恐怖。影片既有饥渴的鲨鱼，也有可观的死亡人数，但大多数杀戮来自危险的人，而非水中的生物。</p>
+<p>一群朋友在墨西哥度假时，团队里的麻烦制造者凯尔带来一个无法拒绝的邀约：登上豪华双体动力艇，参加保证能近距离见到鲨鱼的专属笼潜之旅。凯尔的姐姐塔蒂亚娜犹豫不决，却被男友和朋友夫妇否决。随后，拎着配套名牌包的沉默打手登船；另一艘船靠拢，三名武装男子爬上来——其中包括表现极其抢眼的安东尼奥·班德拉斯。不久鲨鱼便不再饥饿，真正的噩梦开始了。</p>
+<p>与近期的《Dangerous Animals》《The Bay》类似，本片把鲨鱼当作潜在威胁，而非唯一障碍。真正的反派是贪婪、嗜杀的人类，饰演这些反派的演员贡献了全片最抓人的表演。编剧安东尼·史蒂文·乔达诺几乎没给这群朋友写多少戏剧冲突或人物深度：凯尔是捣蛋鬼，塔蒂亚娜打算跟TJ分手，其余关系单薄。反派反而更有发挥空间。路易斯·曼迪勒的马丁是狂躁失控的恶棍；杰斯·利奥丹的加里森带着一种迷人的温文尔雅，与他结实的身形形成对照。班德拉斯的卡洛斯抢尽风头，能从欢快活力瞬间翻转为彻头彻尾的残忍，给原本严肃、偶尔拖沓的段落注入疯狂乐趣。</p>
+<p>评论认为最大的表演问题出在劳拉·马拉诺饰演的塔蒂亚娜——尤其是水下对白。潜水头盔装有通话装置，水下实拍画面好看，但后期录制的台词完全跟不上尸体坠落、鲨鱼撕咬的紧张感。尽管如此，约翰逊仍善于制造融入人物的惊悚与悬念：在甲板上的犯罪威胁与水下的鲨鱼危险之间来回切换，却很少丢掉张力。观众始终猜不透谁能活下来。水下，人物被困在沉到洋底的鲨鱼笼里，氧气将尽，不得不从死者身上取气瓶，从而与被啃咬过的尸体发生诡异互动。塔蒂亚娜、马丁与一条大白鲨的一场戏，是创意与执行的高光。鲨鱼为CG，整体观感不错；最假的是CG血迹。</p>
+<p>故事设定在墨西哥，实拍于保加利亚与加那利群岛；陆地戏有限，离岸与水下拍摄足以维持危险孤绝的幻觉。归根结底，约翰逊的调度以及班德拉斯、曼迪勒、利奥丹的表演，或许让《Above &amp; Below》值得一看。剧本暗示“保守秘密的危险后果”这一主题，最终却几乎未展开，逻辑也经不起推敲。更好的剧本本可给他们更多发挥空间，不过观众本就不为剧本而来。影片于2026年7月29日登陆部分影院。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">ubiquitous</mark></strong></p>
+<ul>
+<li>英文释义: seeming to be everywhere at once; extremely common</li>
+<li>中文释义: 无处不在的；极为普遍的</li>
+<li>例句: Killer shark movies seem to be riding high this year and are one of the most <mark class="hl-kw">ubiquitous</mark> subgenres in horror right now.</li>
+<li>记忆提示: ubi- 有“到处”的语感，想到“走到哪都能撞见”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">steal the show</mark></strong></p>
+<ul>
+<li>英文释义: to attract the most attention and praise, outperforming others</li>
+<li>中文释义: 抢尽风头；成为全场焦点</li>
+<li>例句: It’s Banderas’ Carlos who steals the show in Above &amp; Below.</li>
+<li>记忆提示: 字面“偷走整场演出”，引申为比主角还亮眼</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">loose cannon</mark></strong></p>
+<ul>
+<li>英文释义: an unpredictable person whose reckless behavior can cause serious trouble</li>
+<li>中文释义: 失控的危险人物；行事莽撞、难以预料的人</li>
+<li>例句: Mandylor’s Martin is the villainous <mark class="hl-kw">loose cannon</mark> equivalent of Kyle’s less harmful pain in the ass.</li>
+<li>记忆提示: 甲板上没拴住的大炮会乱滚伤人——联想到“惹祸精”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">meandering</mark></strong></p>
+<ul>
+<li>英文释义: moving or progressing slowly without a clear, direct purpose</li>
+<li>中文释义: （情节）拖沓曲折的；不紧凑的</li>
+<li>例句: Banderas adds craziness into some otherwise serious and occasionally <mark class="hl-kw">meandering</mark> beats.</li>
+<li>记忆提示: 像小河弯弯绕绕向前流，不走直线</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">set piece</mark></strong></p>
+<ul>
+<li>英文释义: a carefully staged, standout action or suspense sequence in a film</li>
+<li>中文释义: （电影中的）重头场面；精心设计的精彩戏份</li>
+<li>例句: Johnson and friends find some solid <mark class="hl-kw">set piece</mark>s below the surface too.</li>
+<li>记忆提示: 像舞台上摆好的“固定布景戏”，专指高光段落</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> Like the recent Dangerous Animals and The Bay, Johnson’s Above &amp; Below takes the wise tact of casting its sharks as an underlying threat instead of the main obstacle.</p>
+<ul>
+<li>结构: 前置比较状语（Like…）+ 主句（takes the wise tact of…）+ 动名词短语说明策略（casting… as… instead of…）</li>
+<li>中文: 与近期的《Dangerous Animals》和《The Bay》一样，约翰逊的《Above &amp; Below》明智地把鲨鱼写成潜在威胁，而非主要障碍。</li>
+<li>仿写: Like many workplace thrillers, the series takes the wise tact of casting office politics as an underlying threat instead of the main plot.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">He plays the film’s big bad with a joyous sense of life that he can turn on a dime into abject cruelty.</mark></p>
+<ul>
+<li>结构: 主句（He plays… with…）+ 定语从句（that he can turn… into…）修饰 sense of life</li>
+<li>中文: 他以一种欢快的生命感演绎片中大反派，又能瞬间翻转为彻头彻尾的残忍。</li>
+<li>仿写: She leads the negotiation with a calm confidence that she can turn on a dime into sharp impatience.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> At the end of the day, it’s Johnson’s direction and the performances by Banderas, Mandylor, and Liaudin that might make Above &amp; Below worth your time.</p>
+<ul>
+<li>结构: 强调句 It is A and B that…；插入名单作 performances 的后置修饰</li>
+<li>中文: 归根结底，可能让《Above &amp; Below》值得一看的，是约翰逊的导演手法以及班德拉斯、曼迪勒和利奥丹的表演。</li>
+<li>仿写: At the end of the day, it’s clear reporting and the sources’ candor that might make the investigation worth your time.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

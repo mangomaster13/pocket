@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ol’ Dirty Bastard Has His Own New York City Street Now</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">音乐 · 2026-07-27</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Ol’ Dirty Bastard Has His Own New York City Street Now</h1>
+    <p class="meta">Source · 2026-07-27 · <a href="https://pitchfork.com/story/ol-dirty-bastard-has-his-own-new-york-city-street-now/">数据来源</a></p>
+    <p class="lead">Brooklyn has co-named a Bed-Stuy street after Wu-Tang Clan co-founder Ol’ Dirty Bastard, tying the honor to the block where his grandmother still lives. The renaming arrives more than twenty years after his death, as his family and city officials mark a lasting local legacy.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>布鲁克林贝德福德-史岱文森一处街道获加冠名“ODB Jones Way”，纪念武当派联合创始人 Ol’ Dirty Bastard。 仪式选在其祖母仍居住的街区，距离他 2004 年去世已逾二十年。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://pitchfork.com/story/ol-dirty-bastard-has-his-own-new-york-city-street-now/">https://pitchfork.com/story/ol-dirty-bastard-has-his-own-new-york-city-street-now/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>A Brooklyn street now carries a second name that hip-hop fans will recognize at once. On July 26, Putnam Avenue in Bedford-Stuyvesant was <mark class="hl-kw">co-named</mark> ODB Jones Way in honor of Ol’ Dirty Bastard, the Wu-Tang Clan co-founder whose raw style helped define 1990s rap. Friends, family, and local officials gathered for a ceremony that turned a neighborhood corner into a public memorial.</p>
+<p>Although Ol’ Dirty Bastard—born Russell Tyrone Jones—grew up in Fort Greene, his ties to Bed-Stuy remain strong. At the event, his eldest brother, Ramsay Jones, told New York photographer Howie Weiss that the new sign stands at the corner of a block where their grandmother still lives. That same stretch of street is also home to a familiar mural of the cover of Jones’s first solo album, <em>Return to the 36 Chambers: The Dirty Version</em>. The location therefore links family history, neighborhood art, and a landmark record in one place.</p>
+<p>The honor comes more than two decades after Jones died of an overdose in 2004, at the age of 35. In the years since, filmmakers have returned to his story more than once. An <mark class="hl-kw">unauthorized</mark> documentary appeared in 2013, and Jones’s estate tried to stop it. A later film arrived in 2023 on A&amp;E, this time with his family’s blessing. Together, those projects show how fiercely people still argue over how his life should be told—and how carefully his relatives guard that narrative.</p>
+<p>Street co-naming is a quiet form of civic praise: the original avenue name stays, while a second title marks a person who shaped the city’s culture. For Bed-Stuy, ODB Jones Way is not only a tribute to a famous MC. It is also a reminder that influence can stay rooted in ordinary blocks—where a grandmother still lives, a mural still faces the sidewalk, and a new sign now asks passersby to say his name.</p>
+<h3>中文全文翻译</h3>
+<p>布鲁克林的一条街道如今有了第二个名字，嘻哈乐迷一眼就能认出来。7 月 26 日，贝德福德-史岱文森的普特南大道获加冠名“ODB Jones Way”，以纪念武当派联合创始人 Ol’ Dirty Bastard——他粗粝的风格曾深刻塑造了 1990 年代说唱。朋友、家属与地方官员齐聚仪式现场，把街角变成一处公共纪念地。</p>
+<p>尽管 Ol’ Dirty Bastard（本名 Russell Tyrone Jones）在福特格林长大，他与 Bed-Stuy 的联系依然很深。仪式上，他的长兄 Ramsay Jones 告诉纽约摄影师 Howie Weiss，新路牌立在祖母至今仍居住的街区拐角。同一路段还有一幅广为人知的壁画，画的是他首张个人专辑《Return to the 36 Chambers: The Dirty Version》的封面。因此，这里把家族记忆、社区艺术与一张里程碑唱片连在了一起。</p>
+<p>这一荣誉到来时，距离 Jones 2004 年因过量用药去世已逾二十年，当时他年仅 35 岁。此后，电影人多次回望他的故事。2013 年出现过一部未经授权的纪录片，Jones 的遗产管理方曾试图阻止；2023 年又有一部影片在 A&amp;E 播出，这一次得到了家人许可。这些作品表明，人们仍在激烈争论该如何讲述他的一生，而亲属也格外谨慎地守护这一叙事权。</p>
+<p>街道加冠名是一种低调的城市致敬：原路名保留，第二个名字则标记那位塑造城市文化的人。对 Bed-Stuy 而言，“ODB Jones Way”不仅是对一位著名 MC 的纪念，也提醒人们：影响力可以扎根在日常街区——祖母仍住在这里，壁画仍朝向人行道，而新的路牌如今让路过的人念出他的名字。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">co-named</mark></strong></p>
+<ul>
+<li>英文释义: given an additional official name alongside the existing one</li>
+<li>中文释义: （街道等）被加冠名；同时拥有第二个正式名称</li>
+<li>例句: Putnam Avenue in the Bed-Stuy neighborhood was <mark class="hl-kw">co-named</mark> ODB Jones Way.</li>
+<li>记忆提示: co- 表示“共同/附加”，name 是命名 → 额外加一个名字</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">esteemed</mark></strong></p>
+<ul>
+<li>英文释义: highly respected and admired</li>
+<li>中文释义: 备受尊敬的；声望很高的</li>
+<li>例句: A Brooklyn street has a new name courtesy of one of the city’s most <mark class="hl-kw">esteemed</mark> rappers.</li>
+<li>记忆提示: 联想 esteem（尊重）→ <mark class="hl-kw">esteemed</mark> 就是“被高度尊重的”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">influential</mark></strong></p>
+<ul>
+<li>英文释义: having the power to shape ideas, taste, or other people’s work</li>
+<li>中文释义: 有影响力的</li>
+<li>例句: The street was renamed in honor of the <mark class="hl-kw">influential</mark> group’s co-founder.</li>
+<li>记忆提示: influence（影响）+ -ial → 能产生影响的</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">unauthorized</mark></strong></p>
+<ul>
+<li>英文释义: made or released without official permission</li>
+<li>中文释义: 未经授权的</li>
+<li>例句: An <mark class="hl-kw">unauthorized</mark> 2013 film about his life was one that Jones’ estate attempted to block.</li>
+<li>记忆提示: un-（否定）+ authorized（获准）→ 没批准就不能做</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">legacy</mark></strong></p>
+<ul>
+<li>英文释义: the lasting impact, reputation, or work someone leaves behind</li>
+<li>中文释义: 遗产；留下的深远影响</li>
+<li>例句: Two documentaries about his life and <mark class="hl-kw">legacy</mark> have been released since his death.</li>
+<li>记忆提示: 不只是财产，也可指艺术与声誉上的“身后影响”</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">During a ceremony held today (July 26) with the late MC’s friends, family, and a group of local officials, Putnam Avenue in the Bed-Stuy neighborhood was co-named ODB Jones Way in honor of the influential group’s co-founder.</mark></p>
+<ul>
+<li>结构: 时间/伴随状语（During a ceremony...）+ 被动主句（Putnam Avenue was <mark class="hl-kw">co-named</mark>...）+ 目的状语（in honor of...）</li>
+<li>中文: 在今天（7 月 26 日）举行的仪式上，已故说唱歌手的亲友与地方官员到场，贝德福德-史岱文森的普特南大道被加冠名为“ODB Jones Way”，以纪念这位有影响力乐队的联合创始人。</li>
+<li>仿写: During a quiet morning ceremony with former teammates and city leaders, the downtown arena was <mark class="hl-kw">co-named</mark> after the coach who rebuilt the franchise.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">At the ceremony, the rapper’s eldest brother, Ramsay Jones, told New York photographer Howie Weiss that the street sign went up at the corner of a block their grandmother still lives on today.</mark></p>
+<ul>
+<li>结构: 地点状语 + 主谓宾（told）+ 间接宾语 + that 宾语从句；从句内含定语从句（their grandmother still lives on）</li>
+<li>中文: 仪式上，这位说唱歌手的长兄 Ramsay Jones 告诉纽约摄影师 Howie Weiss，路牌立在祖母如今仍居住的那个街区拐角。</li>
+<li>仿写: After the unveiling, the designer’s sister told a local reporter that the plaque stands outside the studio their father still visits every week.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> Since then, two documentaries about his life and <mark class="hl-kw">legacy</mark> have been released: an <mark class="hl-kw">unauthorized</mark> 2013 film, which Jones’ estate attempted to block, and a 2023 movie released on A&amp;E with his family’s blessing.</p>
+<ul>
+<li>结构: 时间状语 + 现在完成时被动 + 冒号列举；第一个并列项含非限制性定语从句（which...）</li>
+<li>中文: 自那以后，已有两部关于他生平与遗产的纪录片问世：一部是 2013 年未经授权、且其遗产管理方曾试图阻止的影片；另一部是 2023 年在 A&amp;E 播出、并获得家人许可的电影。</li>
+<li>仿写: Since then, two biographies about her career have appeared: an <mark class="hl-kw">unauthorized</mark> early draft, which her lawyers tried to halt, and a later book published with her family’s approval.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

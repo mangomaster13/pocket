@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nick Hakim’s I Can See Stays Softly Stuck</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">音乐 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Nick Hakim’s I Can See Stays Softly Stuck</h1>
+    <p class="meta">Source · 2026-07-30 · <a href="https://pitchfork.com/reviews/albums/nick-hakim-i-can-see/">数据来源</a></p>
+    <p class="lead">Pitchfork’s review of Nick Hakim’s fourth studio album, *I Can See*, argues that the record lives in a mild middle ground of moderate tempos and subdued vocals. Brief flashes of tension and texture appear, the critic says, but they are often smoothed into a pleasant haze rather than pushed into real drama.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>Pitchfork 评述 Nick Hakim 第四张录音室专辑《I Can See》，认为整张作品节奏克制、人声收敛，张力被抹平。 评论承认细听仍有趣味，但整体更像温和催眠，多数歌曲几乎原地徘徊。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://pitchfork.com/reviews/albums/nick-hakim-i-can-see/">https://pitchfork.com/reviews/albums/nick-hakim-i-can-see/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Near the end of “Soft Wet Clay,” a <mark class="hl-kw">brooding</mark> ballad on Nick Hakim’s new album, something nearly thrilling almost takes shape. Most instruments fall away, leaving a heavily filtered drum kit and a piano that plunks dissonant chords. The duet seems to sag and slow, then suddenly gathers speed and swagger—only to cut out just as the song feels ready to move somewhere new.</p>
+<p>Hakim has long built beautiful songs and then gently glitched, stretched, and gummed them up. Since his 2014 debut EP <em>Where Will We Go</em>, he has shaped a style that mixes sepia-toned psych rock with Soulquarians-style modern R&amp;B, letting live instruments and MPCs bounce against each other until the groove sits between the human and the machine. Those off-kilter production touches often carry the turmoil that his relaxed singing and unshowy playing keep quiet. On “QADIR,” a highlight from his 2020 album <em>WILL THIS MAKE ME GOOD</em>, a demonic pitched-down double of his voice and a choir of wordless cries push icy dread into hot desperation.</p>
+<p><em>I Can See</em>, his fourth studio album, largely lacks that kind of drama, and the review says it suffers for it. The songs inhabit a balmy medium zone between sonic gunk and clarity, between sharp hook and vague atmosphere. Tempos stay relentlessly moderate; Hakim’s voice is more <mark class="hl-kw">subdued</mark> than ever, both in delivery and in the mix. Careful listening still turns up tension—a synth-bass swoop that unsettles the chorus of “The Reason,” a piano-and-synth riff on “Endlessly Waiting” that tick-tocks in close voicings, and vocals on the title track that may be lightly Chipmunked. In general, though, the scuzz is <mark class="hl-kw">homogenized</mark> and spread evenly. A cassette-like hiss opens the album and wraps every song in pleasant degradation. Promotional copy calls the record “medicinal”; if so, the critic suggests, the medicine is probably a <mark class="hl-kw">soporific</mark>.</p>
+<p>With its love of repetition, its allergy to extremes, and its focus on the feel of sound—Hakim and longtime collaborator Andrew Sarlo want you to hear the creak of keys and the rumble of sawtooth waves—<em>I Can See</em> looks ready for neo-soul minimalism. Hakim has named Steve Reich and Terry Riley as influences, yet these songs rarely build; they mostly proceed, ending more or less where they begin. Still, after headphones in the woods, kitchen speakers, car stereo, and laptop listening with eyes closed, the reviewer found a minor miracle: by always retreating into the middle distance of attention, the album somehow made itself new with each listen.</p>
+<h3>中文全文翻译</h3>
+<p>在 Nick Hakim 新专辑后半段的阴郁叙事曲《Soft Wet Clay》将近结尾时，几乎要出现令人振奋的瞬间。多数乐器退场，只剩重度滤波的鼓组和敲出不协和和弦的钢琴。这组二重奏仿佛塌软、变慢，随即突然加快、带上气势——却偏偏在歌曲似乎要冲向新处时戛然而止。</p>
+<p>Hakim 一向擅长写出优美歌曲，再轻轻做毛刺、拉伸、搅乱。自 2014 年出道 EP《Where Will We Go》以来，他形成了一种介于泛黄迷幻摇滚与 Soulquarians 式当代 R&amp;B 之间的风格，让现场乐器与 MPC 彼此碰撞，让律动悬在人声与机械之间。那些偏斜的制作手法，常常承载着他松弛唱腔与不炫技演奏所掩饰的动荡。在 2020 年专辑《WILL THIS MAKE ME GOOD》的高潮曲《QADIR》中，被压低音高的“恶魔”叠声与无词合唱，把冰冷的恐惧推成灼热的绝望。</p>
+<p>他的第四张录音室专辑《I Can See》大体缺少这类戏剧性，评论认为这也是其失分之处。这些歌都栖身于温和的中段地带：介于声响脏污与清晰之间，介于锐利钩子与模糊氛围之间。节奏始终克制适中；Hakim 的声音比以往更收敛，无论在演绎还是在混音位置上都是如此。细听仍能感到张力——《The Reason》副歌里令人不安的合成贝斯掠过，《Endlessly Waiting》中钢琴与合成器近距和声来回滴答，以及标题曲上或许被轻微 Chipmunk 处理的人声。但总体而言，那些粗糙质感被均质化、均匀铺开。磁带般的嘶声是专辑最先响起的声音，并贯穿始终，把所有歌曲裹进愉悦的劣化雾气里。宣传文案称这张专辑“药用”；若果真如此，评论暗示，这剂药多半是安眠药。</p>
+<p>凭借对重复的执着、对极端的排斥，以及对声音物质感的迷恋——Hakim 与长期合作者 Andrew Sarlo 想让你感受到每个琴键的吱嘎与每道锯齿波的轰鸣——《I Can See》具备某种新灵魂极简主义的原料。Hakim 曾把 Steve Reich 与 Terry Riley 列为影响来源，可这些歌很少真正推进；它们大多只是继续前行，结束时几乎还在起点。即便如此，评论者在林中戴耳机散步、厨房煮茶放音箱、开车听立体声、合上电脑屏幕闭眼聆听之后，仍感到一种小小的奇迹：无论怎样用力贴近，音乐总退到注意力的中景，从而在每一次聆听中显得崭新。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">brooding</mark></strong></p>
+<ul>
+<li>英文释义: darkly thoughtful or heavy in mood</li>
+<li>中文释义: 阴郁的；沉思而压抑的</li>
+<li>例句: <mark class="hl-sent">At the end of “Soft Wet Clay,” a brooding ballad tucked in the back half of Nick Hakim’s new album, something exhilarating almost happens.</mark></li>
+<li>记忆提示: brood（沉思、闷闷不乐）→ 情绪发闷发暗，便是 <mark class="hl-kw">brooding</mark></li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">subdued</mark></strong></p>
+<ul>
+<li>英文释义: quiet, restrained, or held back in force</li>
+<li>中文释义: 克制的；低沉收敛的</li>
+<li>例句: Hakim’s voice is more <mark class="hl-kw">subdued</mark> than ever, both in his delivery and in where it sits in the mix.</li>
+<li>记忆提示: sub-（向下）+ due（引导）→ 被压住、放轻放低</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">homogenized</mark></strong></p>
+<ul>
+<li>英文释义: made uniform so that differences no longer stand out</li>
+<li>中文释义: 被均质化的；抹平差异的</li>
+<li>例句: But in general, the scuzz in these songs is <mark class="hl-kw">homogenized</mark>, distributed evenly rather than sticking out in clumps.</li>
+<li>记忆提示: homo-（相同）+ gene（种类）→ 弄成同一种质地</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">soporific</mark></strong></p>
+<ul>
+<li>英文释义: something that makes you sleepy or dulls alertness</li>
+<li>中文释义: 催眠的；令人昏昏欲睡之物</li>
+<li>例句: Promotional copy describes the album as “medicinal”; if that is true, that medicine is probably a <mark class="hl-kw">soporific</mark>.</li>
+<li>记忆提示: 联想 “so poor if I stay awake” → 太困，药像安眠药</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">recede / retreating</mark></strong></p>
+<ul>
+<li>英文释义: to move back or withdraw from close attention</li>
+<li>中文释义: 后退；渐渐远离</li>
+<li>例句: By receding into the middle distance of my attention no matter how hard I tried to keep it closer, this album pulled off a minor miracle.</li>
+<li>记忆提示: re-（向后）+ cede（让出）→ 退到远处</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">At the end of “Soft Wet Clay,” a brooding ballad tucked in the back half of Nick Hakim’s new album, something exhilarating almost happens.</mark></p>
+<ul>
+<li>结构: 时间状语 + 同位语短语（解释曲名）+ 主句（something almost happens）</li>
+<li>中文: 在 Nick Hakim 新专辑后半段那首阴郁叙事曲《Soft Wet Clay》的结尾，几乎要发生一件令人振奋的事。</li>
+<li>仿写: At the start of the final chapter, a quiet confession buried in the middle of the novel, something irreversible finally surfaces.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Hakim has made a career out of writing beautiful songs and then subtly glitching, stretching, and otherwise gumming them up.</mark></p>
+<ul>
+<li>结构: 主语 + 现在完成时 + out of + 动名词链条（writing… and then glitching/stretching/gumming）</li>
+<li>中文: Hakim 的事业建立在先写出优美歌曲、再巧妙地做毛刺、拉伸并以其他方式把它们搅乱之上。</li>
+<li>仿写: She has made a career out of designing clean interfaces and then carefully testing, revising, and otherwise toughening them up.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">By receding into the middle distance of my attention no matter how hard I tried to keep it closer, this album pulled off a minor miracle: It made itself new with each listen.</mark></p>
+<ul>
+<li>结构: By + 动名词状语（含 no matter 让步从句）+ 主句 + 冒号解释</li>
+<li>中文: 无论我怎样努力把它拉近，这张专辑总退到我注意力的中景，从而完成了一个小小的奇迹：它在每一次聆听中都显得崭新。</li>
+<li>仿写: By slipping into the background of the meeting no matter how hard I tried to stay focused, the soft playlist pulled off a minor miracle: It made the long afternoon feel shorter.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

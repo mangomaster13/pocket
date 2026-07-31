@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trump administration bans new Chinese humanoid robots</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">商业 · 2026-07-29</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Trump administration bans new Chinese humanoid robots</h1>
+    <p class="meta">Source · 2026-07-29 · <a href="https://www.bbc.co.uk/news/articles/cp9e2ex3ekyo">数据来源</a></p>
+    <p class="lead">The Trump administration has banned new imports of foreign-made humanoid and other advanced robots into the United States, citing national security risks. The FCC also blocked new foreign power inverters used in data centres and solar systems. China rejected the move as politicised trade policy and vowed to protect its interests.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>特朗普政府以国家安全为由，禁止美国进口新型外国制造的人形等先进机器人，并同时限制外国逆变器进口。中国驻美使馆批评美方将贸易问题政治化，并表示将采取必要措施回应。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://www.bbc.co.uk/news/articles/cp9e2ex3ekyo">https://www.bbc.co.uk/news/articles/cp9e2ex3ekyo</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>On Tuesday, the Trump administration announced a ban on new foreign-made humanoid robot imports into the United States, arguing that they present “<mark class="hl-kw">unacceptable risks</mark>” to national security. The restriction covers advanced robotic devices, including humanoid and four-legged machines. Many of these products come from China, which is racing with the US to lead in robotics and artificial intelligence.</p>
+<p>The Federal Communications Commission (FCC) also banned imports of <mark class="hl-kw">power inverter</mark>s — equipment used in data centres and solar panels — saying they could threaten the US economy. Both categories were added to the FCC’s <mark class="hl-kw">Covered List</mark>, a register of goods and services judged to endanger national security. The ban applies only to newly produced foreign devices; models already authorised by the FCC may still be sold or imported.</p>
+<p>FCC chairman Brendan Carr said the agency was helping “to secure America’s critical supply chains.” Regulators warned that foreign-made inverters could be shut down remotely, used to steal data, or exploited in cyberattacks by overseas actors. They also said robots built outside the US could allow “<mark class="hl-kw">malign actors</mark>” to watch Americans, strengthen foreign intelligence services, or take remote control of the machines.</p>
+<p>The Chinese embassy in Washington said Beijing has long opposed what it calls the US “politicising” of trade issues and sanctions based on “groundless pretexts.” It pledged to “take all necessary measures” against steps that harm Chinese interests and urged countries to develop AI “for the positive and for good.” The embassy also called on Washington to abandon a “hegemonic mindset” and stop smearing Chinese firms with sanctions threats.</p>
+<p>The decision fits a wider US push to curb Chinese technology as Washington tries to fix <mark class="hl-kw">trade imbalances</mark> with the world’s second-largest economy. China, though the top electric-vehicle exporter, faces steep US tariffs that largely shut it out of the American market. Washington has also blocked sales of cutting-edge semiconductors to China to protect national security and keep its AI lead, while Chinese firms have moved quickly to sell humanoid robots for factories and homes ahead of US rivals such as Tesla and Boston Dynamics.</p>
+<h3>中文全文翻译</h3>
+<p>周二，特朗普政府宣布禁止向美国进口新型外国制造的人形机器人，理由是其对国家安全构成“不可接受的风险”。该限制覆盖先进机器人设备，包括人形机器人和四足机器人。这类产品许多来自中国，而中国正与美国在机器人和人工智能领域展开竞争。</p>
+<p>美国联邦通信委员会（FCC）同时禁止进口用于数据中心和太阳能电池板的逆变器，称其可能威胁美国经济。上述两类产品均被列入FCC“受关注清单”，即被认为危及国家安全的商品与服务名录。禁令仅适用于新生产的外国设备；此前已获FCC授权的型号仍可销售或进口。</p>
+<p>FCC主席布兰登·卡尔表示，该机构正在努力“保障美国关键供应链安全”。监管机构警告，外国制造的逆变器可能被远程关闭、用于窃取数据，或被境外行为体在网络攻击中利用。他们还表示，在美国境外制造的机器人可能使“恶意行为者”监控美国人、增强外国情报能力，或远程操控这些机器人。</p>
+<p>中国驻华盛顿大使馆表示，北京长期反对美方将贸易问题“政治化”，以及基于“毫无根据借口”的制裁。使馆承诺将对损害中国利益的举措“采取一切必要措施”，并呼吁各国发展人工智能“向善、向好”。使馆还敦促美方放弃“霸权思维”，停止抹黑中国企业并以制裁相威胁。</p>
+<p>此举符合美国更广泛地遏制中国技术的政策取向，同时华盛顿试图纠正与全球第二大经济体的贸易失衡。尽管中国是全球最大电动汽车出口国，却因高额关税基本被挡在美国市场之外。美方还限制向中国出售尖端半导体，以维护国家安全并保持人工智能领先地位；与此同时，中国科技公司已迅速向工厂和家庭推广人形机器人，抢在特斯拉、波士顿动力等美国竞争对手之前布局市场。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">unacceptable risks</mark></strong></p>
+<ul>
+<li>英文释义: dangers or threats considered too serious to allow</li>
+<li>中文释义: 不可接受的风险；严重到不能容忍的威胁</li>
+<li>例句: The Trump administration announced a ban on new foreign-made humanoid robot imports over &quot;<mark class="hl-kw">unacceptable risks</mark>&quot; to America&#39;s national security.</li>
+<li>记忆提示: un-（不）+ acceptable（可接受的）+ risks（风险）→ 不能接受的风险</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">Covered List</mark></strong></p>
+<ul>
+<li>英文释义: an official register of goods and services judged to threaten US national security</li>
+<li>中文释义: （FCC）受关注清单；被认定危及国家安全的产品与服务名录</li>
+<li>例句: The FCC has added the items to its <mark class="hl-kw">Covered List</mark> — a register of goods and services that are deemed a risk to US national security.</li>
+<li>记忆提示: covered 在此指“被纳入监管覆盖范围”，不是“被盖住”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">power inverter</mark></strong></p>
+<ul>
+<li>英文释义: a device that converts electrical power, used in data centres and solar panels</li>
+<li>中文释义: 电力逆变器；用于数据中心和太阳能系统的电能转换设备</li>
+<li>例句: The FCC also banned imports of <mark class="hl-kw">power inverter</mark>s — devices used in data centres and solar panels.</li>
+<li>记忆提示: invert = 翻转/转换 → 把电流形式“倒过来”转换的设备</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">malign actors</mark></strong></p>
+<ul>
+<li>英文释义: people or groups that intend to cause harm, often through spying or cyberattacks</li>
+<li>中文释义: 恶意行为者；意图造成伤害的个人或组织</li>
+<li>例句: The use of robots made outside the US could allow &quot;<mark class="hl-kw">malign actors</mark> to surveil Americans.&quot;</li>
+<li>记忆提示: malign（恶意的）+ actors（行动者）→ 干坏事的一方</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">trade imbalances</mark></strong></p>
+<ul>
+<li>英文释义: large gaps between what a country exports and what it imports</li>
+<li>中文释义: 贸易失衡；进出口差额过大的状态</li>
+<li>例句: China&#39;s exports have come under intense scrutiny as the Trump administration attempts to address <mark class="hl-kw">trade imbalances</mark>.</li>
+<li>记忆提示: imbalance = 不平衡；贸易一边倒就是 trade imbalance</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> The Trump administration on Tuesday announced a ban on new foreign-made humanoid robot imports to the US over &quot;<mark class="hl-kw">unacceptable risks</mark>&quot; to America&#39;s national security.</p>
+<ul>
+<li>结构: 主语（The Trump administration）+ 时间状语（on Tuesday）+ 谓语（announced）+ 宾语（a ban on...）+ 原因状语（over &quot;<mark class="hl-kw">unacceptable risks</mark>&quot;...）</li>
+<li>中文: 特朗普政府周二宣布禁止向美国进口新型外国制造的人形机器人，理由是其对美国国家安全构成“不可接受的风险”。</li>
+<li>仿写: The regulator on Monday announced a ban on new foreign-made surveillance cameras over <mark class="hl-kw">unacceptable risks</mark> to data privacy.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The ban applies to new foreign-produced advanced robotic devices and power inverters and does not prevent the sale or import of any existing models that had been previously authorised by the FCC.</mark></p>
+<ul>
+<li>结构: 主语（The ban）+ 并列谓语（applies to... / does not prevent...）+ 定语从句（that had been previously authorised by the FCC）修饰 existing models</li>
+<li>中文: 该禁令适用于新型外国生产的先进机器人设备和逆变器，但并不阻止销售或进口此前已获FCC授权的现有型号。</li>
+<li>仿写: The rule applies to new imported medical devices and software updates and does not prevent the use of any existing products that had been previously approved by the agency.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> It added that the use of robots made outside the US could allow &quot;<mark class="hl-kw">malign actors</mark> to surveil Americans, enhance the capabilities of foreign intelligence services, or to remotely commandeer the robots&quot;.</p>
+<ul>
+<li>结构: 主句（It added that...）+ 宾语从句；从句中主语（the use of robots...）+ 谓语（could allow）+ 并列不定式结果（to surveil / enhance / to remotely commandeer）</li>
+<li>中文: 它还补充说，使用美国境外制造的机器人可能使“恶意行为者监控美国人、增强外国情报机构能力，或远程操控这些机器人”。</li>
+<li>仿写: Officials warned that the use of connected devices made abroad could allow <mark class="hl-kw">malign actors</mark> to steal customer data, disrupt factory systems, or remotely commandeer the equipment.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

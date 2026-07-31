@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chip stocks slide in US and Asia as AI jitters rattle investors</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">商业 · 2026-07-28</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Chip stocks slide in US and Asia as AI jitters rattle investors</h1>
+    <p class="meta">Source · 2026-07-28 · <a href="https://www.bbc.co.uk/news/articles/cly8zng43npo">数据来源</a></p>
+    <p class="lead">Major chipmakers and tech-heavy Asian indexes fell sharply as investors grew uneasy about the huge sums being poured into artificial intelligence. Nvidia’s drop handed Apple the crown as the world’s most valuable listed company, while South Korea’s Kospi hit a circuit breaker and closed deep in the red. Fresh competition from China’s memory-chip industry added another reason for caution in AI-related stocks.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>受人工智能投资回报疑虑影响，美亚主要芯片股大跌；韩国股市触发熔断，英伟达跌落后苹果重夺全球市值第一。 分析称资金涌入AI及中国竞争加剧引发获利了结，而中国存储巨头长鑫在上海上市首日暴涨近470%。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://www.bbc.co.uk/news/articles/cly8zng43npo">https://www.bbc.co.uk/news/articles/cly8zng43npo</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>Shares in major semiconductor companies tumbled in the United States and Asia as a <mark class="hl-kw">sell-off</mark> in artificial intelligence–related stocks deepened. Investors have begun to question whether vast spending on AI can generate enough profit to justify the boom, and that doubt spilled quickly into chip makers and tech-heavy indexes.</p>
+<p>South Korea’s benchmark Kospi index was temporarily paused on Tuesday morning after falling 8%. When the 20-minute halt ended, selling continued and the index closed 10.8% lower. Technology firms led the decline: Samsung Electronics and SK Hynix each dropped by more than 13%. The Kospi, which is dominated by tech stocks, has triggered <mark class="hl-kw">circuit breaker</mark>s several times this year—a mechanism meant to slow panic selling. The index more than doubled from the start of the year to mid-June, then lost about a third of its value. Retail investors have poured into the market in recent months, adding to the volatility. On Monday, SK Hynix’s US-listed shares fell 7.5%, sliding below the $149 offer price from its record Nasdaq <mark class="hl-kw">debut</mark> on 9 July. In Japan, the tech-heavy Nikkei 225 closed nearly 4% lower.</p>
+<p>The Asian <mark class="hl-kw">sell-off</mark> followed a 5% drop in Nvidia shares in New York on Monday. That decline cost Nvidia its place as the world’s most valuable listed company, allowing Apple—up about 25% this year—to reclaim the top spot. Nvidia fell after the Wall Street Journal reported that the chip giant is in talks to provide around $250 billion for OpenAI as part of a huge data-centre project. The BBC contacted Nvidia and OpenAI for comment.</p>
+<p>Jun Bei Liu, founder of investment firm Ten Cap, told the BBC that investors worry about the scale of money flowing into AI development and about rising competition from China. Against that backdrop, she said, investors are “taking some profit off the table,” though they may put money back into these stocks after the US holiday season.</p>
+<p>Those competitive pressures were visible in China as well. Shares in ChangXin Memory Technologies (CXMT), the country’s biggest memory-chip maker, soared by nearly 470% on their Shanghai <mark class="hl-kw">debut</mark> on Monday. The company said most IPO proceeds would go toward expanding production and research. CXMT makes DRAM chips used in AI data centres, phones, PCs, tablets and other devices—another reminder that the AI chip race is intensifying even as markets grow nervous about returns.</p>
+<h3>中文全文翻译</h3>
+<p>随着与人工智能相关的股票抛售加深，美国和亚洲主要半导体公司股价大幅下跌。投资者开始质疑：对人工智能的巨额投入，能否产生足以支撑这轮热潮的利润；这种疑虑迅速传导至芯片制造商和科技权重较高的股指。</p>
+<p>周二上午，韩国基准指数Kospi在下跌8%后一度暂停交易。20分钟熔断结束后，卖盘仍在持续，最终收跌10.8%。科技股领跌：三星电子与SK海力士均跌逾13%。以科技股为主的Kospi今年已多次触发熔断机制——该机制旨在缓和恐慌性抛售。该指数从年初到6月中旬涨逾一倍，此后又回吐约三分之一涨幅。近几个月散户大量涌入，加剧了波动。周一，SK海力士在美国上市的股票下跌7.5%，跌破其7月9日创纪录登陆纳斯达克时149美元的发行价。在日本，科技权重较高的日经225指数收跌近4%。</p>
+<p>亚洲的抛售发生在英伟达周一于纽约下跌5%之后。这一跌幅使英伟达失去全球市值最高上市公司的位置，而今年已上涨约25%的苹果重新登顶。英伟达下跌之际，《华尔街日报》报道称，这家芯片巨头正洽谈为OpenAI提供约2500亿美元资金，用于一项大型数据中心项目。BBC已联系英伟达与OpenAI寻求置评。</p>
+<p>投资公司Ten Cap创始人刘君蓓（Jun Bei Liu）对BBC表示，投资者担心涌入人工智能研发的资金规模，以及来自中国的竞争加剧。在此背景下，她说，投资者正在“落袋为安”，不过美国假期季过后，资金可能重新流入这些股票。</p>
+<p>竞争压力在中国也清晰可见。中国最大的存储芯片制造商长鑫存储（CXMT）周一在上海上市首日股价暴涨近470%。该公司表示，IPO募集资金大部分将用于扩大生产和研发。长鑫生产用于人工智能数据中心、手机、个人电脑、平板电脑及其他设备的DRAM芯片——这也提醒市场：即便投资者对回报越来越紧张，人工智能芯片竞赛仍在加剧。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">sell-off</mark></strong></p>
+<ul>
+<li>英文释义: a sharp wave of selling that pushes prices down across a market or sector</li>
+<li>中文释义: 抛售；集中卖出导致价格下跌</li>
+<li>例句: Shares in major chip firms have fallen sharply as a <mark class="hl-kw">sell-off</mark> in artificial intelligence-related stocks deepened.</li>
+<li>记忆提示: sell（卖）+ off（出清）→ 市场集体“甩卖”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">circuit breaker</mark></strong></p>
+<ul>
+<li>英文释义: a market rule that pauses trading after a steep fall to calm panic selling</li>
+<li>中文释义: （股市）熔断机制</li>
+<li>例句: The tech-heavy Kospi has been halted multiple times this year under a stock market mechanism known as a <mark class="hl-kw">circuit breaker</mark>.</li>
+<li>记忆提示: 像电路保险丝一样，跌太猛就“断电停市”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">volatile</mark></strong></p>
+<ul>
+<li>英文释义: likely to change suddenly and sharply, especially in price</li>
+<li>中文释义: 波动剧烈的；不稳定的</li>
+<li>例句: In recent months, stock market trading has been particularly <mark class="hl-kw">volatile</mark> in South Korea as it has attracted large numbers of retail investors.</li>
+<li>记忆提示: 联想 volcano（火山）——情绪和价格都容易“喷发”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">debut</mark></strong></p>
+<ul>
+<li>英文释义: the first public appearance, here a company’s first day of trading after listing</li>
+<li>中文释义: 首次亮相；上市首日</li>
+<li>例句: SK Hynix shares fell well below the $149 offer price from its record-breaking <mark class="hl-kw">debut</mark> on the Nasdaq on 9 July.</li>
+<li>记忆提示: 法语“初次登台”，股市里常指IPO首秀</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">taking profit off the table</mark></strong></p>
+<ul>
+<li>英文释义: selling holdings to lock in gains after a strong run, rather than risking a reversal</li>
+<li>中文释义: 获利了结；落袋为安</li>
+<li>例句: Against that backdrop, investors are “taking some profit off the table” but are likely to reinvest after the US holiday season.</li>
+<li>记忆提示: 把桌上赢来的利润收走，不再继续赌</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> It comes after AI chip giant Nvidia fell by 5% in New York on Monday, meaning it lost its position as the world&#39;s most valuable listed company to Apple.</p>
+<ul>
+<li>结构: 主句（It comes after...）+ 时间状语从句（Nvidia fell...）+ 现在分词短语（meaning...）说明结果</li>
+<li>中文: 此前，人工智能芯片巨头英伟达周一在纽约下跌5%，意味着它把全球市值最高上市公司的位置让给了苹果。</li>
+<li>仿写: The warning came after the supplier cut its forecast by 8% on Friday, meaning it lost its lead in the sector to a smaller rival.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Jun Bei Liu, the founder of investment firm Ten Cap, told the BBC that there are concerns about the amount of money being poured into AI development as well as increasing competition from China.</mark></p>
+<ul>
+<li>结构: 主语 + 同位语 + 谓语 + that宾语从句；从句中 about A as well as B 并列说明担忧点</li>
+<li>中文: 投资公司Ten Cap创始人刘君蓓对BBC表示，人们担心涌入人工智能研发的资金规模，以及来自中国不断加剧的竞争。</li>
+<li>仿写: Maria Chen, the head of research at Horizon Capital, told reporters that there are worries about rising labour costs as well as weaker demand from Europe.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Against that backdrop, investors are “taking some profit off the table” but are likely to reinvest in these stocks after the US holiday season, she said.</mark></p>
+<ul>
+<li>结构: 介词短语作背景状语 + 并列谓语（are taking... but are likely to...）+ 时间状语 + 引述尾句</li>
+<li>中文: 她说，在此背景下，投资者正在“落袋为安”，但美国假期季过后，他们很可能重新投资这些股票。</li>
+<li>仿写: Against that backdrop, managers are freezing new hiring but are likely to expand again after the spring budget, he said.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

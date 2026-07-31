@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Japan Quake Kills 13 as Rescuers Race Against Time</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">国际 · 2026-07-29</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Japan Quake Kills 13 as Rescuers Race Against Time</h1>
+    <p class="meta">Source · 2026-07-29 · <a href="https://www.bbc.co.uk/news/articles/cgewg24qgnjo">数据来源</a></p>
+    <p class="lead">A magnitude 6.8 earthquake struck Kumamoto prefecture on Japan’s Kyushu island, killing at least 13 people. Rescuers are searching collapsed sites, including a shopping mall and a factory, while the prime minister calls the effort a race against time. Aftershocks continue as thousands shelter and power and rail services remain disrupted.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>日本九州熊本县发生强震，至少13人死亡；救援人员仍在废墟中搜救幸存者。首相称这是一场与时间的赛跑，商场与工厂等地受损严重，余震仍在持续。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.co.uk/news/articles/cgewg24qgnjo">https://www.bbc.co.uk/news/articles/cgewg24qgnjo</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>A powerful earthquake struck south-west Japan on Tuesday afternoon, leaving at least 13 people dead and many more searching for safety. The tremor hit Kumamoto prefecture on Kyushu island at 16:27 local time. The Japan Meteorological Agency first measured it at magnitude 7.1, while the US Geological Survey later put the figure at 6.8—a difference that is common as scientists refine early readings. The shallow <mark class="hl-kw">epicentre</mark>, about 10 kilometres deep and roughly 20 kilometres south of Kumamoto city, helped explain why the shaking felt so severe.</p>
+<p>Much of the urgency is focused on the Aeon Mall in Kashima, where part of the second floor collapsed and trapped shoppers and staff. The fire department said three people died there, and reporters said at least eight others had been pulled out alive. Local media first spoke of 20 to 30 people possibly trapped, then said the true number appeared lower, though officials still could not give a final count. Smoke rose from the damaged building, and large sections of its exterior were torn away, exposing steel beams. Rescue teams also worked at a paper factory in nearby Yatsushiro, where a bridge partially collapsed after the quake.</p>
+<p>Prime Minister Sanae Takaichi offered condolences and thanked emergency crews. “It’s a <mark class="hl-kw">race against time</mark>,” she said on Wednesday morning, warning that people still needed help more than 20 hours after the main shock. Thousands of residents moved into shelters as roads cracked, rail services stopped, and electricity failed for tens of thousands of households. Japan’s Meteorological Agency recorded more than 60 <mark class="hl-kw">aftershock</mark>s between magnitude 1 and 4. Officials said thousands of soldiers, firefighters, and coast guard members would support the recovery.</p>
+<p>Japan sits on one of the world’s most active seismic belts and feels about 1,500 quakes each year. Many cause little harm, but memories of the 2016 Kumamoto disasters—when hundreds died—remain vivid. On Wednesday, the country’s challenge was both technical and human: stabilise damaged sites, reach anyone still buried, and keep communities calm while the ground continues to tremble.</p>
+<h3>中文全文翻译</h3>
+<p>周二下午，日本西南部发生强烈地震，造成至少13人死亡，更多人仍在寻找安全之处。震中位于九州岛熊本县，当地时间16:27发生。日本气象厅最初测定震级为7.1，美国地质调查局随后给出6.8——随着科学家修正早期数据，这种差异并不少见。浅源震中深度约10公里，位于熊本市以南约20公里，这也解释了为何震感如此强烈。</p>
+<p>救援重点之一是鹿岛市的永旺购物中心：二层部分楼板坍塌，顾客和工作人员被困。消防部门称商场内有三人死亡，报道称至少另有八人被救出。当地媒体起初称可能有二三十人被困，后来表示实际人数似乎更低，但官方仍无法给出最终数字。损毁建筑冒出烟雾，外墙大面积脱落，钢梁暴露在外。附近八代市一座纸厂也在开展救援，当地一座桥梁在地震后部分坍塌。</p>
+<p>首相高市早苗表示哀悼，并感谢应急人员。“这是一场与时间的赛跑，”她在周三上午说，并警告主震二十多小时后仍有人需要帮助。道路开裂、铁路停运、数万户断电，数千居民进入避难所。日本气象厅记录到60多次震级在1至4之间的余震。官方表示将派遣数千名军人、消防员和海岸警卫队人员支援灾后救援。</p>
+<p>日本地处全球最活跃的地震带之一，每年约发生1500次地震。多数破坏不大，但2016年熊本地震造成数百人死亡的记忆仍历历在目。周三，日本面临的既是技术挑战，也是人道考验：稳定损毁现场，搜救可能仍被埋者，并在余震不断时安抚民众。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">race against time</mark></strong></p>
+<ul>
+<li>英文释义: an urgent effort to finish something before it becomes too late</li>
+<li>中文释义: 与时间赛跑；争分夺秒</li>
+<li>例句: &quot;It&#39;s a <mark class="hl-kw">race against time</mark>,&quot; Takaichi said in an update on Wednesday morning.</li>
+<li>记忆提示: race（赛跑）+ against time（对抗时间）= 必须尽快完成</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">death toll</mark></strong></p>
+<ul>
+<li>英文释义: the number of people who have died in an accident, disaster, or conflict</li>
+<li>中文释义: 死亡人数</li>
+<li>例句: The <mark class="hl-kw">death toll</mark> from a powerful earthquake in south-west Japan has risen to 13.</li>
+<li>记忆提示: toll 可指“伤亡数字”，<mark class="hl-kw">death toll</mark> 即死亡总数</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">evacuate</mark></strong></p>
+<ul>
+<li>英文释义: to move people from a dangerous place to a safer one</li>
+<li>中文释义: 疏散；撤离</li>
+<li>例句: The quake forced thousands to <mark class="hl-kw">evacuate</mark> to shelters.</li>
+<li>记忆提示: e-（出）+ vac（空）→ 把人撤空离开危险区</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">aftershock</mark></strong></p>
+<ul>
+<li>英文释义: a smaller earthquake that follows a larger one in the same area</li>
+<li>中文释义: 余震</li>
+<li>例句: Japan&#39;s Meteorological Agency has reported more than 60 <mark class="hl-kw">aftershock</mark>s ranging in magnitude from 1 to 4.</li>
+<li>记忆提示: after（之后）+ shock（震动）→ 主震之后的震动</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">epicentre</mark></strong></p>
+<ul>
+<li>英文释义: the point on the Earth’s surface directly above where an earthquake begins</li>
+<li>中文释义: 震中</li>
+<li>例句: The quake&#39;s shallow <mark class="hl-kw">epicentre</mark> — with a depth of 10 km — was about 20km south of Kumamoto city.</li>
+<li>记忆提示: epi-（之上）+ centre（中心）→ 震源正上方的地表点</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The death toll from a powerful earthquake in south-west Japan has risen to 13, as rescue workers race to find more survivors from underneath the rubble.</mark></p>
+<ul>
+<li>结构: 主句（<mark class="hl-kw">death toll</mark> has risen）+ as 引导的伴随时间状语从句（rescue workers race…）</li>
+<li>中文: 日本西南部强震的死亡人数已升至13人，与此同时救援人员正争分夺秒在废墟下搜寻更多幸存者。</li>
+<li>仿写: The number of missing climbers has risen to five, as mountain teams race to reach the ridge before nightfall.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The Japan Meteorological Agency (JMA) measured the earthquake magnitude at 7.1 and the US Geological Survey later placed it at 6.8.</mark></p>
+<ul>
+<li>结构: 并列主句（A measured… and B later placed…），对比两家机构的不同读数</li>
+<li>中文: 日本气象厅将地震震级测定为7.1，而美国地质调查局随后将其定为6.8。</li>
+<li>仿写: The local hospital listed the injured at 40, and the national agency later placed the figure at 52.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">We urge residents in areas where the shaking was particularly severe to pay close attention to evacuation information issued by local authorities via radio, television and the internet, and to act calmly.</mark></p>
+<ul>
+<li>结构: urge + 宾语 + 两个不定式（to pay… and to act…）；where 定语从句修饰 areas；issued… 分词短语修饰 information</li>
+<li>中文: 我们敦促震感特别强烈地区的居民密切关注地方政府通过广播、电视和互联网发布的疏散信息，并保持冷静行动。</li>
+<li>仿写: Officials urge workers in flood-risk zones to follow safety alerts issued by city hall via text and email, and to leave early.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

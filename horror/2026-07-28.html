@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bloody Ozploitation Debut Fuels Punk Horror Siege</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">惊悚 · 2026-07-28</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Bloody Ozploitation Debut Fuels Punk Horror Siege</h1>
+    <p class="meta">Source · 2026-07-28 · <a href="https://bloody-disgusting.com/reviews/3961047/penny-lane-is-dead-review-a-bloody-ozploitation-throwback-fueled-by-punk-rock-energy-fantasia-2026/">数据来源</a></p>
+    <p class="lead">*Penny Lane is Dead*, Mia’Kate Russell’s raucous horror-comedy debut, turns a cruel birthday prank into an ’80s-flavored siege of practical gore and punk energy. The Fantasia premiere follows three friends trapped with sadistic invaders, carried by effects and a fierce heroine even when tone and villains grow cartoonish. The film hits Shudder on August 28 after its 2026 Fantasia world premiere.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>《Penny Lane is Dead》是化妆师出身的导演 Mia’Kate Russell 的恐怖喜剧长片处女作，以残酷生日恶作剧引爆八零年代风格的围困与血腥暴力。 影评肯定其实体特效与朋克女主角的爆发力，但也指出反派卡通化、基调冲突，以及结尾宣泄感不足；影片已在 Fantasia 首映，并将于 8 月 28 日登陆 Shudder。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://bloody-disgusting.com/reviews/3961047/penny-lane-is-dead-review-a-bloody-ozploitation-throwback-fueled-by-punk-rock-energy-fantasia-2026/">https://bloody-disgusting.com/reviews/3961047/penny-lane-is-dead-review-a-bloody-<mark class="hl-kw">ozploitation</mark>-throwback-fueled-by-punk-rock-energy-fantasia-2026/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>In the summer of 1986, popular high-school senior Penny Lane is celebrating her last days before college at a remote family cabin with close friends Toni and Amy. Everything seems bright: she has the college of her dreams ahead, and she is also riding the secret high of a new romantic relationship with Toni—one that even tender-hearted Amy does not know about. In that good mood, Penny invites her family’s black sheep, cousin Kat, to join the getaway.</p>
+<p>Kat arrives with cupcakes and a smile, but the kindness is a ruse. She spikes Penny’s treat, then gleefully makes Toni and Amy uneasy until Toni throws her out for the party foul. Kat then turns to her criminal boyfriend Angus, and the night meant for revelry becomes a harrowing fight to survive as Angus and his henchmen crash the cabin.</p>
+<p>Writer-director Mia’Kate Russell, leaping from makeup artist to filmmaker, fully embraces B-movie <mark class="hl-kw">Ozploitation</mark> chaos. Punk energy, drugs, and an <mark class="hl-kw">inciting</mark> sexual assault push simmering tension into a <mark class="hl-kw">no-holds-barred</mark> torrent of arterial spray and prosthetic gore. Practical effects and Tahlee Faraday’s resolute turn as Toni—Penny’s protector forced into fight mode—carry the film even when characters make dumb choices for plot momentum. Sophia Wright-Mendelsohn’s manic Kat and Ben O’Toole’s larger-than-life Angus make the villains easy to loathe, yet by the final act Kat’s crazy-eye sadism stretches thin into cartoon mustache-twirling that an unsatisfying conclusion fails to overcome.</p>
+<p>The review also flags a clashing tone: the movie wants to be a fun romp while broaching bleak rape-revenge territory, and it assigns heavy responsibility to Kat for horrors inflicted on female bodies. As a lean horror siege, <em>Penny Lane is Dead</em> stays visceral and propulsive and pulls viewers into Toni’s bid to reach dawn with lives and friendships intact. Still, its explorations never go very deep, and the punk-rock charge fizzles by the end, leaving audiences split on whether the <mark class="hl-kw">catharsis</mark> matches the zany, brutal ride. The film premiered at Fantasia 2026 and arrives on Shudder on August 28.</p>
+<h3>中文全文翻译</h3>
+<p>1986 年夏天，人气高中生 Penny Lane 在偏远的家族小屋与密友 Toni、Amy 共度大学前的最后几天。一切看似美好：她即将奔赴梦想中的大学，还正沉浸在与 Toni 的秘密恋情里——连温柔天真的 Amy 也毫不知情。心情大好之下，Penny 邀请了家族中的“害群之马”、表妹 Kat 一同度假。</p>
+<p>Kat 带着纸杯蛋糕和笑容到来，但善意只是伪装。她在 Penny 的点心里下药，又故意让 Toni 和 Amy 难堪，直到 Toni 因这场派对事故把她赶出门。Kat 随即求助于犯罪男友 Angus；本该狂欢的夜晚，随着 Angus 与其爪牙闯入小屋，变成了一场惊心动魄的求生战。</p>
+<p>从化妆师跨界执导的编剧兼导演 Mia’Kate Russell 彻底拥抱 B 级片式的澳大利亚剥削片（<mark class="hl-kw">Ozploitation</mark>）混乱。朋克能量、毒品，以及作为导火索的性侵，把酝酿中的张力推成不加节制的喷血与假体特效洪流。实体特效，再加上 Tahlee Faraday 饰演的 Toni——被迫进入战斗模式、护着 Penny 的坚定表演——撑起了整部片子，即便角色有时为了推进剧情做出愚蠢决定。Sophia Wright-Mendelsohn 饰演的癫狂 Kat 与 Ben O’Toole 饰演的夸张 Angus 让反派令人憎恶，但到了最后一幕，Kat 那双“疯眼”式的施虐气质被拉得过薄，沦为卡通式捻胡子反派，而令人不满的结局也未能挽回。</p>
+<p>影评还指出基调冲突：影片既想做成好玩的狂欢，又踏入阴暗的强奸复仇领域，并把施加于女性身体的暴行责任大量归到 Kat 身上。作为精悍的恐怖围困片，《Penny Lane is Dead》保持着内脏冲击与推进感，把观众拉进 Toni 力争撑到黎明、保住性命与友情的拼搏。不过，它的主题探索始终不够深入，朋克摇滚般的冲劲到结尾也逐渐泄气，让人在这场癫狂残酷的旅程结束时，对宣泄感是否足够各执一词。影片于 2026 年 Fantasia 国际电影节全球首映，并将于 8 月 28 日登陆 Shudder。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">Ozploitation</mark></strong></p>
+<ul>
+<li>英文释义: Australian exploitation cinema known for raw, over-the-top genre excess</li>
+<li>中文释义: 澳大利亚剥削电影风格，常以粗粝、夸张的类型片元素见长</li>
+<li>例句: A cruel birthday prank leads to <mark class="hl-kw">Ozploitation</mark> levels of violence and bloodshed.</li>
+<li>记忆提示: Oz（澳洲昵称）+ exploitation（剥削片）→ 澳洲式剥削恐怖</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">raucous</mark></strong></p>
+<ul>
+<li>英文释义: loudly wild, rough, and energetic in a disorderly way</li>
+<li>中文释义: 喧闹刺耳的；狂野吵嚷的</li>
+<li>例句: Penny Lane is Dead is the <mark class="hl-kw">raucous</mark> horror-comedy feature debut by writer-director Mia’Kate Russell.</li>
+<li>记忆提示: 联想到 rock concert 的嘈杂吼叫场面</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">inciting</mark></strong></p>
+<ul>
+<li>英文释义: sparking or triggering a strong reaction or escalation</li>
+<li>中文释义: 煽动的；引发（事态升级）的</li>
+<li>例句: Free-flowing drugs set off simmering tension that roars to a boil with an <mark class="hl-kw">inciting</mark> sexual assault.</li>
+<li>记忆提示: in-cite ≈ 把情绪“点燃”成行动</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">no-holds-barred</mark></strong></p>
+<ul>
+<li>英文释义: with no limits or restraints; holding nothing back</li>
+<li>中文释义: 毫无保留的；不设限制的</li>
+<li>例句: Russell unleashes a <mark class="hl-kw">no-holds-barred</mark> torrent of violence that delivers arterial spray and prosthetic work.</li>
+<li>记忆提示: 摔跤术语“不许抓持”被取消 → 什么招都能用</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">catharsis</mark></strong></p>
+<ul>
+<li>英文释义: emotional release or cleansing after intense tension or suffering</li>
+<li>中文释义: 情感宣泄；精神净化</li>
+<li>例句: Viewers are left split on whether this rape-revenge tale offers enough <mark class="hl-kw">catharsis</mark> at the end of its brutal ride.</li>
+<li>记忆提示: 看完高压故事后心里那一口“终于吐出来了”的感觉</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">It’s that stellar effects work, along with a winsome punk rock heroine, that carries this bloody horror-comedy far even when its villains descend into grating cartoon territory.</mark></p>
+<ul>
+<li>结构: It is…that… 强调句 + along with 伴随成分 + even when 让步时间从句</li>
+<li>中文: 正是那些出色的特效，再加上讨人喜欢的朋克女主角，才把这部血腥恐怖喜剧撑得很远，即便反派已经滑向刺耳的卡通化领地。</li>
+<li>仿写: It is the relentless score, along with a weary detective’s quiet resolve, that carries this thriller far even when its conspiracies tip into familiar territory.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Punk rock energy and free-flowing drugs for party girl Kat set off simmering tension that roars to a boil with an inciting sexual assault.</mark></p>
+<ul>
+<li>结构: 并列主语 + set off + 宾语 + that 定语从句（含 with 介词短语表触发点）</li>
+<li>中文: 派对女孩 Kat 身上的朋克能量与畅通无阻的毒品，点燃了酝酿中的张力，并在一次作为导火索的性侵中沸腾爆发。</li>
+<li>仿写: Late-night deadlines and unpaid overtime for junior staff set off simmering frustration that finally boils over with an unexpected mass resignation.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">But Russell’s explorations never venture very deep, and that punk rock energy fizzles out by the film’s end, leaving you split on whether this rape-revenge tale offers enough catharsis at the end of its zany, brutal ride.</mark></p>
+<ul>
+<li>结构: 并列主句 + leaving 结果状语 + whether 宾语从句嵌在 split on 之后</li>
+<li>中文: 但 Russell 的探索始终不够深入，那股朋克摇滚能量到片尾也逐渐熄灭，让你在这场癫狂残酷的旅程结束时，对这部强奸复仇故事是否提供了足够宣泄各执一词。</li>
+<li>仿写: But the novel’s ideas never venture very deep, and that early momentum fizzles out by the final chapter, leaving readers split on whether the mystery delivers enough payoff after its winding chase.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

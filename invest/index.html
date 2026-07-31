@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket Hub · Invest</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../">← Pocket Hub</a>
+      <nav class="app-switch" aria-label="切换子应用">
+        <a href="../articles/">文章</a>
+        <a class="active" href="./">投资</a>
+      </nav>
+    </div>
+    <p class="eyebrow">Invest</p>
+    <h1>2026-07-31</h1>
+    <div class="meta-row">
+      <span>6 briefs · newest first</span>
+    </div>
+
+    
+
+    <div class="filters">
+      <label for="date-filter">日期</label>
+      <select id="date-filter" data-date-filter>
+        <option value="all">全部日期</option>
+        <option value="2026-07-31">2026-07-31</option>
+        <option value="2026-07-30">2026-07-30</option>
+        <option value="2026-07-29">2026-07-29</option>
+        <option value="2026-07-28">2026-07-28</option>
+        <option value="2026-07-27">2026-07-27</option>
+        <option value="2026-07-26">2026-07-26</option>
+      </select>
+    </div>
+
+    <ul class="list">
+  <li data-note data-topic="invest" data-date="2026-07-31">
+    <a class="card" href="./2026-07-31.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta"># Fund Watch · 2026-07-31</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-31</h3>
+      <p class="card-lead">Risk-on tech rebound into the session: deep/growth leads, AI semiconductors and optical modules both bid hard — prefer hold/small probe over chase.</p>
+      <p class="card-zh">三大指数齐红，深证成指大涨约 3.2%、两市合计成交约 1.79 万亿，成长风险偏好明显抬升。AI/半导体设备相关股（中科飞测、寒武纪、芯源微、精测电子）与光模块/PCB（新易盛、源杰科技、中际旭创、沪电股份）全线放量反弹，广度偏强。两只观察基金近月回撤仍深，今日主题侧大概率跟涨修复，整体操作偏向「持有为主、仅小仓分批试探，不追猛加」。</p>
+      <div class="card-keys"><span>A</span><span>B</span><span>C</span><span>D</span><span>上证指数</span><span>深证成指</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="invest" data-date="2026-07-30">
+    <a class="card" href="./2026-07-30.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta">Invest · 2026-07-30</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-30</h3>
+      <p class="card-lead">Risk-off into the close: growth/tech sold hard while index volume stayed heavy — stand aside on fresh buys and tighten exposure on theme funds.</p>
+      <p class="card-zh">今日三大指数全线收跌，深证成指跌超2.7%、沪深300跌约1.1%，两市合计成交额约2.3万亿，属于“下跌放量”而非缩量阴跌。半导体设备、光模块、AI算力链条普遍深度回调，风险偏好明显收缩。两只主题基当日偏空：不宜抄底加仓，持仓宜优先控回撤。</p>
+      <div class="card-keys"><span>A</span><span>B</span><span>C</span><span>D</span><span>上证指数</span><span>深证成指</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="invest" data-date="2026-07-29">
+    <a class="card" href="./2026-07-29.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta">Invest · 2026-07-29</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-29</h3>
+      <p class="card-lead">Broad indices finished green with solid turnover, but AI/semiconductor-heavy watchlist funds lagged and stay on a wait-or-trim bias into the close.</p>
+      <p class="card-zh">三大指数收涨、两市成交合计约2.3万亿，风险偏好整体尚可，深证明显强于上证。但半导体/人工智能主题偏弱，与指数背离。观察池两只基金当日净值均收跌，盘中估值分时图源站返回的是旧缓存图，不可当作今日分时；综合当日净值与主题相对强弱，整体偏观望，不宜追买，半导体主题可考虑控仓。</p>
+      <div class="card-keys"><span>A</span><span>B</span><span>C</span><span>D</span><span>上证指数</span><span>深证成指</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="invest" data-date="2026-07-28">
+    <a class="card" href="./2026-07-28.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta"># Fund Watch · 2026-07-28</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-28</h3>
+      <p class="card-lead">Risk-off close: growth/tech themes sold hard on amplified volume; stand aside on new buys and tighten risk on holders.</p>
+      <p class="card-zh">今日上证跌约1.2%、沪深300跌近2.8%、深证成指重挫超4.5%，两市成交额合计约2万亿量级，深市换手偏高，属于明显放量杀跌而非缩量阴跌。人工智能、电子传媒等高弹性主题显著跑输大盘，风险偏好快速降温。收盘前总体偏向观望与控回撤：暂缓新开仓，持仓侧优先评估减仓而非加仓。</p>
+      <div class="card-keys"><span>A</span><span>B</span><span>C</span><span>D</span><span>上证指数</span><span>深证成指</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="invest" data-date="2026-07-27">
+    <a class="card" href="./2026-07-27.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta"># Fund Watch · 2026-07-27</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-27</h3>
+      <p class="card-lead">Pre-close risk appetite is clearly risk-on, with Shenzhen/ChiNext leading and AI/electronics themes still carrying volume into the close.</p>
+      <p class="card-zh">三大指数全线上涨，上证、深证成交额均破万亿，创业板指涨逾3%，交投偏活跃、风险偏好偏高。人工智能、CPO、消费电子、传媒相关板块普遍走强且成交不弱，主题情绪偏多。官方盘中估值与当日分时图未能可靠读到，两只基金操作整体偏“顺势但克制”：AI主题可小仓试探，传媒相关更宜观望、不宜追高。</p>
+      <div class="card-keys"><span>A</span><span>B</span><span>C</span><span>D</span><span>上证指数</span><span>深证成指</span></div>
+    </a>
+  </li>
+  <li data-note data-topic="invest" data-date="2026-07-26">
+    <a class="card" href="./2026-07-26.html">
+      <div class="card-top">
+        <span class="pill">投资</span>
+        <span class="card-meta">Invest · 2026-07-26</span>
+      </div>
+      <h3 class="card-title">Fund Watch · 2026-07-26</h3>
+      <p class="card-lead">Market closed — no live intraday tape, so no buy/sell grades today.</p>
+      <p class="card-zh">今日 A 股不开市（周末休市），<strong>没有当日实时分时/成交量</strong>，因此不给出买入/卖出等级，也不给操作建议。请下一交易日 14:40 再看。</p>
+      
+    </a>
+  </li>
+    </ul>
+    <p class="empty" data-empty hidden>没有符合筛选的笔记。</p>
+  </main>
+  <script>(function () {
+  var topic = "all";
+  var date = "all";
+  var topicButtons = document.querySelectorAll("[data-topic-filter]");
+  var dateSelect = document.querySelector("[data-date-filter]");
+  var items = Array.prototype.slice.call(document.querySelectorAll("[data-note]"));
+  var empty = document.querySelector("[data-empty]");
+
+  function apply() {
+    var visible = 0;
+    items.forEach(function (item) {
+      var okTopic = topic === "all" || item.getAttribute("data-topic") === topic;
+      var okDate = date === "all" || item.getAttribute("data-date") === date;
+      var show = okTopic && okDate;
+      item.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  topicButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      topic = btn.getAttribute("data-topic-filter") || "all";
+      topicButtons.forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      apply();
+    });
+  });
+
+  if (dateSelect) {
+    dateSelect.addEventListener("change", function () {
+      date = dateSelect.value || "all";
+      apply();
+    });
+  }
+})();</script>
+</body>
+</html>

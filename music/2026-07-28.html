@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Syd’s Beard Turns Ease Into Self-Knowledge</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">音乐 · 2026-07-28</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Syd’s Beard Turns Ease Into Self-Knowledge</h1>
+    <p class="meta">Source · 2026-07-28 · <a href="https://pitchfork.com/reviews/albums/syd-beard/">数据来源</a></p>
+    <p class="lead">Pitchfork reviews Syd’s third solo album, *Beard*, as a calm, lush portrait of self-acceptance after years of shaping alternative rap and R&amp;B. Written after quitting alcohol, getting married, and buying a house in her childhood Los Angeles neighborhood, the record favors spacious production and candid desire over restless curiosity. Even when some later tracks feel vague or slow, the album lands as a patient document of love rooted in knowing oneself.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>Pitchfork 评价 Syd 第三张个人专辑《Beard》为一部从容、丰沛的自我认知之作，写于戒酒、结婚并在洛杉矶童年社区置业之后。 专辑音色宽阔不赶，虽有后半段偏缓、歌词偏空的问题，整体仍像一份关于爱与自我接纳的沉稳记录。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://pitchfork.com/reviews/albums/syd-beard/">https://pitchfork.com/reviews/albums/syd-beard/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Since her teens, Syd has helped define alternative rap and R&amp;B. She engineered and later produced for Odd Future, co-founded The Internet, released two solo albums of trap-tinged soul and airy R&amp;B, and produced for artists such as Vince Staples and Beyoncé—all before the latter half of her thirties. Even so, she calls herself a <mark class="hl-kw">late bloomer</mark>: she spent years finding her own sound after writing for others, and longer still learning who she was beneath the social conditioning placed on her as a Black queer woman. <em>Beard</em>—named for the facial hair she has learned to love—comes out of that slow work of self-examination.</p>
+<p>Where her earlier solo records were full of verve and restless desire, <em>Beard</em> sounds settled. Syd wrote it after quitting alcohol, getting married, and buying a house in her childhood Los Angeles neighborhood. On the closer “2 Many Days,” her crystalline voice rides swelling synths and drums as she names pieces of a dream life—a pool, tinted windows, treating her mother with respect—and treats them as nearly within reach. She produced or co-produced ten of twelve tracks, keeping arrangements spacious, lush, and unhurried. “Walls” slows further: a meandering synth lets her voice move from <mark class="hl-kw">gossamer</mark> and ethereal to deep and honeyed while she considers healing without vanishing, and love without losing herself. Occasional dissonance keeps a sense of surprise alive. On the luminous bossa-nova cut “My Love,” she states protectiveness plainly over lilting guitar and shimmering percussion: she would give her life for that love at the drop of a dime.</p>
+<p>The calm can tip into languor. The second half sometimes drags; “Any Time” is a satisfactory ballad that never becomes memorable, and “Do Better” confronts depression and difficulty showing affection with lyrics that stay fairly vague—“Your love was a blessing / Now it’s a weapon / Patience a virtue”—over a melody that echoes more than it progresses. Still, as a whole, <em>Beard</em> is a patient, poised record of self-knowledge gathered over time: an album about love and desire grounded in knowing oneself. In a recent interview, Syd joked that her wife likes her mustache and once recoiled when she shaved it too low. On <em>Beard</em>, she sings with the assurance of someone who has found unconditional love—and who also knows how to grow that love for herself.</p>
+<h3>中文全文翻译</h3>
+<p>自青少年起，Syd 就在塑造另类说唱与 R&amp;B 的声音。她曾为 Odd Future 担任录音工程师并最终成为制作人，与人共同创立 The Internet，发行过两张融合 trap 灵魂乐与空灵 R&amp;B 的个人专辑，还为 Vince Staples、Beyoncé 等艺人制作——这一切都发生在她迈入三十多岁后半段之前。即便如此，她仍自称是“大器晚成”：在为他人写歌多年后，她花了很长时间寻找自己的声音；更久的是，作为一名黑人酷儿女性，她要辨认社会规训与真正自我之间的边界。《Beard》以她学会去爱的面部毛发命名，正是这场自我审视的结果。</p>
+<p>如果说前两张个人专辑充满活力与躁动欲望，《Beard》则透出安稳。Syd 在戒酒、结婚、并在洛杉矶童年社区买下房子之后写下这张专辑。终曲《2 Many Days》中，她清澈的嗓音托在层层推进的合成器与鼓点上，点出梦想生活的元素——泳池、有色车窗、对母亲的尊重——并让人感到它们几乎触手可及。她制作或联合制作了十二首歌中的十首，编曲宽阔、丰沛、不慌不忙。《Walls》进一步放慢：蜿蜒的合成器给嗓音留出空间，从轻薄空灵滑向深沉蜜意，她思考如何在疗愈中不失去自己、在追求爱的过程中仍守住自我。偶尔的不协和音又带来意外感。在明亮的波萨诺瓦曲《My Love》里，她在轻盈吉他与闪亮打击乐上坦陈对恋人的保护欲：转瞬之间，她愿以生命去证明这份爱。</p>
+<p>这种从容有时也会滑向慵懒。专辑后半段偶有拖沓；《Any Time》作为抒情曲合格却难记，《Do Better》正视抑郁与难表爱意，歌词却偏空泛——“你的爱曾是祝福／如今成了武器／耐心是美德”——旋律更多在回响而非推进。但整体而言，《Beard》仍是一份耐心、沉稳的自我认知记录：一张关于爱与欲望、却扎根于深刻自我理解的专辑。在最近一次采访中，Syd 笑说妻子喜欢她的小胡子，有一次她刮得太低，妻子还嫌弃。在《Beard》里，她唱得像一个已得到无条件之爱、也懂得如何为自己培育这份爱的人。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">paean</mark></strong></p>
+<ul>
+<li>英文释义: a song or expression of praise and celebration</li>
+<li>中文释义: 赞美之歌；颂扬</li>
+<li>例句: The singer and producer’s third solo album is a <mark class="hl-kw">paean</mark> to self-knowledge gleaned over time.</li>
+<li>记忆提示: 想成“唱赞歌给某人/某事”——<mark class="hl-kw">paean</mark> ≈ praise song</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">late bloomer</mark></strong></p>
+<ul>
+<li>英文释义: someone who develops skills, confidence, or success later than peers</li>
+<li>中文释义: 大器晚成的人</li>
+<li>例句: But despite all her early career success, Syd considers herself a <mark class="hl-kw">late bloomer</mark>.</li>
+<li>记忆提示: bloom 是开花；晚开花＝起步晚却后来居上</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">equanimity</mark></strong></p>
+<ul>
+<li>英文释义: calmness and composure, especially under change or pressure</li>
+<li>中文释义: 平静；镇定；从容不迫</li>
+<li>例句: Other times, the <mark class="hl-kw">equanimity</mark> comes from the pace at which the music unfurls.</li>
+<li>记忆提示: equa- 表“均等”，心情保持平衡＝内心平稳</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">gossamer</mark></strong></p>
+<ul>
+<li>英文释义: extremely light, delicate, and thin, like fine silk or cobweb</li>
+<li>中文释义: 轻薄如纱的；纤细空灵的</li>
+<li>例句: Syd’s vocals dip from <mark class="hl-kw">gossamer</mark> and ethereal to deep and honeyed.</li>
+<li>记忆提示: 联想蜘蛛丝或薄纱——轻到几乎透明</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">languid</mark></strong></p>
+<ul>
+<li>英文释义: slow, relaxed, or lacking energy in a way that can feel weak or dull</li>
+<li>中文释义: 慵懒的；无力的；节奏拖沓的</li>
+<li>例句: There are times when the tempo and atmospheric production veer on <mark class="hl-kw">languid</mark>.</li>
+<li>记忆提示: 发音有点像“懒”，用来形容音乐或动作没劲、慢吞吞</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">More broadly, she also needed time to understand and embody who she is at her core, to parse the social conditioning imposed on her as a Black queer woman from her inherent personality.</mark></p>
+<ul>
+<li>结构: 主句（needed time to understand and embody…）+ 不定式并列（to parse A from B）说明第二层目的；imposed on her… 为过去分词短语修饰 conditioning</li>
+<li>中文: 更广泛地说，她也需要时间去理解并活出核心的自己，把作为黑人酷儿女性所受的社会规训，与她固有的个性分辨开来。</li>
+<li>仿写: More broadly, he also needed time to understand and embody who he is at his core, to parse the expectations imposed on him as a first-generation professional from his own values.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">A meandering synth line leaves room for Syd’s vocals to dip from gossamer and ethereal to deep and honeyed as she ruminates on healing without losing herself and pursuing love throughout the process.</mark></p>
+<ul>
+<li>结构: 主句（synth line leaves room for…）+ 不定式结果（to dip from A to B）+ as 时间/伴随从句（ruminates on A and B）</li>
+<li>中文: 一条蜿蜒的合成器线条为 Syd 的人声留出空间，让她从轻薄空灵沉入深沉蜜意，同时思索如何在疗愈中不失去自己，并在整个过程中继续追求爱。</li>
+<li>仿写: A spare piano line leaves room for her vocals to dip from bright and brittle to warm and steady as she ruminates on starting over without erasing her past.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Still, taken as a whole, Beard is a patient, poised document of self-knowledge gleaned over time—an album about love and desire that is rooted in a deep understanding of self.</mark></p>
+<ul>
+<li>结构: 插入语/过去分词状语（taken as a whole）+ 主系表 + 破折号后同位语（an album…）再接定语从句（that is rooted in…）</li>
+<li>中文: 不过，就整体而言，《Beard》是一份耐心而沉稳的自我认知文献，这份认知随时间慢慢收获——它是一张关于爱与欲望、却扎根于深刻自我理解的专辑。</li>
+<li>仿写: Still, taken as a whole, the memoir is a patient, poised document of hard-won clarity—a book about ambition that is rooted in a deep understanding of limits.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

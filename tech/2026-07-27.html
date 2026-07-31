@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apple TV and Music Down for Some Users</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-27</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Apple TV and Music Down for Some Users</h1>
+    <p class="meta">Source · 2026-07-27 · <a href="https://9to5mac.com/2026/07/26/psa-apple-tv-apple-music-and-more-are-currently-down-for-some-users/">数据来源</a></p>
+    <p class="lead">Apple reported outages across several consumer and developer services, including Apple TV, Podcasts, and parts of the App Store. Status pages listed routine or scheduled maintenance for some products and active investigations for others. By early evening Pacific Time, Apple said the developer-site issues had been resolved.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>苹果晚间出现多项服务异常，涉及 Apple TV、播客与 App Store 相关功能。随后苹果表示，开发者状态页上列出的问题均已恢复。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://9to5mac.com/2026/07/26/psa-apple-tv-apple-music-and-more-are-currently-down-for-some-users/">https://9to5mac.com/2026/07/26/psa-apple-tv-apple-music-and-more-are-currently-down-for-some-users/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Apple told users that several of its services were down one evening, affecting everyday products as well as tools that developers rely on. According to reporting from 9to5Mac, the disruption touched Apple TV, Apple Podcasts, and various parts of the App Store. Apple Music and related subscription features also appeared on the company’s public status pages, leaving some customers unsure whether they could stream content, buy apps, or manage subscriptions as usual.</p>
+<p>On its consumer system status website, Apple posted a mix of messages. AppleCare on Device purchases were <mark class="hl-kw">temporarily unavailable</mark>. For the App Store and Apple Music, Apple said it was performing <mark class="hl-kw">routine maintenance</mark> and expected no user impact, even as other listings pointed to real friction. Apple Music Subscriptions might be slow or unavailable. Apple TV might be unavailable because of <mark class="hl-kw">scheduled maintenance</mark>. Podcasts users might also be experiencing issues. Taken together, the notices suggested a broad maintenance window rather than a single isolated glitch.</p>
+<p>The picture looked more serious on Apple’s System Status site for developers. There, Apple reported problems with App Store In-App Purchases, receipt verification, server APIs, and server notifications. In several cases, Apple said users or developers were experiencing a problem, that engineers were investigating, and that the company would update the status as more information became available. For receipt verification, Apple said developers might be experiencing issues and that it was working to <mark class="hl-kw">resolve</mark> the problem. At the time of the initial report, there was no clear timeline for a full fix.</p>
+<p>Later the same evening, the story shifted. In an update at 6:15 p.m. Pacific Time, Apple said all the problems previously listed on its Developer website had been <mark class="hl-kw">resolve</mark>d. That update did not erase the earlier consumer-facing notices, but it indicated that the developer-side outages had ended. For professionals who depend on App Store commerce, receipts, and server notifications, the episode was a reminder that even brief disruptions can interrupt purchases, testing, and backend workflows until Apple marks services healthy again.</p>
+<h3>中文全文翻译</h3>
+<p>苹果当晚告知用户，其多项服务出现故障，既影响日常消费产品，也影响开发者依赖的工具。据 9to5Mac 报道，异常波及 Apple TV、Apple Podcasts，以及 App Store 的多个环节。Apple Music 及相关订阅功能也出现在公司公开状态页上，令部分用户不确定能否正常流媒体播放、购买应用或管理订阅。</p>
+<p>在面向消费者的系统状态网站上，苹果发布了多种说明。设备上的 AppleCare 购买暂时不可用。对于 App Store 与 Apple Music，苹果表示正在进行例行维护，并预期不会影响用户，但其他条目仍指向实际不便。Apple Music 订阅可能变慢或不可用；Apple TV 可能因计划维护而不可用；播客用户也可能遇到问题。综合来看，这些通知更像是一次大范围维护窗口，而非单一孤立故障。</p>
+<p>在面向开发者的系统状态网站上，情况显得更严峻。苹果报告 App Store 应用内购买、收据验证、服务器 API 与服务器通知均出现问题。在多个条目中，苹果称用户或开发者正遇到问题，工程师正在调查，并将在有更多信息时更新状态。关于收据验证，苹果表示开发者可能遇到问题，并正在努力解决。在最初报道时，尚无明确的全面修复时间表。</p>
+<p>当晚晚些时候，情况有所变化。在太平洋时间傍晚 6:15 的更新中，苹果表示开发者网站上先前列出的所有问题均已解决。该更新并未抹去早前面向消费者的通知，但表明开发者侧故障已经结束。对依赖 App Store 交易、收据与服务器通知的专业人士而言，这次事件提醒人们：即便短暂中断，也可能打断购买、测试与后端流程，直到苹果将服务标记为恢复正常。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">temporarily unavailable</mark></strong></p>
+<ul>
+<li>英文释义: not able to be used for a short period of time</li>
+<li>中文释义: 暂时不可用</li>
+<li>例句: AppleCare purchase is <mark class="hl-kw">temporarily unavailable</mark>.</li>
+<li>记忆提示: temporarily=暂时，unavailable=不可用，合起来就是“短时间用不了”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">routine maintenance</mark></strong></p>
+<ul>
+<li>英文释义: planned, regular work to keep a system running normally</li>
+<li>中文释义: 例行维护</li>
+<li>例句: <mark class="hl-sent">We are performing routine maintenance, with no expected user impact.</mark></li>
+<li>记忆提示: routine 像“日常流程”，maintenance 是维护，常出现在状态页</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">scheduled maintenance</mark></strong></p>
+<ul>
+<li>英文释义: downtime that a company has planned in advance</li>
+<li>中文释义: 计划内维护</li>
+<li>例句: Apple TV may be unavailable due to <mark class="hl-kw">scheduled maintenance</mark>.</li>
+<li>记忆提示: scheduled=已排进日程，强调不是突发故障</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">investigate</mark></strong></p>
+<ul>
+<li>英文释义: to examine a problem carefully in order to find the cause</li>
+<li>中文释义: 调查；排查</li>
+<li>例句: We are investigating and will update the status as more information becomes available.</li>
+<li>记忆提示: 出故障时官网常写 investigating，表示“正在查原因”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">resolve</mark></strong></p>
+<ul>
+<li>英文释义: to fix a problem so that a service works again</li>
+<li>中文释义: 解决；修复</li>
+<li>例句: <mark class="hl-sent">Apple says all the problems previously listed on its Developer website have been resolved.</mark></li>
+<li>记忆提示: <mark class="hl-kw">resolve</mark>/<mark class="hl-kw">resolve</mark>d 是状态页恢复时的高频词，等于“问题已修好”</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">We are performing routine maintenance, with no expected user impact.</mark></p>
+<ul>
+<li>结构: 主句（正在进行例行维护）+ with 介词短语补充结果预期（预计不影响用户）</li>
+<li>中文: 我们正在进行例行维护，预计不会对用户造成影响。</li>
+<li>仿写: The payment gateway is undergoing <mark class="hl-kw">routine maintenance</mark>, with no expected user impact tonight.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Users are experiencing a problem with the service listed above.</mark></p>
+<ul>
+<li>结构: 主语 Users + 进行时 are experiencing + 宾语 a problem + 介词短语说明问题对象</li>
+<li>中文: 用户在使用上述服务时正遇到问题。</li>
+<li>仿写: Customers are experiencing a problem with checkout on the mobile app this morning.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Apple says all the problems previously listed on its Developer website have been resolved.</mark></p>
+<ul>
+<li>结构: 主句 Apple says + 宾语从句；从句中 previously listed... 作后置定语修饰 problems；现在完成时被动 have been <mark class="hl-kw">resolve</mark>d</li>
+<li>中文: 苹果表示，开发者网站上先前列出的所有问题均已解决。</li>
+<li>仿写: The company says all the outages previously listed on its status page have been <mark class="hl-kw">resolve</mark>d.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

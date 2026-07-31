@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Firefighters Race to Control Wildfires Near Madrid</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">国际 · 2026-07-28</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Firefighters Race to Control Wildfires Near Madrid</h1>
+    <p class="meta">Source · 2026-07-28 · <a href="https://www.bbc.com/news/live/cvgzd34kq5dt">数据来源</a></p>
+    <p class="lead">Firefighters in France and Spain are racing to contain major wildfires near Bordeaux and Madrid as another heatwave approaches. Hundreds of thousands of people have been evacuated, and officials warn that rising temperatures could make the blazes even harder to control.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>法国与西班牙正全力扑灭波尔多与马德里附近的大型山火，新一轮热浪即将到来。已有数十万人撤离，高温干燥天气令火势更难控制。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://www.bbc.com/news/live/cvgzd34kq5dt">https://www.bbc.com/news/live/cvgzd34kq5dt</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Firefighters across south-western France and central Spain are racing to contain vast wildfires as another <mark class="hl-kw">heatwave</mark> builds over Europe. Near Bordeaux, crews reported a relatively calm night: several new outbreaks were put out, and the burned area did not expand. Officials say the fire is <mark class="hl-kw">stabilised</mark> but still not under control. The blaze in the Gironde region has scorched more than 42,000 hectares, destroyed about 240 homes, and forced roughly 220,000 people to leave.</p>
+<p>The fire has drawn within about 15 kilometres of Bordeaux’s outskirts. France’s interior minister described it as having “a life of its own,” while President Emmanuel Macron called the crisis the toughest since the Second World War and thanked responders during a visit to the region. More than 2,750 firefighters, aerial units, and around 1,500 military personnel have been mobilised. A second fire farther south in the Landes region has been contained, but the larger Gironde blaze remains the main threat.</p>
+<p>In Spain, fires west of Madrid and in neighbouring regions have forced around 105,000 people to <mark class="hl-kw">evacuate</mark>. Authorities say winds have pushed some flames south and away from the capital, yet villages in their path still face orders to leave. Spain’s weather service has warned of “extreme” fire risk as intense heat and dryness continue. Temperatures in Madrid and south-west France are forecast to reach the high thirties to around 39–40C, with little widespread rain expected for several days.</p>
+<p>Residents and visitors describe thick smoke, ash, and an almost surreal atmosphere. Some Bordeaux residents compare the air to Pompeii; others are opening their homes to evacuees. Firefighters are digging and reinforcing <mark class="hl-kw">firebreak</mark>s and hunting for smouldering embers that could reignite when easterly winds and hotter air return. Officials urge people not to go back to affected zones yet, warning that the coming days will be decisive for both countries.</p>
+<h3>中文全文翻译</h3>
+<p>法国西南部与西班牙中部的消防人员正全力控制大范围山火，与此同时，欧洲又一轮热浪正在酝酿。波尔多附近的队伍报告，夜里相对平静：多处新火点被扑灭，过火面积没有继续扩大。官方称火势已趋稳定，但仍未得到控制。吉伦特省的大火已烧毁超过4.2万公顷土地，约240栋房屋被毁，约22万人被迫撤离。</p>
+<p>火线已逼近波尔多市郊约15公里处。法国内政部长形容这场火“仿佛有自己的生命”，总统马克龙则称这是二战以来最严峻的危机，并在视察该地区时感谢救援人员。已出动逾2750名消防员、空中灭火力量以及约1500名军人。南部朗德省的另一场火已被控制，但吉伦特省这场更大的火灾仍是主要威胁。</p>
+<p>在西班牙，马德里以西及邻近地区的火灾已迫使约10.5万人撤离。当局表示，风向已把部分火势推向南方、远离首都，但路径上的村庄仍面临撤离命令。西班牙气象部门警告，在持续高温与干燥条件下，火险等级为“极端”。马德里与法国西南部气温预计将升至三十多度至约39–40摄氏度，未来数日难有大范围降雨。</p>
+<p>居民与游客描述烟雾浓重、灰烬遍地，气氛近乎不真实。一些波尔多居民把空气比作庞贝古城；另一些人则向撤离者开放自家住所。消防员正在开挖并加固防火隔离带，并搜寻可能在东风与更热气流回来时复燃的余烬。官方敦促人们暂勿返回受灾区，并警告未来几天对两国都将是关键时刻。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">stabilised</mark></strong></p>
+<ul>
+<li>英文释义: made steady so that a dangerous situation stops getting worse, even if it is not yet fully solved</li>
+<li>中文释义: （局势）得到稳定；暂缓恶化</li>
+<li>例句: Firefighters west of Bordeaux say the fire is <mark class="hl-kw">stabilised</mark> – but not under control.</li>
+<li>记忆提示: stable（稳定的）+ -ise，想像“先稳住，再彻底解决”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">evacuate</mark></strong></p>
+<ul>
+<li>英文释义: to move people away from a dangerous place for safety</li>
+<li>中文释义: 撤离；疏散</li>
+<li>例句: An estimated 220,000 people have been forced to <mark class="hl-kw">evacuate</mark> in the Gironde region.</li>
+<li>记忆提示: e-（向外）+ vac（空）→ 把人“清空”危险区</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">heatwave</mark></strong></p>
+<ul>
+<li>英文释义: a period of unusually hot weather lasting several days</li>
+<li>中文释义: 热浪；持续高温期</li>
+<li>例句: Firefighters are racing to control wildfires as another <mark class="hl-kw">heatwave</mark> hits France and Spain.</li>
+<li>记忆提示: heat（热）+ wave（浪潮）→ 像热气浪潮一样袭来</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">firebreak</mark></strong></p>
+<ul>
+<li>英文释义: a cleared strip of land that stops or slows a wildfire’s spread</li>
+<li>中文释义: 防火隔离带</li>
+<li>例句: Overnight, crews worked to create more <mark class="hl-kw">firebreak</mark>s by clearing brush.</li>
+<li>记忆提示: fire + break → 用空地“打断”火的蔓延</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">unprecedented</mark></strong></p>
+<ul>
+<li>英文释义: never known or experienced before; without earlier example</li>
+<li>中文释义: 前所未有的；史无前例的</li>
+<li>例句: Macron said France is facing a completely <mark class="hl-kw">unprecedented</mark> wildfire.</li>
+<li>记忆提示: un-（无）+ precedent（先例）→ 没有先例</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Firefighters west of Bordeaux are reporting a relatively good night, in which they’ve been able to put out a number of new outbreaks but the overall surface of the destruction has not increased.</mark></p>
+<ul>
+<li>结构: 主句（Firefighters...reporting...）+ 非限制性定语从句（in which...），从句内用 but 连接两个对比结果</li>
+<li>中文: 波尔多以西的消防员报告，夜里情况相对较好：他们扑灭了多处新火点，但整体过火面积并未增加。</li>
+<li>仿写: Negotiators in Brussels are reporting a relatively calm week, in which they’ve narrowed several disputes but the overall trade gap has not closed.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">This return of the heat, combined with a wind from the east, will act on smouldering embers of vegetation and cause them to burst back into flame.</mark></p>
+<ul>
+<li>结构: 主语（This return of the heat）+ 过去分词短语作后置定语（combined with...）+ 并列谓语（will act... and cause...）</li>
+<li>中文: 高温回升，再加上东风，会作用于仍在闷烧的草木余烬，使它们再次燃起火焰。</li>
+<li>仿写: This surge in demand, combined with delays from the east, will act on already thin inventories and cause prices to climb again.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">While man-made climate change did not provide the sparks that started these fires, it is making the hotter, drier conditions that allow fires to spread faster and burn more fiercely more likely.</mark></p>
+<ul>
+<li>结构: While 让步从句 + 主句（it is making A more likely），其中 A 含定语从句（that allow...）</li>
+<li>中文: 虽然人为气候变化并非点燃这些火灾的火星，但它正在使更热、更干燥——从而让火势蔓延更快、燃烧更猛——的条件变得更有可能出现。</li>
+<li>仿写: While remote work did not invent the need for clear writing, it is making concise, well-structured emails that prevent costly misunderstandings more essential.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

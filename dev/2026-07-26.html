@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>June 2026 Baseline Monthly Digest</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">开发 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>June 2026 Baseline Monthly Digest</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://web.dev/blog/baseline-digest-jun-2026">数据来源</a></p>
+    <p class="lead">In June 2026, the CSS property `field-sizing` reached Baseline Newly available, so form controls can resize to their content without custom JavaScript. Many CSS, HTML, and Web API features also became Baseline Widely available, and Web Platform Status now offers Baseline Alerts for subscription updates.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>2026 年 6 月，`field-sizing` 进入 Baseline Newly available，表单控件可随内容自动伸缩。 同期多项 CSS、HTML 与 Web API 特性达到 Baseline Widely available，Web Platform Status 还推出了可订阅的 Baseline Alerts。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://web.dev/blog/baseline-digest-jun-2026">https://web.dev/blog/baseline-digest-jun-2026</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>Welcome to the Baseline monthly digest for June 2026. This edition highlights one feature that became Baseline Newly available and a broad set of CSS, HTML, and Web API features that reached Baseline Widely available. It also covers community-facing tooling that helps developers track interoperability as it changes.</p>
+<p>Tracking when features become <mark class="hl-kw">interoperable</mark> is easier with Baseline Alerts on the Web Platform Status dashboard. After signing in with GitHub, you can <mark class="hl-kw">subscribe</mark> when features become Baseline Newly available, Widely available, or gain new browser implementations. Alerts can arrive by email or custom RSS on a monthly, weekly, or immediate schedule. You can limit alerts to saved searches, build custom newsletters, create shareable feature lists, or send Slack webhooks to your engineering team.</p>
+<p>The standout Newly available feature is <code>field-sizing</code>. This CSS property controls how form elements such as text inputs, textareas, and select controls size themselves. With <code>field-sizing: content</code>, those controls expand or shrink to fit their content, which reduces the need for hand-written JavaScript auto-resize scripts.</p>
+<p>A long list of features also became Baseline Widely available, meaning they are now <mark class="hl-kw">broadly compatible</mark> for everyday projects. Examples include the <code>:has()</code> parent selector for styling based on descendants or following siblings; lazy loading for iframes through <code>HTMLIFrameElement.loading</code>; <code>CanvasRenderingContext2D.reset()</code> for clearing canvas state; the <code>cap</code> font-relative length unit; <code>counter-set</code> for CSS counters; and <code>createImageBitmap()</code> for decoding images off the main thread. Developers also gained wider support for the <code>easing-function</code> data type, the <code>&amp;</code> nesting selector, responsive preloading with <code>rel=&quot;preload&quot;</code> and media queries, <code>HTMLMediaElement.preservesPitch</code>, the <code>:dir()</code> pseudo-class, the <code>pow()</code> math function, the <code>mask</code> shorthand, <code>@media (scripting)</code>, <code>URL.canParse()</code>, and the Storage Access API for cross-site storage requests inside third-party iframes.</p>
+<p>As usual, the digest closes by inviting readers to report anything Baseline-related that was missed and to file feedback or questions in the Baseline issue tracker.</p>
+<h3>中文全文翻译</h3>
+<p>欢迎阅读 2026 年 6 月的 Baseline 月度摘要。本期重点介绍一项进入 Baseline Newly available 的特性，以及一批达到 Baseline Widely available 的 CSS、HTML 与 Web API 特性，同时也涵盖帮助开发者持续跟踪互操作性变化的社区工具。</p>
+<p>借助 Web Platform Status 仪表板上的 Baseline Alerts，跟踪特性何时实现互操作变得更轻松。使用 GitHub 登录后，你可以订阅特性进入 Baseline Newly available、Widely available，或获得新浏览器实现时的通知。提醒可通过邮件或自定义 RSS 发送，频率可选每月、每周或即时。你也可以把提醒限定在已保存的搜索范围内，制作自定义简报、生成可分享的特性列表，或配置 Slack webhook 通知工程团队。</p>
+<p>本月最突出的 Newly available 特性是 <code>field-sizing</code>。这一 CSS 属性用于控制文本输入框、文本域和下拉框等表单元素的尺寸行为。使用 <code>field-sizing: content</code> 后，这些控件会随内容自动伸展或收缩，从而减少手写 JavaScript 自动调整高度脚本的需要。</p>
+<p>同时，大量特性进入 Baseline Widely available，意味着它们已具备广泛兼容性，可更安心地用于日常项目。例子包括：按后代或后续兄弟元素选择样式的 <code>:has()</code> 父选择器；通过 <code>HTMLIFrameElement.loading</code> 实现 iframe 懒加载；用于清空画布状态的 <code>CanvasRenderingContext2D.reset()</code>；与大写字母高度相关的 <code>cap</code> 字体相对长度单位；用于 CSS 计数器的 <code>counter-set</code>；以及可在主线程外解码图像的 <code>createImageBitmap()</code>。开发者还获得了更广泛支持的 <code>easing-function</code> 数据类型、<code>&amp;</code> 嵌套选择器、结合媒体查询的 <code>rel=&quot;preload&quot;</code> 响应式预加载、<code>HTMLMediaElement.preservesPitch</code>、<code>:dir()</code> 伪类、<code>pow()</code> 数学函数、<code>mask</code> 简写、<code>@media (scripting)</code>、<code>URL.canParse()</code>，以及供第三方 iframe 请求跨站存储访问的 Storage Access API。</p>
+<p>一如既往，摘要结尾邀请读者补充任何遗漏的 Baseline 相关动态，并在 Baseline issue tracker 中提交反馈或问题。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">interoperable</mark></strong></p>
+<ul>
+<li>英文释义: able to work the same way across different browsers or systems</li>
+<li>中文释义: 可互操作的；在不同浏览器或系统间表现一致</li>
+<li>例句: Keeping track of when web features become <mark class="hl-kw">interoperable</mark> is now easier with Baseline Alerts.</li>
+<li>记忆提示: inter-（彼此之间）+ operable（可运行）→ 彼此都能正常运行</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">subscribe</mark></strong></p>
+<ul>
+<li>英文释义: to sign up to receive updates or notifications</li>
+<li>中文释义: 订阅；登记以接收更新或通知</li>
+<li>例句: By signing in with GitHub, you can <mark class="hl-kw">subscribe</mark> to notifications for features as they become Baseline Newly available.</li>
+<li>记忆提示: sub-（在下）+ scribe（写）→ 登记在名单下，持续接收信息</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">automatically</mark></strong></p>
+<ul>
+<li>英文释义: happening by itself, without manual effort</li>
+<li>中文释义: 自动地；无需人工操作地</li>
+<li>例句: With <code>field-sizing: content</code>, form controls <mark class="hl-kw">automatically</mark> expand or shrink to fit their content.</li>
+<li>记忆提示: auto-（自己）→ 自己完成，不必人动手</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">defer</mark></strong></p>
+<ul>
+<li>英文释义: to delay an action until a later time</li>
+<li>中文释义: 推迟；延后执行</li>
+<li>例句: By specifying <code>loading=&quot;lazy&quot;</code>, browsers <mark class="hl-kw">defer</mark> loading offscreen iframes until they are scrolled near the viewport.</li>
+<li>记忆提示: de-（离开）+ fer（携带）→ 先放一边，稍后再做</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">broadly compatible</mark></strong></p>
+<ul>
+<li>英文释义: widely supported and safe to use in most target environments</li>
+<li>中文释义: 广泛兼容的；在多数目标环境中可安心使用</li>
+<li>例句: The following features became Baseline Widely available, meaning that they are now <mark class="hl-kw">broadly compatible</mark> and usable in your projects.</li>
+<li>记忆提示: broadly（广泛地）+ compatible（兼容的）→ 覆盖面大、冲突少</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">By signing in with GitHub, you can subscribe to notifications for features as they become Baseline Newly available, Widely available, or receive new browser implementations.</mark></p>
+<ul>
+<li>结构: 方式状语（By signing...）+ 主句（you can <mark class="hl-kw">subscribe</mark>...）+ 时间状语从句（as they become... or receive...）</li>
+<li>中文: 使用 GitHub 登录后，你可以订阅特性进入 Baseline Newly available、Widely available，或获得新浏览器实现时的通知。</li>
+<li>仿写: By enabling project alerts, you can <mark class="hl-kw">subscribe</mark> to notifications for APIs as they become stable, deprecated, or receive breaking changes.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> With <code>field-sizing: content</code>, form controls <mark class="hl-kw">automatically</mark> expand or shrink to fit their content, reducing the need for custom JavaScript auto-resize scripts.</p>
+<ul>
+<li>结构: 伴随状语（With...）+ 主句（form controls expand or shrink...）+ 结果状语（reducing the need...）</li>
+<li>中文: 使用 <code>field-sizing: content</code> 后，表单控件会随内容自动伸展或收缩，从而减少对手写 JavaScript 自动调整高度脚本的需求。</li>
+<li>仿写: With native form validation, input fields highlight errors as users type, reducing the need for custom client-side checks.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> By combining <code>rel=&quot;preload&quot;</code> with media queries, browsers download only the assets matching the user&#39;s viewport width or display characteristics early in the loading lifecycle.</p>
+<ul>
+<li>结构: 方式状语（By combining...）+ 主句（browsers download...）+ 定语（matching...）+ 时间状语（early in...）</li>
+<li>中文: 通过把 <code>rel=&quot;preload&quot;</code> 与媒体查询结合，浏览器会在加载生命周期的早期只下载匹配用户视口宽度或显示特性的资源。</li>
+<li>仿写: By combining code splitting with route-based loading, apps download only the modules matching the user&#39;s current page early in navigation.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

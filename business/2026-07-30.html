@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shell profits double as oil prices rise due to Iran war</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">商业 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Shell profits double as oil prices rise due to Iran war</h1>
+    <p class="meta">Source · 2026-07-30 · <a href="https://www.bbc.co.uk/news/articles/cpq8n45r5e8o">数据来源</a></p>
+    <p class="lead">Shell’s second-quarter profits more than doubled after the Iran conflict drove oil and LNG prices higher. Disruption through the Strait of Hormuz lifted Brent crude well above pre-war levels, and Shell’s first-half earnings rose about 70%. Energy majors also benefited from trading on sharp price swings.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>受伊朗冲突推高油价影响，壳牌第二季度利润逾翻一番，上半年盈利约增七成。霍尔木兹海峡供应受阻推高布伦特原油，能源巨头也因油价剧烈波动中的交易获益。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://www.bbc.co.uk/news/articles/cpq8n45r5e8o">https://www.bbc.co.uk/news/articles/cpq8n45r5e8o</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>Shell has reported a sharp jump in earnings for the April-to-June quarter, as the war involving the United States, Israel and Iran pushed global energy prices higher. The oil major said second-quarter profits reached $9.84 billion (£7.37 billion), more than double the $4.26 billion recorded in the same period a year earlier. Chief executive Wael Sawan credited strong operational performance for “very strong results during another quarter of <mark class="hl-kw">severe disruption</mark> in global energy markets.”</p>
+<p>The price shock has been rooted in supply risk. Since the conflict began, oil and liquefied natural gas (LNG) flows through the <mark class="hl-kw">Strait of Hormuz</mark> have faced major disruption, lifting the cost of energy worldwide. Before fighting started, Brent crude—the main global oil <mark class="hl-kw">benchmark</mark>—traded near $73 a barrel. It later peaked above $120, then slipped back below $100 as markets argued over when the strait might reopen.</p>
+<p>Those swings matter for trading profits as well as production. Wide gaps between buying and selling prices often allow traders to earn more when markets are volatile. Shell is not alone: rivals such as BP and Norway’s Equinor have also posted bumper results this year, helped in part by trading on oil-price movements.</p>
+<p>Taken with first-quarter profits of $6.92 billion, Shell’s first-half earnings are up about 70%. For learners of business English, the story links geopolitics, <mark class="hl-kw">benchmark</mark> pricing, and how energy companies can benefit when supply routes are threatened and prices move fast.</p>
+<h3>中文全文翻译</h3>
+<p>壳牌公布了四月至六月季度盈利大幅上升的消息，原因是美国、以色列与伊朗之间的冲突推高了全球能源价格。这家石油巨头表示，第二季度利润达到98.4亿美元（约合73.7亿英镑），较去年同期的42.6亿美元逾翻一番。首席执行官瓦埃勒·萨万将成绩归因于出色的运营表现，称公司“在全球能源市场再度经历严重动荡的一个季度里取得了非常强劲的业绩”。</p>
+<p>这轮价格冲击源于供应风险。冲突爆发以来，经霍尔木兹海峡的石油与液化天然气（LNG）运输面临重大中断，推高了全球能源成本。战事开始前，全球主要原油基准布伦特原油价格约为每桶73美元；此后一度升至每桶120美元以上，又随着市场揣测海峡何时重开而回落至100美元以下。</p>
+<p>价格剧烈波动对交易利润与生产同样重要。买卖价差扩大时，交易商往往能在市场动荡中赚取更多利润。壳牌并非唯一受益者：英国石油（BP）和挪威国家石油（Equinor）等同行今年也交出丰厚业绩，部分得益于围绕油价波动的交易。</p>
+<p>加上第一季度69.2亿美元的利润，壳牌上半年盈利约增长70%。对商务英语学习者而言，这则新闻把地缘政治、基准定价，以及供应通道受威胁、价格快速波动时能源公司如何受益联系在了一起。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">more than doubled</mark></strong></p>
+<ul>
+<li>英文释义: became more than twice as large as before</li>
+<li>中文释义: 逾翻一番；增加了一倍以上</li>
+<li>例句: Shell&#39;s profits for the second quarter of the year have <mark class="hl-kw">more than doubled</mark> after the Iran war pushed up oil prices.</li>
+<li>记忆提示: double 是“翻倍”，<mark class="hl-kw">more than doubled</mark> = 不止两倍</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">severe disruption</mark></strong></p>
+<ul>
+<li>英文释义: a serious break or disturbance that stops normal activity</li>
+<li>中文释义: 严重中断／剧烈扰动</li>
+<li>例句: The company reported very strong results during another quarter of <mark class="hl-kw">severe disruption</mark> in global energy markets.</li>
+<li>记忆提示: severe（严重）+ disruption（中断）常用于供应链与市场动荡</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">Strait of Hormuz</mark></strong></p>
+<ul>
+<li>英文释义: a narrow sea passage vital for shipping oil and gas from the Gulf</li>
+<li>中文释义: 霍尔木兹海峡（海湾石油天然气外运要道）</li>
+<li>例句: Major disruption to global supplies of oil and LNG through the <mark class="hl-kw">Strait of Hormuz</mark> has lifted energy prices.</li>
+<li>记忆提示: 商务新闻里常与 oil supply、shipping risk 一起出现</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">benchmark</mark></strong></p>
+<ul>
+<li>英文释义: a standard used to measure or compare prices or performance</li>
+<li>中文释义: 基准（价格或业绩参照标准）</li>
+<li>例句: Before the conflict began, the price of Brent crude, the global <mark class="hl-kw">benchmark</mark> for oil prices, was around $73 a barrel.</li>
+<li>记忆提示: bench + mark → “标尺”；布伦特原油是油价基准</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">bumper profits</mark></strong></p>
+<ul>
+<li>英文释义: unusually large or excellent profits</li>
+<li>中文释义: 丰厚利润；创纪录般的高利润</li>
+<li>例句: Shell and other energy giants such as BP and Norway&#39;s Equinor have seen <mark class="hl-kw">bumper profits</mark> this year.</li>
+<li>记忆提示: bumper 有“丰盛、特大”之意，常修饰 harvest / profits / sales</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The price of oil has soared since the outbreak of the US-Israel war with Iran due to major disruption to global supplies of oil and liquid natural gas (LNG) through the Strait of Hormuz.</mark></p>
+<ul>
+<li>结构: 主句（oil has soared）+ since 时间状语 + due to 原因状语（disruption to supplies… through…）</li>
+<li>中文: 自美以与伊朗开战以来，油价飙升，原因是经霍尔木兹海峡的全球石油与液化天然气供应遭到重大中断。</li>
+<li>仿写: Copper prices have climbed since the mine strike began due to major disruption to metal shipments through the main export port.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> Shell chief executive Wael Sawan said the company&#39;s &quot;operational performance enabled very strong results during another quarter of <mark class="hl-kw">severe disruption</mark> in global energy markets&quot;.</p>
+<ul>
+<li>结构: 主语 + said + 宾语从句；从句核心为 performance enabled results，后接 during 时间状语</li>
+<li>中文: 壳牌首席执行官瓦埃勒·萨万表示，公司的“运营表现使其在全球能源市场再度经历严重动荡的一个季度里取得了非常强劲的业绩”。</li>
+<li>仿写: The bank&#39;s CEO said the firm&#39;s risk controls enabled solid results during another quarter of severe volatility in credit markets.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">These big movements in the oil price can widen the gap between buying and selling prices which typically enables traders to make bigger profits.</mark></p>
+<ul>
+<li>结构: 主句（movements can widen the gap）+ which 定语从句修饰 gap／前述情况</li>
+<li>中文: 油价的这些大幅波动会拉大买卖价差，而这通常使交易商能够赚取更高利润。</li>
+<li>仿写: Sharp swings in currency rates can widen the gap between bid and ask prices which typically enables dealers to make bigger profits.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

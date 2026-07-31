@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pitchfork Revisits Janet Jackson’s All for You</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">音乐 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Pitchfork Revisits Janet Jackson’s All for You</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://pitchfork.com/reviews/janet-jackson-all-for-you/">数据来源</a></p>
+    <p class="lead">Pitchfork’s Sunday Review looks back at Janet Jackson’s 2001 album *All for You*, made after a painful, very public divorce. The essay argues the record turns heartbreak into acceptance, blending pop, R&amp;B, and dance while answering doubts about her place in a changing charts era. For learners, it is rich in emotion vocabulary, career language, and long descriptive sentences.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>Pitchfork 周日回顾专栏重读珍妮·杰克逊 2001 年专辑《All for You》，讲述她在离婚风波后如何把伤痛写进音乐。文章认为这张专辑最终走向释然与重生，并以巡演与商业成绩证明她仍是流行乐舞台上的重要人物。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译
+原文链接：<a href="https://pitchfork.com/reviews/janet-jackson-all-for-you/">https://pitchfork.com/reviews/janet-jackson-all-for-you/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>In May 2000, René Elizondo announced that he and Janet Jackson were getting a divorce. <mark class="hl-sent">The news shocked fans not only because he had been her creative partner for thirteen years, but because few people even knew they were married.</mark> For more than a decade, Elizondo had helped shape her peak-era work, co-writing songs and directing videos for albums such as <em>Rhythm Nation</em> and <em>The Velvet Rope</em>. Later he sued her, claiming he was owed millions in royalties.</p>
+<p>The breakup hit Jackson hard. Born into one of music’s most famous families, she had always struggled to protect her private life. When she and Elizondo married, only a small circle of trusted people knew. After the split, she told interviewer Larry King that she had hoped they would remain friends. Yet by December 2000, she was back in the studio—not trapped in heartache, but newly single and, for the first time in her adult life, dating with a freer spirit.</p>
+<p><em>All for You</em> arrived at a turning point. Younger stars such as Britney Spears and Christina Aguilera were rising fast, and the industry whispered about whether Jackson could stay a <mark class="hl-kw">household name</mark>. Instead of repeating the darker mood of <em>The Velvet Rope</em>, she answered with brighter, more restless music. The album moves through stages of grief—rage, sadness, and finally acceptance—across an <mark class="hl-kw">eclectic</mark> mix of pop-rock, electronica, and house. Tracks like “You Ain’t Right” channel anger; others celebrate desire and the thrill of starting over.</p>
+<p>Critics later called <em>All for You</em> a <mark class="hl-kw">bounce-back</mark> album: a breakup record that refused to stay stuck in bitterness. The supporting tour, promoted as a farewell, became a major cultural event and was filmed for an HBO special full of bold choreography and stage spectacle. Jackson may have lost money in the divorce fight, but the tour became her highest-grossing to that point—proof that emotional recovery, for a pop star, can also sound like victory.</p>
+<h3>中文全文翻译</h3>
+<p>2000 年 5 月，勒内·埃利松多宣布他与珍妮·杰克逊即将离婚。消息令粉丝震惊：不仅因为他已做了她十三年的创作伙伴，更因为几乎没人知道他们结过婚。十多年来，埃利松多深度参与了她巅峰期作品，曾为《Rhythm Nation》《The Velvet Rope》等专辑共同写歌、执导音乐录影带。后来他又起诉她，声称应得数百万美元版税。</p>
+<p>这场分手沉重打击了杰克逊。她出生于音乐界最知名的家庭之一，一直努力守护私人生活。她与埃利松多结婚时，只有少数可信的人知情。分手后，她在接受拉里·金采访时说，自己本希望两人仍能做朋友。可到了 2000 年 12 月，她已重返录音室——并非困在伤痛里，而是刚刚恢复单身，并以一种更自由的心态，第一次真正开始约会。</p>
+<p>《All for You》出现在事业转折点。布兰妮·斯皮尔斯、克里斯蒂娜·阿奎莱拉等更年轻的明星迅速崛起，业界也在窃窃私语：杰克逊能否继续家喻户晓。她没有重复《The Velvet Rope》那种更阴郁的气质，而是用更明亮、更躁动的音乐回应质疑。专辑穿过悲伤的多个阶段——愤怒、低落，最终抵达接受——并在流行摇滚、电子与浩室等风格之间切换。像 “You Ain’t Right” 这样的歌释放怒意；另一些作品则庆祝欲望与重新开始的兴奋。</p>
+<p>评论界后来称《All for You》是一张“反弹专辑”：它是分手唱片，却不肯停留在苦涩里。配套巡演被宣传为告别演出，却成为重大文化事件，并拍成充满大胆编舞与舞台奇观的 HBO 特辑。杰克逊或许在离婚官司中蒙受金钱损失，但这场巡演成为她当时票房最高的巡演——证明对流行巨星而言，情感复原也可以听起来像一场胜利。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">creative partner</mark></strong></p>
+<ul>
+<li>英文释义: a person who regularly works with an artist to make and shape work</li>
+<li>中文释义: 创作伙伴；长期共同参与艺术创作的人</li>
+<li>例句: Elizondo had been her <mark class="hl-kw">creative partner</mark> for thirteen years.</li>
+<li>记忆提示: creative（创作的）+ partner（伙伴）→ 一起做作品的人</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">household name</mark></strong></p>
+<ul>
+<li>英文释义: a person or brand so famous that almost everyone recognizes them</li>
+<li>中文释义: 家喻户晓的人物或品牌</li>
+<li>例句: The industry whispered about whether she would remain a <mark class="hl-kw">household name</mark>.</li>
+<li>记忆提示: 名字能进“每个家庭”→ 人人都认识</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">eclectic</mark></strong></p>
+<ul>
+<li>英文释义: drawing ideas, styles, or tastes from many different sources</li>
+<li>中文释义: 兼收并蓄的；博采众长的</li>
+<li>例句: The album has an <mark class="hl-kw">eclectic</mark> mix of pop-rock, electronica, and house.</li>
+<li>记忆提示: 联想 “收集各种风格装进一张专辑”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">bounce-back</mark></strong></p>
+<ul>
+<li>英文释义: a recovery after failure, loss, or a difficult period</li>
+<li>中文释义: 反弹；从低谷恢复</li>
+<li>例句: Critics later called All for You a <mark class="hl-kw">bounce-back</mark> album.</li>
+<li>记忆提示: bounce（弹起）+ back（回来）→ 跌倒后再弹起</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">galvanizing</mark></strong></p>
+<ul>
+<li>英文释义: exciting or shocking people into strong interest or action</li>
+<li>中文释义: 令人振奋的；激发行动的</li>
+<li>例句: The tour became a <mark class="hl-kw">galvanizing</mark> cultural moment.</li>
+<li>记忆提示: 像电流一样“刺激”众人行动起来</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">The news shocked fans not only because he had been her creative partner for thirteen years, but because few people even knew they were married.</mark></p>
+<ul>
+<li>结构: not only because A, but because B（不仅因为……，还因为……）并列原因从句</li>
+<li>中文: 消息令粉丝震惊，不仅因为他做过她十三年的创作伙伴，还因为几乎没人知道他们结过婚。</li>
+<li>仿写: The product succeeded not only because the design was elegant, but because the price felt fair to busy professionals.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Instead of repeating the darker mood of The Velvet Rope, she answered with brighter, more restless music.</mark></p>
+<ul>
+<li>结构: Instead of + doing…, 主语 + 动词…（不是……，而是……）</li>
+<li>中文: 她没有重复《The Velvet Rope》那种更阴郁的气质，而是用更明亮、更躁动的音乐作出回应。</li>
+<li>仿写: Instead of defending the old plan in the meeting, she proposed a clearer timeline and fewer risks.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Critics later called All for You a bounce-back album: a breakup record that refused to stay stuck in bitterness.</mark></p>
+<ul>
+<li>结构: 主句 + 冒号解释同位语；定语从句 that refused… 修饰 record</li>
+<li>中文: 评论界后来称《All for You》是一张反弹专辑：一张拒绝停留在苦涩里的分手唱片。</li>
+<li>仿写: Managers later called the quarter a turnaround story: a recovery plan that refused to stay stuck in last year’s losses.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

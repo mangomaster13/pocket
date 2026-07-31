@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS 27 Adds Three New iPhone Features You’ll Use</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">科技 · 2026-07-30</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>iOS 27 Adds Three New iPhone Features You’ll Use</h1>
+    <p class="meta">Source · 2026-07-30 · <a href="https://9to5mac.com/2026/07/29/ios-27-adds-three-new-iphone-features-youll-use-all-the-time/">数据来源</a></p>
+    <p class="lead">iOS 27, arriving this fall, brings a rebuilt Siri AI, smarter proofreading with grammar checks, and a major search upgrade across Spotlight, Photos, and Mail. A 9to5Mac writer who has used the beta for nearly two months says these tools already feel like everyday essentials.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>iOS 27 将于今秋发布，重点包括彻底重建的 Siri AI、由 Apple Intelligence 驱动的拼写与语法校对，以及 Spotlight、照片和邮件的搜索升级。 作者试用公测近两个月后认为，这些功能很可能成为很多用户的日常刚需。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><p>模式：英文改写 + 中文翻译<br>原文链接：<a href="https://9to5mac.com/2026/07/29/ios-27-adds-three-new-iphone-features-youll-use-all-the-time/">https://9to5mac.com/2026/07/29/ios-27-adds-three-new-iphone-features-youll-use-all-the-time/</a></p>
+<h3>英文改写 Readable rewrite</h3>
+<p>iOS 27 is set to launch this fall as Apple’s next major iPhone software update, and 9to5Mac highlights three features that could quickly become among the most used. The first is Siri AI. Whatever users thought of Siri in the past, the new version is described as a deep rebuild rather than a light refresh. Apple says it tore Siri down and rebuilt it <mark class="hl-kw">from the ground up</mark>. Users can now ask Siri about almost anything, much as they would ask Google or ChatGPT, and receive <mark class="hl-kw">informed</mark>, helpful answers. Siri can also take more actions on the iPhone, work more consistently across devices, and keep conversations in a dedicated Siri app. After nearly two months with the beta, the writer says the new assistant became a daily go-to almost immediately.</p>
+<p>The second feature is automatic <mark class="hl-kw">proofreading</mark> that goes beyond basic spellcheck. The iPhone has long underlined misspelled words, but iOS 27 expands the system in two ways: spellcheck is now powered by Apple Intelligence, and there is a new tool for checking grammar. Because AI can judge context, the phone may suggest a replacement even when a word is spelled correctly but seems used in the wrong way. Misspellings still appear with a red underline, while suggested replacements and grammar issues are marked in blue. That visual difference makes the new suggestions feel optional rather than urgent warnings. Users who dislike the feature can turn <mark class="hl-kw">proofreading</mark> off in Settings, though the writer expects many people will welcome the change.</p>
+<p>The third major change is a search <mark class="hl-kw">overhaul</mark> in Spotlight, Photos, and Mail. Spotlight has been rebuilt with a more <mark class="hl-kw">comprehensive</mark> index of on-device content that stays updated throughout the day, and Siri is fully integrated into the search experience. Apple says the same new search foundation also powers Photos and Mail, so finding messages, images, and other items should feel more relevant. In the writer’s testing, the improvement is already noticeable. Taken together, these three updates point to an iOS release focused less on novelty and more on tools people may reach for every day.</p>
+<h3>中文全文翻译</h3>
+<p>iOS 27 将于今秋作为苹果下一代主要 iPhone 系统更新发布，9to5Mac 重点介绍了三项很可能迅速成为高频功能的新特性。第一项是 Siri AI。无论用户过去如何看待 Siri，新版本都被描述为一次深度重建，而不是轻度升级。苹果表示，它把 Siri“拆到地基”并“从零重建”。用户现在几乎可以像问 Google 或 ChatGPT 一样向 Siri 提问，并得到更知情、更有帮助的回答。Siri 也能在 iPhone 上执行更多操作，在各设备间更稳定地协作，还可通过独立的 Siri App 保存对话。作者使用公测近两个月后表示，新助手几乎立刻成了每日必用工具。</p>
+<p>第二项是超越基础拼写检查的自动校对。iPhone 长期以来会用下划线标出拼错的词，但 iOS 27 从两方面扩展了这一能力：拼写检查现由 Apple Intelligence 驱动，并新增语法检查工具。由于 AI 能判断语境，即使某个词拼写正确，若用法看起来不对，手机也可能给出替换建议。拼写错误仍用红色下划线标出，而替换建议和语法问题则用蓝色标记。这种视觉差异让新建议更像可选提示，而不是紧迫警告。不喜欢该功能的用户可在“设置”中关闭校对，不过作者预计很多人会欢迎这一改动。</p>
+<p>第三项重大变化是 Spotlight、照片和邮件中的搜索大改版。Spotlight 已用更全面、全天持续更新的本机内容索引重建，并且 Siri 已深度集成到搜索体验中。苹果表示，同一套新搜索基础也用于照片和邮件，因此查找信息、图片等内容应更相关。作者实测后认为提升已经很明显。综合来看，这三项更新表明，这次 iOS 更关注用户每天都会用到的实用工具，而非单纯制造新鲜感。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">from the ground up</mark></strong></p>
+<ul>
+<li>英文释义: completely rebuilt from the very beginning, not just lightly improved</li>
+<li>中文释义: 从零开始、彻底重建</li>
+<li>例句: Apple says it tore Siri down and rebuilt it <mark class="hl-kw">from the ground up</mark>.</li>
+<li>记忆提示: ground 是“地面/地基”，up 是“往上”，整句像“从地基往上盖”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">informed</mark></strong></p>
+<ul>
+<li>英文释义: based on useful knowledge or accurate information</li>
+<li>中文释义: 有依据的；知情的、有内容的</li>
+<li>例句: You can now ask Siri about anything and it provides <mark class="hl-kw">informed</mark>, helpful answers.</li>
+<li>记忆提示: in-form 像“装进信息”，答案里“有料”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">proofreading</mark></strong></p>
+<ul>
+<li>英文释义: checking writing for spelling, grammar, and word-choice mistakes</li>
+<li>中文释义: 校对（检查拼写、语法和用词）</li>
+<li>例句: Now in iOS 27, Apple is expanding <mark class="hl-kw">proofreading</mark> in two ways.</li>
+<li>记忆提示: proof + reading，读一遍来“验明”文字是否正确</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">overhaul</mark></strong></p>
+<ul>
+<li>英文释义: a thorough redesign or major improvement of a system</li>
+<li>中文释义: 大检修；全面改造</li>
+<li>例句: In iOS 27, Spotlight search has received a major <mark class="hl-kw">overhaul</mark>.</li>
+<li>记忆提示: over + haul，像把整套系统“拖出来大修”</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">comprehensive</mark></strong></p>
+<ul>
+<li>英文释义: covering many parts of something; broad and complete</li>
+<li>中文释义: 全面的；综合性的</li>
+<li>例句: Systemwide search has been rebuilt with a more <mark class="hl-kw">comprehensive</mark> index of your content.</li>
+<li>记忆提示: com-（一起）+ prehend（抓住），把各方面都“抓住”</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Siri didn’t just get an AI glow-up with a few upgrades.</mark></p>
+<ul>
+<li>结构: 主句否定 + just… with…（“不仅仅是……外加……”）</li>
+<li>中文: Siri 并不是只做了一次 AI 外表升级，再加几项小改进而已。</li>
+<li>仿写: The company didn’t just get a marketing glow-up with a few slogans.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">AI being applied to spellcheck means even if a word is technically spelled correctly, you’ll see suggested word replacements if your iPhone thinks the word is being used incorrectly.</mark></p>
+<ul>
+<li>结构: 动名词主语（AI being applied…）+ means + even if 让步从句 + 主句 + if 条件从句</li>
+<li>中文: 把 AI 用于拼写检查意味着：即便某个词从技术上看拼写正确，只要 iPhone 认为用法不对，你仍会看到替换建议。</li>
+<li>仿写: Automation being applied to customer support means even if a request is politely worded, you’ll get a faster reply if the system can classify the issue correctly.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Apple says that the same new search foundation powering Spotlight has been implemented in the Photos and Mail apps too, upgrading search across those key apps.</mark></p>
+<ul>
+<li>结构: Apple says that…（宾语从句）+ 现在分词短语 powering Spotlight 修饰 foundation + 现在分词短语 upgrading… 表结果</li>
+<li>中文: 苹果表示，驱动 Spotlight 的同一套新搜索基础也已用于照片和邮件 App，从而提升了这些核心应用的搜索能力。</li>
+<li>仿写: The firm says that the same new data model powering analytics has been implemented in sales and support tools too, upgrading insights across those key teams.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>

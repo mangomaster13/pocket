@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carrie Seeks Friends in Flanagan’s Prime Video Teaser</title>
+  <style>:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #8a8a8a;
+  --line: #ececec;
+  --soft: #f6f8f8;
+  --chip: #eef6f5;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --summary: #f5f8ff;
+  --summary-border: #3b82f6;
+  --card: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #f3f3f3;
+    --muted: #9a9a9a;
+    --line: #2a2a2a;
+    --soft: #1a1a1a;
+    --chip: #163532;
+    --accent: #5eead4;
+    --accent-soft: rgba(94, 234, 212, 0.12);
+    --summary: #152033;
+    --summary-border: #60a5fa;
+    --card: #161616;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.65;
+  font-size: 15px;
+}
+a { color: var(--accent); }
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.35rem;
+}
+h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+.meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+.meta a { color: var(--muted); }
+.meta a:hover { color: var(--accent); }
+.lead {
+  font-size: 1.02rem;
+  color: var(--fg);
+  margin: 0 0 1rem;
+  padding: 0.85rem 0 0.85rem 0.9rem;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+}
+.zh-summary {
+  margin: 0 0 1.4rem;
+  padding: 0.85rem 1rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 10px 10px 0;
+}
+.zh-summary .label {
+  display: block;
+  color: var(--summary-border);
+  font-size: 0.8rem;
+  font-weight: 650;
+  margin-bottom: 0.3rem;
+}
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.tabs button {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.55rem 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tabs button.active {
+  color: var(--fg);
+  font-weight: 650;
+  border-bottom-color: var(--accent);
+}
+.tabs .count { color: var(--muted); font-weight: 400; margin-left: 0.25rem; }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0 0 1.25rem;
+}
+.filters label {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.filters select {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.list > li[hidden] { display: none; }
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+.pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.14rem 0.6rem;
+  font-weight: 600;
+}
+.card-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+}
+.card-lead {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 0.65rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-zh {
+  margin: 0;
+  padding: 0.65rem 0.8rem;
+  background: var(--summary);
+  border-left: 3px solid var(--summary-border);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+}
+.card-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.card-keys span {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: var(--chip);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+}
+.empty {
+  color: var(--muted);
+  padding: 2rem 0;
+}
+.article-page .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+.article-page .brand {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.article-page .brand:hover { color: var(--accent); }
+.article h1 { display: none; }
+.article h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.65rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--line);
+}
+.article ul { padding-left: 1.15rem; }
+.article li { margin: 0.3rem 0; }
+.article code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+.source-box {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.05rem;
+}
+.source-box > :first-child { margin-top: 0; }
+.source-box > :last-child { margin-bottom: 0; }
+mark.hl-kw {
+  background: #fef3c7;
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
+}
+mark.hl-sent {
+  background: #dbeafe;
+  color: inherit;
+  padding: 0.05em 0.15em;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+@media (prefers-color-scheme: dark) {
+  mark.hl-kw { background: #78350f; }
+  mark.hl-sent { background: #1e3a5f; }
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0 0 1.1rem;
+}
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  vertical-align: -0.05rem;
+}
+.legend .kw::before { background: #fef3c7; }
+.legend .sent::before { background: #dbeafe; }
+@media (prefers-color-scheme: dark) {
+  .legend .kw::before { background: #78350f; }
+  .legend .sent::before { background: #1e3a5f; }
+}
+.hub-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+.hub-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.hub-apps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.hub-apps a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.05rem 1.05rem;
+  background: var(--card);
+}
+.hub-apps a:hover { border-color: var(--accent); }
+.hub-apps .pill { margin-bottom: 0.45rem; }
+.hub-apps h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+.hub-apps p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.app-switch {
+  display: flex;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+}
+.app-switch a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.app-switch a.active {
+  color: var(--fg);
+  font-weight: 650;
+}
+.app-switch a:hover { color: var(--accent); }
+
+/* —— Invest grade badges (A–D) —— */
+.invest-page .grade-legend {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.05rem;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.invest-page .grade-legend > h2 {
+  margin-top: 0;
+}
+.invest-page .grade-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.55rem 0 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.invest-page .grade-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+}
+.invest-page .grade-legend-text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+.invest-page .grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  list-style: none;
+}
+.invest-page .grade-row::marker {
+  content: "";
+  font-size: 0;
+}
+.invest-page .grade-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  min-width: 4.5em;
+}
+.invest-page .grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  border: 1.5px solid transparent;
+}
+.invest-page .grade-row .grade-badge {
+  min-width: 2.55rem;
+  height: 2.55rem;
+  font-size: 1.75rem;
+  border-radius: 12px;
+}
+.invest-page .grade-legend-badge {
+  min-width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.2rem;
+}
+.invest-page .grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+.invest-page .grade-c {
+  color: #854d0e;
+  background: #fef9c3;
+  border-color: #facc15;
+}
+.invest-page .grade-d {
+  color: #334155;
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+.invest-page .grade-buy.grade-a {
+  color: #065f46;
+  background: #d1fae5;
+  border-color: #34d399;
+}
+.invest-page .grade-buy.grade-b {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #2dd4bf;
+}
+.invest-page .grade-sell.grade-a {
+  color: #9f1239;
+  background: #ffe4e6;
+  border-color: #fb7185;
+}
+.invest-page .grade-sell.grade-b {
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fb923c;
+}
+@media (prefers-color-scheme: dark) {
+  .invest-page .grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+  .invest-page .grade-c {
+    color: #fef08a;
+    background: #422006;
+    border-color: #a16207;
+  }
+  .invest-page .grade-d {
+    color: #cbd5e1;
+    background: #1e293b;
+    border-color: #64748b;
+  }
+  .invest-page .grade-buy.grade-a {
+    color: #a7f3d0;
+    background: #064e3b;
+    border-color: #059669;
+  }
+  .invest-page .grade-buy.grade-b {
+    color: #99f6e4;
+    background: #134e4a;
+    border-color: #0d9488;
+  }
+  .invest-page .grade-sell.grade-a {
+    color: #fecdd3;
+    background: #4c0519;
+    border-color: #be123c;
+  }
+  .invest-page .grade-sell.grade-b {
+    color: #fed7aa;
+    background: #431407;
+    border-color: #c2410c;
+  }
+}</style>
+</head>
+<body class="article-page">
+  <main class="wrap">
+    <div class="top">
+      <a class="brand" href="../articles/index.html">← 历史归档</a>
+      <div class="eyebrow">惊悚 · 2026-07-26</div>
+    </div>
+    <p class="eyebrow">Pocket Hub · Articles</p>
+    <h1>Carrie Seeks Friends in Flanagan’s Prime Video Teaser</h1>
+    <p class="meta">Source · 2026-07-26 · <a href="https://bloody-disgusting.com/tv/3960919/carrie-seeks-friends-in-first-teaser-for-mike-flanagans-stephen-king-series-for-prime-video/">数据来源</a></p>
+    <p class="lead">Prime Video has released the first teaser for Mike Flanagan’s new limited series *Carrie*, adapted from Stephen King’s classic. The eight-episode show premieres on October 7 and follows lonely teen Carrie White as bullying, social media pressure, and telekinetic powers collide. Flanagan writes, executive produces, and directs four episodes, with Stephen King also serving as an executive producer.</p>
+    <div class="zh-summary"><span class="label">中文摘要</span>亚马逊 Prime Video 公布了迈克·弗拉纳根新版《魔女嘉莉》限时剧集的首支预告，八集将于 10 月 7 日上线。 剧集聚焦寄人篱下、遭欺凌并觉醒念力的少女嘉莉，弗拉纳根执笔并执导部分集数，斯蒂芬·金担任制片人。</div>
+    <div class="legend">
+      <span class="kw">重点单词</span>
+      <span class="sent">重点句子</span>
+    </div>
+    <article class="article">
+<h2>原文 Source</h2><div class="source-box"><ul>
+<li>模式：英文改写 + 中文翻译</li>
+<li>原文链接：<a href="https://bloody-disgusting.com/tv/3960919/carrie-seeks-friends-in-first-teaser-for-mike-flanagans-stephen-king-series-for-prime-video/">https://bloody-disgusting.com/tv/3960919/carrie-seeks-friends-in-first-teaser-for-mike-flanagans-stephen-king-series-for-prime-video/</a></li>
+</ul>
+<h3>英文改写 Readable rewrite</h3>
+<p>A lonely Carrie White searches for friendship and answers in the first teaser for <em>Carrie</em>, a new adaptation of Stephen King’s classic story from horror filmmaker Mike Flanagan. Alongside the teaser, Prime Video announced that the eight-episode <mark class="hl-kw">limited series</mark> will premiere on October 7.</p>
+<p>The series follows <mark class="hl-kw">misfit</mark> high-schooler Carrie White, played by Summer H. Howell. For much of her life she has been kept inside her home by her <mark class="hl-kw">fiercely protective</mark> mother, Margaret, played by Samantha Sloyan. After her father’s sudden death forces her into the harsh world of public high school, Carrie must face a <mark class="hl-kw">viral bullying scandal</mark> that spreads through her community. She also confronts the casual cruelty of the social-media age and the awakening of mysterious <mark class="hl-kw">telekinetic powers</mark> that grow with her adolescence.</p>
+<p>Mike Flanagan, known for <em>Midnight Mass</em> and <em>The Haunting of Hill House</em>, serves as showrunner. He writes and executive produces the series and directs four episodes. Stephen King is also an executive producer. The cast includes Siena Agudong as Sue Snell, Alison Thornton as Chris Hargensen, Joel Oulette as Tommy Ross, Amber Midthunder as Miss Desjardin, and Matthew Lillard as Principal Grayle.</p>
+<p>Each episode is expected to open with a different story about another woman, somewhere else in the world and in time, coming to terms with her own abilities. Flanagan has said that Carrie’s place among that group of women is part of the joy viewers will discover across the season. He appears ready to expand King’s story in unexpected ways through a modern lens, and a new poster offers a glimpse of Carrie in her prom queen tiara.</p>
+<h3>中文全文翻译</h3>
+<p>孤独的嘉莉·怀特在首支预告中寻找友情与答案。这部由恐怖片导演迈克·弗拉纳根改编自斯蒂芬·金经典故事的新作《魔女嘉莉》，随预告一并宣布：八集限时剧集将于 10 月 7 日在 Prime Video 首播。</p>
+<p>剧集讲述由萨默·H·豪厄尔饰演的不合群高中生嘉莉·怀特。她大半生被极力保护女儿的母亲玛格丽特（萨曼莎·斯洛伊安饰）关在家中。父亲突然去世后，她被迫进入残酷的公立高中环境，既要面对席卷社区的网络霸凌丑闻，也要承受社交媒体时代的冷漠刻薄，同时觉醒伴随青春期而来的神秘念力。</p>
+<p>以《午夜弥撒》《鬼入侵》闻名的迈克·弗拉纳根担任主创：他编剧、担任执行制片人，并执导四集。斯蒂芬·金亦任执行制片人。演员阵容包括饰演苏·斯内尔的西恩娜·阿古东、饰演克里斯·哈金森的艾莉森·桑顿、饰演汤米·罗斯的乔尔·乌莱特、饰演德雅丹老师的安珀·米德桑德，以及饰演格雷尔校长的马修·里拉德。</p>
+<p>据悉，每一集开头都会引入另一位女性的故事——她身处不同世界与时代，正在接受自己的能力。弗拉纳根表示，嘉莉在这群女性中的位置，正是整季令人期待去发现的乐趣之一。他似乎准备以现代视角、出人意料的方式拓展金的原著；新海报也让观众瞥见戴着舞会皇后头冠的嘉莉。</p></div>
+<h2>单词 Vocabulary</h2>
+<ul>
+<li><p><strong><mark class="hl-kw">misfit</mark></strong></p>
+<ul>
+<li>英文释义: a person who does not fit in with a group or social setting</li>
+<li>中文释义: 不合群的人；格格不入者</li>
+<li>例句: The series follows <mark class="hl-kw">misfit</mark> high-schooler Carrie White.</li>
+<li>记忆提示: mis-（错）+ fit（适合）→ 合不进来的人</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">fiercely protective</mark></strong></p>
+<ul>
+<li>英文释义: extremely determined to shield someone from harm or outside influence</li>
+<li>中文释义: 极力保护的；过度护短的</li>
+<li>例句: Carrie has spent her life hidden away with her <mark class="hl-kw">fiercely protective</mark> mother.</li>
+<li>记忆提示: fiercely 强调“猛烈、极度”，protective 是保护 → 保护欲极强</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">viral bullying scandal</mark></strong></p>
+<ul>
+<li>英文释义: a case of harassment that spreads quickly online and becomes a public controversy</li>
+<li>中文释义: 迅速在网上传播的霸凌丑闻</li>
+<li>例句: Carrie is forced to navigate a <mark class="hl-kw">viral bullying scandal</mark> that tears through her community.</li>
+<li>记忆提示: viral 像病毒一样传播；scandal 是丑闻</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">telekinetic powers</mark></strong></p>
+<ul>
+<li>英文释义: the ability to move objects with the mind</li>
+<li>中文释义: 念力；心灵致动能力</li>
+<li>例句: Mysterious <mark class="hl-kw">telekinetic powers</mark> rise alongside her adolescence.</li>
+<li>记忆提示: tele-（远距离）+ kinetic（运动）→ 用意念让物体动起来</li>
+</ul>
+</li>
+<li><p><strong><mark class="hl-kw">limited series</mark></strong></p>
+<ul>
+<li>英文释义: a TV show planned for a fixed, short number of episodes rather than many seasons</li>
+<li>中文释义: 限时剧集；短篇季播剧</li>
+<li>例句: The eight-episode <mark class="hl-kw">limited series</mark> premieres on Prime Video on October 7.</li>
+<li>记忆提示: limited 表示“有限”，series 是剧集 → 集数固定、通常一季完结</li>
+</ul>
+</li>
+</ul>
+<h2>长难句</h2>
+<ul>
+<li><p><strong>原句：</strong> <mark class="hl-sent">After her father’s sudden, untimely death thrusts her into the unforgiving ecosystem of public high school, Carrie is forced to navigate a viral bullying scandal that tears through her community, the relentless pressure and casual cruelty of the social‑media age, and the awakening of mysterious telekinetic powers that rise alongside her adolescence.</mark></p>
+<ul>
+<li>结构: 时间状语从句（After...）+ 主句（Carrie is forced to navigate A, B, and C）+ 定语从句修饰 scandal / powers</li>
+<li>中文: 父亲突然且不合时宜的去世把她推进公立高中这个冷酷的生态系统后，嘉莉被迫应对席卷社区的网络霸凌丑闻、社交媒体时代无情的压力与随意的残忍，以及伴随青春期觉醒的神秘念力。</li>
+<li>仿写: After the company merger thrusts him into a ruthless new workplace, he is forced to navigate office politics that tear through his team, the relentless pressure of quarterly targets, and the awakening of ambitions he had long ignored.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Each of the show’s episodes will apparently open with the introduction of “a different, unique story of a different woman, somewhere else in the world and in time, coming to terms with their own abilities.”</mark></p>
+<ul>
+<li>结构: 主句（Each... will open with...）+ 介词短语作后置修饰（somewhere else...）+ 现在分词短语（coming to terms with...）</li>
+<li>中文: 该剧每一集显然都会以引入“另一位女性的独特故事”开场——她身处世界与时间的别处，正在接受自己的能力。</li>
+<li>仿写: Each chapter will open with the introduction of a different traveler, somewhere else on the map and in memory, coming to terms with a choice that changed everything.</li>
+</ul>
+</li>
+<li><p><strong>原句：</strong> <mark class="hl-sent">Expect Flanagan to expand King’s story in unexpected ways, using a modern lens.</mark></p>
+<ul>
+<li>结构: 祈使句 Expect + 宾语 + to do；现在分词短语 using... 表方式</li>
+<li>中文: 可以期待弗拉纳根以现代视角、出人意料的方式拓展金的故事。</li>
+<li>仿写: Expect the director to reshape the novel in unexpected ways, using a documentary lens.</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>
