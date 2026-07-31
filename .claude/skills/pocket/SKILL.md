@@ -48,6 +48,10 @@ cd /path/to/pocket
 | Bark Invest note | `npm run notify -- --job invest-daily` |
 | Ad-hoc Bark | `npm run bark -- --to all --preset english --body "..."` |
 | Typecheck | `npm run typecheck` |
+| Install local schedule (macOS) | `npm run schedule:install` |
+| Local schedule status | `npm run schedule:status` |
+| Run one local schedule task | `npm run schedule:run -- articles-generate` |
+| Uninstall local schedule | `npm run schedule:uninstall` |
 
 ## File map — where to change what
 
@@ -64,7 +68,8 @@ cd /path/to/pocket
 | English note prompt | `packages/daily/src/topics/english-vocab.ts` |
 | Fund advice prompt | `packages/daily/src/topics/fund-watch.ts` |
 | Fund NAV fetcher | `packages/daily/src/sources/funds.ts` |
-| Articles generate | `.github/workflows/daily.yml` (Beijing **07:30**) |
+| Local schedule runner | `scripts/local-run.sh` + `npm run schedule:install` (preferred for on-time) |
+| Articles generate | `.github/workflows/daily.yml` (Beijing **07:30**, Actions cron best-effort) |
 | Articles Bark | `.github/workflows/articles-notify.yml` (Beijing **08:00**) |
 | Invest generate | `.github/workflows/invest.yml` (Beijing **14:30**) |
 | Invest Bark | `.github/workflows/invest-notify.yml` (Beijing **14:40**) |
@@ -120,6 +125,19 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 4. Check inbox: real body after `---`?
 5. `npm run site` then open `site/index.html`
 6. Bark: `npm run bark -- --list` then `--presets`; secrets on Actions must be Repository secrets
+
+## Local schedule (macOS, preferred)
+
+GitHub Actions `schedule` is often late or skipped. For accurate Beijing times:
+
+```bash
+npm run schedule:install     # launchd: 07:30 / 08:00 / 14:30 / 14:40 local time
+npm run schedule:status
+npm run schedule:run -- invest-notify
+npm run schedule:uninstall
+```
+
+Mac must be awake + logged in (screensaver OK). Logs in `logs/`. Default syncs `notes/` + deploys Pages; use `--no-sync` / `--no-pages` on install. Disable Actions `schedule` triggers to avoid double runs.
 
 ## GitHub Actions
 

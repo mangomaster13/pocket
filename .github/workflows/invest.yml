@@ -4,10 +4,8 @@ name: Invest daily
 #   14:30 generate AI fund watch → site → Pages
 #   14:40 Bark push is a separate workflow: invest-notify.yml
 
+# Timed runs: macOS launchd (npm run schedule:install). Manual backup only:
 on:
-  schedule:
-    # Beijing 14:30 = UTC 06:30 (before 15:00 close)
-    - cron: "30 6 * * *"
   workflow_dispatch:
 
 jobs:

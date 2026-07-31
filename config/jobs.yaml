@@ -4,11 +4,10 @@
 # Article categories: world / business / tech / dev / music / horror
 # Invest category: invest (watchlist in config/funds.yaml)
 # Schedule times below are China local (Asia/Shanghai).
-# Actions crons are UTC equivalents in .github/workflows/:
-#   Articles generate 07:30 → daily.yml
-#   Articles Bark     08:00 → articles-notify.yml
-#   Invest generate   14:30 → invest.yml
-#   Invest Bark       14:40 → invest-notify.yml
+# Timed runs: macOS launchd via npm run schedule:install
+#   Articles generate 07:30 / Bark 08:00
+#   Invest generate   14:30 / Bark 14:40
+# GitHub Actions workflows keep workflow_dispatch only (no cron).
 
 defaults:
   notesDir: notes

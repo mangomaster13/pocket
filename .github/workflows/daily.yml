@@ -4,10 +4,8 @@ name: Articles daily
 #   07:30 generate AI notes → site → Pages
 #   08:00 Bark push is a separate workflow: articles-notify.yml
 
+# Timed runs: macOS launchd (npm run schedule:install). Manual backup only:
 on:
-  schedule:
-    # Beijing 07:30 = UTC 23:30 (previous calendar day in UTC)
-    - cron: "30 23 * * *"
   workflow_dispatch:
     inputs:
       job:

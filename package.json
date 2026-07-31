@@ -15,7 +15,11 @@
     "site": "tsx packages/cli/src/cli.ts site",
     "notify": "tsx packages/cli/src/cli.ts notify",
     "bark": "tsx packages/cli/src/cli.ts bark",
-    "typecheck": "npm run typecheck -w @pocket/bark && npm run typecheck -w @pocket/daily && npm run typecheck -w @pocket/cli"
+    "typecheck": "npm run typecheck -w @pocket/bark && npm run typecheck -w @pocket/daily && npm run typecheck -w @pocket/cli",
+    "schedule:install": "bash scripts/install-local-schedule.sh",
+    "schedule:uninstall": "bash scripts/uninstall-local-schedule.sh",
+    "schedule:run": "bash scripts/local-run.sh",
+    "schedule:status": "launchctl list | grep com.pocket || echo 'No Pocket launchd agents loaded'"
   },
   "engines": {
     "node": ">=20"
