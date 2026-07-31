@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Install macOS launchd agents for Pocket daily schedules (Asia/Shanghai wall clock
-# when the Mac timezone is China Standard Time).
+# Install macOS launchd agents that dispatch GitHub Actions workflows on time
+# (Asia/Shanghai wall clock when the Mac timezone is China Standard Time).
 #
 # Usage:
 #   npm run schedule:install
-#   scripts/install-local-schedule.sh [--no-sync] [--no-pages] [--run-now]
+#   scripts/install-local-schedule.sh [--run-now]
 
 set -euo pipefail
 
@@ -12,18 +12,16 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LABEL_PREFIX="com.pocket"
 LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 RUNNER="$ROOT/scripts/local-run.sh"
-
-SYNC=1
-DEPLOY_PAGES=1
 RUN_NOW=0
 
 for arg in "$@"; do
   case "$arg" in
-    --no-sync) SYNC=0 ;;
-    --no-pages) DEPLOY_PAGES=0 ;;
     --run-now) RUN_NOW=1 ;;
-    -h|--help)
-      sed -n '2,12p' "$0"
+    --no-sync | --no-pages)
+      echo "note: --no-sync / --no-pages ignored (local runner only dispatches Actions now)"
+      ;;
+    -h | --help)
+      sed -n '2,10p' "$0"
       exit 0
       ;;
     *)
@@ -35,45 +33,21 @@ done
 
 chmod +x "$RUNNER" "$ROOT/scripts/uninstall-local-schedule.sh" 2>/dev/null || true
 
-# Resolve absolute Node bin dir (nvm-friendly) so launchd does not need a login shell.
-resolve_node_bin() {
-  if command -v npm >/dev/null 2>&1; then
-    dirname "$(command -v npm)"
-    return 0
-  fi
-  if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
-    export MANPATH="${MANPATH:-}"
-    set +u
-    # shellcheck disable=SC1091
-    source "$HOME/.nvm/nvm.sh"
-    nvm use default >/dev/null 2>&1 || true
-    set -u
-    if command -v npm >/dev/null 2>&1; then
-      dirname "$(command -v npm)"
-      return 0
-    fi
-  fi
-  echo "error: cannot find npm. Install Node or open a shell where nvm works, then retry." >&2
-  exit 1
-}
-
-NODE_BIN="$(resolve_node_bin)"
-PATH_VALUE="$NODE_BIN:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
+PATH_VALUE="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
 
 if [[ ! -f "$ROOT/.env" ]]; then
-  echo "warning: $ROOT/.env missing — copy from .env.example and fill keys before the first scheduled run."
+  echo "warning: $ROOT/.env missing — copy from .env.example and set GITHUB_TOKEN."
+elif ! grep -Eq '^(GITHUB_TOKEN|GH_TOKEN)=' "$ROOT/.env" 2>/dev/null; then
+  echo "warning: .env has no GITHUB_TOKEN / GH_TOKEN — dispatch will fail until you add a classic PAT (repo + workflow)."
 fi
 
 TZ_NAME="$(date +%Z)"
-echo "Installing Pocket local schedule"
-echo "  root:     $ROOT"
-echo "  node bin: $NODE_BIN"
-echo "  tz now:   $(date '+%Y-%m-%d %H:%M:%S %Z') (launchd uses Mac local time)"
+echo "Installing Pocket local schedule (dispatch → GitHub Actions)"
+echo "  root:   $ROOT"
+echo "  tz now: $(date '+%Y-%m-%d %H:%M:%S %Z') (launchd uses Mac local time)"
 if [[ "$TZ_NAME" != "CST" && "$TZ_NAME" != "UTC+8" ]]; then
   echo "  note: Mac timezone is $TZ_NAME — set System Settings → Date & Time → Asia/Shanghai for Beijing wall clock."
 fi
-echo "  sync:     POCKET_LOCAL_SYNC=$SYNC"
-echo "  pages:    POCKET_LOCAL_DEPLOY_PAGES=$DEPLOY_PAGES"
 
 mkdir -p "$LAUNCH_AGENTS" "$ROOT/logs"
 
@@ -112,12 +86,6 @@ write_plist() {
     <string>${PATH_VALUE}</string>
     <key>HOME</key>
     <string>${HOME}</string>
-    <key>POCKET_NODE_BIN</key>
-    <string>${NODE_BIN}</string>
-    <key>POCKET_LOCAL_SYNC</key>
-    <string>${SYNC}</string>
-    <key>POCKET_LOCAL_DEPLOY_PAGES</key>
-    <string>${DEPLOY_PAGES}</string>
     <key>LANG</key>
     <string>en_US.UTF-8</string>
   </dict>
@@ -148,16 +116,13 @@ echo
 echo "Done. Agents:"
 launchctl list | grep "$LABEL_PREFIX" || true
 echo
-echo "Manual test:"
-echo "  npm run schedule:run -- articles-generate"
-echo "Logs:"
-echo "  $ROOT/logs/"
-echo
-echo "Tip: disable GitHub Actions schedule triggers (or the whole workflows) to avoid double runs."
-echo "Uninstall: npm run schedule:uninstall"
+echo "Each tick only calls GitHub workflow_dispatch (work runs in Actions)."
+echo "Manual test:  npm run schedule:run -- articles-notify"
+echo "Logs:         $ROOT/logs/"
+echo "Uninstall:    npm run schedule:uninstall"
 
 if [[ "$RUN_NOW" == "1" ]]; then
   echo
-  echo "Running articles-generate once (--run-now)..."
+  echo "Dispatching articles-generate once (--run-now)..."
   "$RUNNER" articles-generate
 fi

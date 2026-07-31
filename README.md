@@ -75,7 +75,7 @@ Articles tabs: **world / business / tech / dev / music / horror**.
 
 Scheduled (China / Asia/Shanghai): **Articles** AI at **07:30**, Bark at **08:00**; **Invest** AI at **14:30**, Bark at **14:40**.
 
-For **on-time** runs on a Mac, prefer local `launchd` over GitHub Actions cron (Actions schedules are often delayed). See [Local schedule (macOS)](#local-schedule-macos) below.
+For **on-time** runs, use Mac `launchd` as an alarm that **dispatches** GitHub Actions (`workflow_dispatch`). See [Local schedule (macOS)](#local-schedule-macos).
 
 ## Switch LLM
 
@@ -134,16 +134,17 @@ npm run bark -- --to all --title "自定义标题" --body "test"
 
 ## Local schedule (macOS)
 
-GitHub Actions `schedule` cron is best-effort and can lag hours. For accurate Beijing wall-clock runs, install LaunchAgents on your Mac:
+GitHub Actions `schedule` cron is best-effort and can lag hours. Use Mac `launchd` only as a **timer** that calls `workflow_dispatch` (work still runs in Actions):
 
 ```bash
+# .env: GITHUB_TOKEN=…  (classic PAT: repo + workflow)
 npm run schedule:install          # 07:30 / 08:00 / 14:30 / 14:40 local time
 npm run schedule:status
-npm run schedule:run -- articles-notify   # manual smoke test
+npm run schedule:run -- articles-notify   # smoke-test one dispatch
 npm run schedule:uninstall
 ```
 
-Requirements: Mac awake + logged in at fire time (screensaver OK; system sleep is not). Keep timezone **Asia/Shanghai**. Logs land in `logs/`. Default sync pushes `notes/` and deploys `site/` to `gh-pages` (`--no-sync` / `--no-pages` to disable). Disable the Actions `schedule:` triggers if you switch to local, to avoid double runs.
+Requirements: Mac awake + logged in (screensaver OK; sleep is not). Timezone **Asia/Shanghai**. Dispatch logs in `logs/`; job logs on the Actions tab. Actions secrets (`CURSOR_API_KEY`, Bark, …) stay on GitHub.
 
 ## Local button / Shortcut
 

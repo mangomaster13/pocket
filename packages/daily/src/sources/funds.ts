@@ -5,7 +5,11 @@ import {
   fetchEastmoneyJson,
   fetchEastmoneyPushJson,
 } from "./eastmoney-http.js";
-import { loadFundsCatalog, type FundWatchEntry } from "./funds-catalog.js";
+import {
+  loadFundsCatalog,
+  type FundWatchEntry,
+  type RelatedStockEntry,
+} from "./funds-catalog.js";
 import type { SourcePaths, SourceProvider } from "./types.js";
 
 interface NavPoint {
@@ -18,6 +22,8 @@ interface NavPoint {
 interface FundSnapshot {
   code: string;
   name: string;
+  theme?: string;
+  relatedStocks: RelatedStockEntry[];
   latestDate: string;
   latestNav: string;
   latestChangePct: string;
@@ -27,6 +33,16 @@ interface FundSnapshot {
   history: NavPoint[];
   pageUrl: string;
   chartUrl: string;
+}
+
+interface StockQuote {
+  code: string;
+  name: string;
+  price: number;
+  changePct: number;
+  volume: number;
+  amount: number;
+  turnover: number;
 }
 
 interface IndexQuote {
@@ -58,10 +74,12 @@ export class FundsSource implements SourceProvider {
     const catalog = loadFundsCatalog(fundsFile, paths.cwd);
     const sessionDate = paths.date ?? todayInTimeZone("Asia/Shanghai");
 
-    const [snapshots, board, shTrends] = await Promise.all([
+    const relatedEntries = uniqueRelatedStocks(catalog);
+    const [snapshots, board, shTrends, relatedQuotes] = await Promise.all([
       Promise.all(catalog.map((entry) => fetchFundSnapshot(entry, historyDays))),
       fetchMarketBoard(),
       fetchIndexTrends("1.000001", 12),
+      fetchStockQuotes(relatedEntries),
     ]);
 
     const trendDate = shTrends[shTrends.length - 1]?.time.slice(0, 10);
@@ -79,10 +97,12 @@ export class FundsSource implements SourceProvider {
       "",
       formatIndexTrends("上证指数分时抽样（含成交量）", shTrends),
       "",
+      formatRelatedStocksMarkdown(catalog, relatedQuotes),
+      "",
       "## Watchlist funds",
       "",
       liveSession
-        ? "Open each fund page / chart URL and read today's 分时 before grading."
+        ? "Read 大盘 + theme stocks first, then open each fund page/chart before grading the fund."
         : "WARNING: no live 分时 for sessionDate — do NOT invent buy/sell grades.",
       "",
       formatSnapshotsMarkdown(snapshots),
@@ -149,6 +169,8 @@ async function fetchFundSnapshot(
   return {
     code: entry.code,
     name,
+    theme: entry.theme?.trim() || undefined,
+    relatedStocks: entry.relatedStocks ?? [],
     latestDate: latest.date,
     latestNav: latest.nav,
     latestChangePct: latest.changePct,
@@ -160,6 +182,127 @@ async function fetchFundSnapshot(
     // Eastmoney daily/performance chart image (agent should also open the HTML page for live 分时)
     chartUrl: `https://j4.dfcfw.com/charts/pic6/${entry.code}.png`,
   };
+}
+
+/**
+ * Dedupes related stocks across the watchlist (keeps first name label).
+ */
+function uniqueRelatedStocks(catalog: FundWatchEntry[]): RelatedStockEntry[] {
+  const map = new Map<string, RelatedStockEntry>();
+  for (const fund of catalog) {
+    for (const stock of fund.relatedStocks ?? []) {
+      if (!map.has(stock.code)) {
+        map.set(stock.code, stock);
+      }
+    }
+  }
+  return [...map.values()];
+}
+
+/**
+ * True when the 6-digit code is listed on Shanghai.
+ */
+function isShanghaiCode(code: string): boolean {
+  return code.startsWith("6") || code.startsWith("5") || code.startsWith("9");
+}
+
+/**
+ * Maps a 6-digit A-share code to an Eastmoney secid (SH=1 / SZ=0).
+ */
+function toEastmoneySecid(code: string): string {
+  return `${isShanghaiCode(code) ? "1" : "0"}.${code}`;
+}
+
+/**
+ * Eastmoney quote page for a 6-digit A-share code.
+ */
+function quotePageUrl(code: string): string {
+  return `https://quote.eastmoney.com/${isShanghaiCode(code) ? "sh" : "sz"}${code}.html`;
+}
+
+/**
+ * Fetches live quotes for theme proxy stocks (batched ulist).
+ */
+async function fetchStockQuotes(stocks: RelatedStockEntry[]): Promise<StockQuote[]> {
+  if (stocks.length === 0) {
+    return [];
+  }
+  const secids = stocks.map((s) => toEastmoneySecid(s.code)).join(",");
+  const nameByCode = new Map(
+    stocks.map((s) => [s.code, s.name?.trim() || ""] as const),
+  );
+  const path =
+    "/api/qt/ulist.np/get" +
+    "?fltt=2&fields=f12,f14,f2,f3,f5,f6,f8" +
+    `&secids=${encodeURIComponent(secids)}`;
+  try {
+    const json = await fetchEastmoneyPushJson<{
+      data?: {
+        diff?: Array<{
+          f12?: string;
+          f14?: string;
+          f2?: number;
+          f3?: number;
+          f5?: number;
+          f6?: number;
+          f8?: number;
+        }>;
+      };
+    }>(path);
+    return (json.data?.diff ?? []).map((row) => {
+      const code = String(row.f12 ?? "");
+      return {
+        code,
+        name: nameByCode.get(code) || String(row.f14 ?? code),
+        price: Number(row.f2 ?? 0),
+        changePct: Number(row.f3 ?? 0),
+        volume: Number(row.f5 ?? 0),
+        amount: Number(row.f6 ?? 0),
+        turnover: Number(row.f8 ?? 0),
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Formats theme → related-stock quotes for the multi-role prompt.
+ */
+function formatRelatedStocksMarkdown(
+  catalog: FundWatchEntry[],
+  quotes: StockQuote[],
+): string {
+  if (catalog.every((f) => !(f.relatedStocks && f.relatedStocks.length))) {
+    return "## Theme related stocks\n- (none configured in funds.yaml)";
+  }
+  const quoteByCode = new Map(quotes.map((q) => [q.code, q]));
+  const blocks = catalog.map((fund) => {
+    const theme = fund.theme?.trim() || "theme";
+    const stocks = fund.relatedStocks ?? [];
+    if (stocks.length === 0) {
+      return `### ${fund.code} · ${theme}\n- (no relatedStocks)`;
+    }
+    const lines = stocks.map((stock) => {
+      const q = quoteByCode.get(stock.code);
+      const label = stock.name?.trim() || q?.name || stock.code;
+      if (!q) {
+        return `- ${stock.code} ${label}: quote unavailable`;
+      }
+      return (
+        `- ${stock.code} ${label}: ${q.price} · ${formatSignedPct(String(q.changePct))}` +
+        ` · 额 ${formatCompact(q.amount)} · 换手 ${q.turnover.toFixed(2)}%` +
+        ` · ${quotePageUrl(stock.code)}`
+      );
+    });
+    return [`### ${fund.code} · ${theme}`, ...lines].join("\n");
+  });
+  return [
+    "## Theme related stocks",
+    "Use these 个股 prints (plus fund-page holdings) before grading each fund.",
+    "",
+    ...blocks,
+  ].join("\n");
 }
 
 /**
@@ -344,10 +487,19 @@ function formatSnapshotsMarkdown(snapshots: FundSnapshot[]): string {
           ? `- Intraday estimate: ${fund.estimateNav} · ${formatSignedPct(fund.estimateChangePct ?? "")}` +
             (fund.estimateTime ? ` · ${fund.estimateTime}` : "")
           : "- Intraday estimate: (not published yet / market closed)";
+      const themeLine = fund.theme ? `- Theme: ${fund.theme}` : null;
+      const relatedLine =
+        fund.relatedStocks.length > 0
+          ? `- Related stocks: ${fund.relatedStocks
+              .map((s) => `${s.code}${s.name ? ` ${s.name}` : ""}`)
+              .join(", ")}`
+          : null;
       return [
         `### ${fund.code} · ${fund.name}`,
         "",
-        `- Fund page (open for live 分时): ${fund.pageUrl}`,
+        themeLine,
+        relatedLine,
+        `- Fund page (open for live 分时 / holdings): ${fund.pageUrl}`,
         `- Chart image URL: ${fund.chartUrl}`,
         `- Latest published NAV date: ${fund.latestDate}`,
         `- Latest published NAV: ${fund.latestNav}`,
@@ -356,7 +508,9 @@ function formatSnapshotsMarkdown(snapshots: FundSnapshot[]): string {
         "",
         "Recent published NAV history (newest first):",
         historyLines,
-      ].join("\n");
+      ]
+        .filter((line): line is string => line != null)
+        .join("\n");
     })
     .join("\n\n---\n\n");
 }

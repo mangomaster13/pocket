@@ -1,8 +1,31 @@
 # Watchlist for the Invest app (fund-watch topic).
 # Codes are Chinese mutual-fund codes (天天基金 / Eastmoney).
+# relatedStocks: theme proxies the multi-role desk should weigh before fund grades.
+# Stock codes are 6-digit A-share codes (SH 6xxxxx / SZ 0xxxxx|3xxxxx).
 
 funds:
   - code: "017811"
     name: 东方人工智能主题混合C
+    theme: AI / 算力 / 半导体设备
+    relatedStocks:
+      - code: "688256"
+        name: 寒武纪
+      - code: "688082"
+        name: 芯源微
+      - code: "688361"
+        name: 中科飞测
+      - code: "300567"
+        name: 精测电子
+
   - code: "006080"
     name: 海富通电子传媒股票C
+    theme: 光模块 / 电子传媒 / PCB
+    relatedStocks:
+      - code: "300308"
+        name: 中际旭创
+      - code: "300502"
+        name: 新易盛
+      - code: "688498"
+        name: 源杰科技
+      - code: "002463"
+        name: 沪电股份

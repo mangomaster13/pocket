@@ -3,7 +3,7 @@ name: Articles notify
 # China (Asia/Shanghai, UTC+8, no DST):
 #   Bark push at 08:00 after the 07:30 Articles daily generate + Pages deploy.
 
-# Timed runs: macOS launchd (npm run schedule:install). Manual backup only:
+# Timed runs: macOS launchd dispatches this workflow (npm run schedule:install).
 on:
   workflow_dispatch:
 

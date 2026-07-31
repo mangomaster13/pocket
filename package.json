@@ -19,7 +19,8 @@
     "schedule:install": "bash scripts/install-local-schedule.sh",
     "schedule:uninstall": "bash scripts/uninstall-local-schedule.sh",
     "schedule:run": "bash scripts/local-run.sh",
-    "schedule:status": "launchctl list | grep com.pocket || echo 'No Pocket launchd agents loaded'"
+    "schedule:status": "launchctl list | grep com.pocket || echo 'No Pocket launchd agents loaded'",
+    "schedule:gui": "node scripts/schedule-gui/server.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pocket Schedule</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div>
+          <p class="eyebrow">Pocket Hub</p>
+          <h1>Trigger Actions</h1>
+          <p class="sub" id="meta">Loading…</p>
+        </div>
+        <div class="top-actions">
+          <a class="btn primary" id="link-actions" href="#" target="_blank" rel="noreferrer">
+            Open GitHub Actions
+          </a>
+          <button type="button" class="btn ghost" id="btn-refresh">Refresh</button>
+          <button type="button" class="btn ghost" id="btn-install">Install timer</button>
+          <button type="button" class="btn ghost danger" id="btn-uninstall">Uninstall</button>
+        </div>
+      </header>
+
+      <p class="hint" id="hint">
+        点击按钮只触发 GitHub workflow；运行日志请到 Actions 查看。
+      </p>
+
+      <section class="tasks" id="tasks" aria-label="Workflow triggers"></section>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>

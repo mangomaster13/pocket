@@ -52,6 +52,7 @@ cd /path/to/pocket
 | Local schedule status | `npm run schedule:status` |
 | Run one local schedule task | `npm run schedule:run -- articles-generate` |
 | Uninstall local schedule | `npm run schedule:uninstall` |
+| Schedule GUI (logs + Run now) | `npm run schedule:gui` → http://127.0.0.1:8787 |
 
 ## File map — where to change what
 
@@ -68,8 +69,8 @@ cd /path/to/pocket
 | English note prompt | `packages/daily/src/topics/english-vocab.ts` |
 | Fund advice prompt | `packages/daily/src/topics/fund-watch.ts` |
 | Fund NAV fetcher | `packages/daily/src/sources/funds.ts` |
-| Local schedule runner | `scripts/local-run.sh` + `npm run schedule:install` (preferred for on-time) |
-| Articles generate | `.github/workflows/daily.yml` (Beijing **07:30**, Actions cron best-effort) |
+| Local alarm → Actions | `scripts/local-run.sh` + `npm run schedule:install` |
+| Articles generate | `.github/workflows/daily.yml` (dispatched locally at **07:30**) |
 | Articles Bark | `.github/workflows/articles-notify.yml` (Beijing **08:00**) |
 | Invest generate | `.github/workflows/invest.yml` (Beijing **14:30**) |
 | Invest Bark | `.github/workflows/invest-notify.yml` (Beijing **14:40**) |
@@ -109,10 +110,10 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 
 ## Invest notes
 
-- Watchlist: `config/funds.yaml` (`code` + optional `name`)
+- Watchlist: `config/funds.yaml` (`code`, optional `name` / `theme` / `relatedStocks`)
 - Runs ~**14:30** Asia/Shanghai so the agent can read **分时** + market volume; Bark at **14:40**
 - **Trading-day gate**: weekends / holidays / stale 上证分时 → write 休市 note, **skip LLM**, no A–D grades
-- Live days only: topic `fund-watch` requires per fund **买入等级** and **卖出等级** (`A`–`D`) plus the grade legend
+- Live days: `fund-watch` uses a **multi-role** desk (市场/技术/情绪 → 多空辩论 → 风控) on **大盘 + theme 个股**, then per-fund **买入/卖出等级** (`A`–`D`)
 - Site: Invest pages skip English vocab highlighting; grade badges styled on live notes
 - Always keep a risk disclaimer in the note (not licensed advice)
 - Demo Hub mock (optional): `demo/pocket-hub.html`
@@ -126,18 +127,27 @@ Inbox wins when it has a real article body after `---`. Placeholder stubs count 
 5. `npm run site` then open `site/index.html`
 6. Bark: `npm run bark -- --list` then `--presets`; secrets on Actions must be Repository secrets
 
-## Local schedule (macOS, preferred)
+## Local schedule (macOS → Actions dispatch)
 
-GitHub Actions `schedule` is often late or skipped. For accurate Beijing times:
+Mac `launchd` is only an alarm: it calls GitHub `workflow_dispatch`. Pipeline still runs in Actions.
 
 ```bash
-npm run schedule:install     # launchd: 07:30 / 08:00 / 14:30 / 14:40 local time
+# .env needs GITHUB_TOKEN (classic PAT: repo + workflow)
+npm run schedule:install     # 07:30 / 08:00 / 14:30 / 14:40 local time
 npm run schedule:status
 npm run schedule:run -- invest-notify
 npm run schedule:uninstall
+npm run schedule:gui         # localhost UI: Trigger buttons → Actions
 ```
 
-Mac must be awake + logged in (screensaver OK). Logs in `logs/`. Default syncs `notes/` + deploys Pages; use `--no-sync` / `--no-pages` on install. Disable Actions `schedule` triggers to avoid double runs.
+| Task | Workflow |
+|------|----------|
+| articles-generate | `daily.yml` |
+| articles-notify | `articles-notify.yml` |
+| invest-generate | `invest.yml` |
+| invest-notify | `invest-notify.yml` |
+
+Mac awake + logged in (screensaver OK). GUI opens Actions in the browser after a successful dispatch; detailed job logs live on GitHub.
 
 ## GitHub Actions
 

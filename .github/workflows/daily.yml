@@ -4,7 +4,7 @@ name: Articles daily
 #   07:30 generate AI notes → site → Pages
 #   08:00 Bark push is a separate workflow: articles-notify.yml
 
-# Timed runs: macOS launchd (npm run schedule:install). Manual backup only:
+# Timed runs: macOS launchd dispatches this workflow (npm run schedule:install).
 on:
   workflow_dispatch:
     inputs:
